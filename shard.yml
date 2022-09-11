@@ -1,0 +1,16 @@
+name: goban
+version: 0.1.0
+
+authors:
+  - soya_daizu <soya_daizu@protonmail.com>
+
+targets:
+  test:
+    main: src/goban.cr
+
+crystalline:
+  main: src/goban.cr
+
+crystal: 1.6.0-dev
+
+license: MIT
