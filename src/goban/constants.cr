@@ -1,13 +1,3 @@
-MASK_COMPUTATIONS = {
-  ->(i : Int32, j : Int32) { (i + j) % 2 == 0 },
-  ->(i : Int32, j : Int32) { i % 2 == 0 },
-  ->(i : Int32, j : Int32) { j % 3 == 0 },
-  ->(i : Int32, j : Int32) { (i + j) % 3 == 0 },
-  ->(i : Int32, j : Int32) { ((i // 2) + (j // 3)) % 2 == 0 },
-  ->(i : Int32, j : Int32) { (i * j) % 2 + (i * j) % 3 == 0 },
-  ->(i : Int32, j : Int32) { ((i * j) % 2 + (i * j) % 3) % 2 == 0 },
-  ->(i : Int32, j : Int32) { ((i + j) % 2 + (i * j) % 3) % 2 == 0 },
-}
 
 ECC_CODEWORDS_PER_BLOCK = {
   # Version: (note that index 0 is for padding, and is set to an illegal value)

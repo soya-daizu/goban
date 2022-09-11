@@ -7,11 +7,22 @@ struct Goban::QRCode
     end
 
     def apply_to(canvas : Canvas)
-      proc = MASK_COMPUTATIONS[@value]
       canvas.size.times do |y|
         canvas.size.times do |x|
           next if canvas.is_module_reserved?(x, y)
-          value = canvas.get_module(x, y) ^ proc.call(y, x)
+          invert = case @value
+                   when 0; (x + y) % 2 == 0
+                   when 1; y % 2 == 0
+                   when 2; x % 3 == 0
+                   when 3; (x + y) % 3 == 0
+                   when 4; (x // 3 + y // 2) % 2 == 0
+                   when 5; (x * y) % 2 + (x * y) % 3 == 0
+                   when 6; ((x * y) % 2 + (x * y) % 3) % 2 == 0
+                   when 7; ((x + y) % 2 + (x * y) % 3) % 2 == 0
+                   else; raise "Invalid mask number"
+                   end
+
+          value = canvas.get_module(x, y) ^ invert
           canvas.set_module(x, y, value)
         end
       end
