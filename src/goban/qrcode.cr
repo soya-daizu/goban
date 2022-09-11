@@ -4,7 +4,7 @@ module Goban
   struct QRCode
     getter version : Version
     getter ecl : ECLevel
-    getter modules : Array(Array(Bool))
+    getter modules : Array(Bool)
     getter size : Int32
 
     def initialize(@version, @ecl, @modules)
@@ -13,9 +13,9 @@ module Goban
 
     def print_to_console
       border = 4
-      @modules.size.times do |y|
-        @modules.size.times do |x|
-          print @modules[y][x] ? "██" : "  "
+      @size.times do |y|
+        @size.times do |x|
+          print @modules[y * @size + x] ? "██" : "  "
         end
         print '\n'
       end

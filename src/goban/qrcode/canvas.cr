@@ -1,11 +1,11 @@
 struct Goban::QRCode
   struct Canvas
-    getter modules : Array(Array(Bool))
+    getter modules : Array(Bool)
+    getter size : Int32
 
     def initialize(@version : Version, @ecl : ECLevel)
-      @modules = Array(Array(Bool)).new(@version.symbol_size) do
-        Array(Bool).new(@version.symbol_size, false)
-      end
+      @size = @version.symbol_size
+      @modules = Array(Bool).new(@size ** 2, false)
       @reserved_modules = @modules.clone
     end
 
@@ -39,8 +39,8 @@ struct Goban::QRCode
       tim_pat_mods_count = @version.timing_pattern_mods_count
       (8...8 + tim_pat_mods_count).each do |i|
         next unless i.even?
-        @modules[i][6] = true
-        @modules[6][i] = true
+        set_module(i, 6)
+        set_module(6, i)
       end
       reserve_modules(8, 6, tim_pat_mods_count, 1)
       reserve_modules(6, 8, 1, tim_pat_mods_count)
@@ -52,26 +52,52 @@ struct Goban::QRCode
       end
     end
 
+    def draw_data_codewords(data_codewords : Array(UInt8))
+      size = @version.symbol_size
+
+      i = 0
+      upward = true
+      base_x = size - 1
+      while base_x > 0
+        base_x = 5 if base_x == 6 # Skip vertical timing pattern
+
+        (0...size).reverse_each do |base_y|
+          (0..1).each do |alt|
+            x = base_x - alt
+            y = upward ? base_y : size - 1 - base_y
+            # next if is_module_reserved(x, y) || i >= data_codewords.size * 8
+            if !is_module_reserved?(x, y) && i < data_codewords.size * 8
+              set_module(x, y, data_codewords[i >> 3].bit(7 - i & 7) == 1)
+              i += 1
+            end
+          end
+        end
+
+        upward = !upward
+        base_x -= 2
+      end
+    end
+
     private def draw_finder_pattern(x : Int, y : Int)
-      @modules[y].fill(true, x, 7)
+      fill_module(x, y, 7)
       (y + 1..y + 5).each do |yy|
-        @modules[yy][x] = true
-        @modules[yy][x + 6] = true
+        set_module(x, yy)
+        set_module(x + 6, yy)
         if (y + 2..y + 4).includes?(yy)
-          @modules[yy].fill(true, x + 2, 3)
+          fill_module(x + 2, yy, 3)
         end
       end
-      @modules[y + 6].fill(true, x, 7)
+      fill_module(x, y + 6, 7)
     end
 
     private def draw_alignment_pattern(x : Int, y : Int)
-      @modules[y - 2].fill(true, x - 2, 5)
-      @modules[y][x] = true
+      fill_module(x - 2, y - 2, 5)
+      set_module(x, y)
       (y - 1..y + 1).each do |yy|
-        @modules[yy][x - 2] = true
-        @modules[yy][x + 2] = true
+        set_module(x - 2, yy)
+        set_module(x + 2, yy)
       end
-      @modules[y + 2].fill(true, x - 2, 5)
+      fill_module(x - 2, y + 2, 5)
     end
 
     private def draw_version_modules
@@ -87,9 +113,9 @@ struct Goban::QRCode
       (0...18).each do |i|
         bit = bits.bit(i) == 1
         x = i // 3
-        y = @modules.size - 11 + i % 3
-        @modules[y][x] = bit
-        @modules[x][y] = bit
+        y = @size - 11 + i % 3
+        set_module(x, y, bit)
+        set_module(y, x, bit)
       end
 
       true
@@ -106,28 +132,20 @@ struct Goban::QRCode
       (0...8).each do |i|
         bit = bits.bit(i) == 1
         pos = i >= 6 ? i + 1 : i
-        @modules[pos][8] = bit
-        pos = @modules.size - 1 - i
-        @modules[8][pos] = bit
+        set_module(8, pos, bit)
+        pos = @size - 1 - i
+        set_module(pos, 8, bit)
       end
 
       (0...7).each do |i|
         bit = bits.bit(14 - i) == 1
         pos = i >= 6 ? i + 1 : i
-        @modules[8][pos] = bit
-        pos = @modules.size - 1 - i
-        @modules[pos][8] = bit
+        set_module(pos, 8, bit)
+        pos = @size - 1 - i
+        set_module(8, pos, bit)
       end
 
-      @modules[@modules.size - 8][8] = true
-    end
-
-    private def reserve_modules(x : Int, y : Int, w : Int, h : Int)
-      (y...y + h).each do |i|
-        (x...x + w).each do |j|
-          @reserved_modules[i][j] = true
-        end
-      end
+      set_module(8, @size - 8, true)
     end
 
     private def alignment_pattern_positions
@@ -145,29 +163,32 @@ struct Goban::QRCode
       result
     end
 
-    def draw_data_codewords(data_codewords : Array(UInt8))
-      size = @version.symbol_size
+    protected def set_module(x : Int, y : Int, value : Bool? = true)
+      @modules[y * @size + x] = value
+    end
 
-      i = 0
-      upward = true
-      base_x = size - 1
-      while base_x > 0
-        base_x = 5 if base_x == 6 # Skip vertical timing pattern
+    protected def fill_module(x : Int, y : Int, w : Int, value : Bool? = true)
+      @modules.fill(value, y * @size + x, w)
+    end
 
-        (0...size).reverse_each do |base_y|
-          (0..1).each do |alt|
-            x = base_x - alt
-            y = upward ? base_y : size - 1 - base_y
-            if !@reserved_modules[y][x] && i < data_codewords.size * 8
-              @modules[y][x] = data_codewords[i >> 3].bit(7 - i & 7) == 1
-              i += 1
-            end
-          end
+    def get_module(x : Int, y : Int)
+      @modules[y * @size + x]
+    end
+
+    private def reserve_module(x : Int, y : Int)
+      @reserved_modules[y * @size + x] = true
+    end
+
+    private def reserve_modules(x : Int, y : Int, w : Int, h : Int)
+      (y...y + h).each do |yy|
+        (x...x + w).each do |xx|
+          reserve_module(xx, yy)
         end
-
-        upward = !upward
-        base_x -= 2
       end
+    end
+
+    def is_module_reserved?(x : Int, y : Int)
+      @reserved_modules[y * @size + x]
     end
 
     def apply_best_mask
@@ -176,26 +197,24 @@ struct Goban::QRCode
       8_u8.times do |i|
         msk = Mask.new(i)
         draw_format_modules(msk)
-        msk.apply_to(@modules, @reserved_modules)
-        score = Mask.evaluate_score(@modules)
-        puts i
-        puts score
+        msk.apply_to(self)
+        score = Mask.evaluate_score(self)
         if score < min_score
           mask = msk
           min_score = score
         end
-        msk.apply_to(@modules, @reserved_modules)
+        msk.apply_to(self)
       end
       raise "Unable to set the mask" unless mask
       draw_format_modules(mask)
-      mask.apply_to(@modules, @reserved_modules)
+      mask.apply_to(self)
     end
 
     def print_to_console
       border = 4
-      @modules.size.times do |y|
-        @modules.size.times do |x|
-          print @modules[y][x] ? "██" : "  "
+      @size.times do |y|
+        @size.times do |x|
+          print get_module(x, y) ? "██" : "  "
         end
         print '\n'
       end
