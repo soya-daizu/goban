@@ -70,6 +70,7 @@ struct Goban::QRCode
         (canvas.size - 1).times do |x|
           m1 = canvas.get_module(x, y)
           m2 = canvas.get_module(x + 1, y)
+          next unless m1 == m2
           m3 = canvas.get_module(x, y + 1)
           m4 = canvas.get_module(x + 1, y + 1)
 
@@ -86,18 +87,20 @@ struct Goban::QRCode
 
       # In horizontal mode, i is y coordinate and j is x coordinate
       canvas.size.times do |i|
-        (canvas.size - 7).times do |j|
-          pattern_matches = (j...j + 7).all? do |k|
+        (0..canvas.size - 7).each do |j|
+          pattern_matches = (j..j + 6).all? do |k|
             value = is_horizontal ? canvas.get_module(k, i) : canvas.get_module(i, k)
             value == pattern[k - j]
           end
           next unless pattern_matches
 
-          score += 40 if (j - 4...j).all? do |k|
+          score += 40 if (j - 4..j - 1).all? do |k|
+                           next false unless k > 0
                            value = is_horizontal ? canvas.get_module(k, i) : canvas.get_module(i, k)
                            value == false
                          end
-          score += 40 if (j + 7...j + 11).all? do |k|
+          score += 40 if (j + 7..j + 10).all? do |k|
+                           next false unless k <= canvas.size - 1
                            value = is_horizontal ? canvas.get_module(k, i) : canvas.get_module(i, k)
                            value == false
                          end
