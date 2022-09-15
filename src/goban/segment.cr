@@ -43,6 +43,50 @@ module Goban
       segment
     end
 
+    def self.bytes(text : String)
+      bytes = text.bytes
+      bit_stream = BitStream.new(bytes.size * 8)
+      segment = self.new(Segment::Mode::Byte, bytes.size, bit_stream)
+      bytes.each do |byte|
+        bit_stream.append_bits(byte, 8)
+      end
+
+      segment
+    end
+
+    def self.kanji(text : String)
+      # In accordance to JIS X 0208, this doesn't include
+      # extended characters as in CP932 or other variants
+      bytes = text.encode("SHIFT_JIS")
+      raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
+      bit_stream = BitStream.new(bytes.size // 2 * 13)
+      segment = self.new(Segment::Mode::Kanji, text.size, bit_stream)
+
+      bytes.each_slice(2).each do |byte_pair|
+        if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
+          # Probably unnecessary, but make sure the least
+          # significant byte is in the range of SHIFT_JIS
+          raise "Kanji data contains unencodable characters"
+        end
+
+        val = (byte_pair[0].to_u16 << 8) | byte_pair[1]
+        if (0x8140..0x9ffc).includes?(val)
+          val -= 0x8140
+        elsif (0xe040..0xebbf).includes?(val)
+          val -= 0xc140
+        else
+          # Again, this should be caught in the first place
+          # as it's not a valid SHIFT_JIS code anyway
+          raise "Kanji data contains unencodable characters"
+        end
+        val = (val >> 8) * 0xc0 + (val & 0xff)
+
+        bit_stream.append_bits(val, 13)
+      end
+
+      segment
+    end
+
     def self.count_total_bits(segments : Array(Segment), version : QRCode::Version)
       result = 0_u64
       segments.each do |segment|
