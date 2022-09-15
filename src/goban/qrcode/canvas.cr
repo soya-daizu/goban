@@ -10,17 +10,15 @@ struct Goban::QRCode
     end
 
     def draw_function_patterns
-      size = @version.symbol_size
-
       draw_finder_pattern(0, 0)
-      draw_finder_pattern(size - 7, 0)
-      draw_finder_pattern(0, size - 7)
+      draw_finder_pattern(@size - 7, 0)
+      draw_finder_pattern(0, @size - 7)
 
       # Reserve finder pattern and format info area at once
       # as they belong to the same adjacent square area
       reserve_modules(0, 0, 9, 9)
-      reserve_modules(size - 8, 0, 8, 9)
-      reserve_modules(0, size - 8, 9, 8)
+      reserve_modules(@size - 8, 0, 8, 9)
+      reserve_modules(0, @size - 8, 9, 8)
 
       ali_pat_pos = alignment_pattern_positions
       ali_pat_count = ali_pat_pos.size
@@ -47,29 +45,27 @@ struct Goban::QRCode
 
       if draw_version_modules
         # Reserve version info area
-        reserve_modules(size - 11, 0, 3, 6)
-        reserve_modules(0, size - 11, 6, 3)
+        reserve_modules(@size - 11, 0, 3, 6)
+        reserve_modules(0, @size - 11, 6, 3)
       end
     end
 
     def draw_data_codewords(data_codewords : Array(UInt8))
-      size = @version.symbol_size
+      data_length = data_codewords.size * 8
 
       i = 0
       upward = true
-      base_x = size - 1
+      base_x = @size - 1
       while base_x > 0
         base_x = 5 if base_x == 6 # Skip vertical timing pattern
 
-        (0...size).reverse_each do |base_y|
+        (0...@size).reverse_each do |base_y|
           (0..1).each do |alt|
             x = base_x - alt
-            y = upward ? base_y : size - 1 - base_y
-            # next if is_module_reserved(x, y) || i >= data_codewords.size * 8
-            if !is_module_reserved?(x, y) && i < data_codewords.size * 8
-              set_module(x, y, data_codewords[i >> 3].bit(7 - i & 7) == 1)
-              i += 1
-            end
+            y = upward ? base_y : @size - 1 - base_y
+            next if is_module_reserved?(x, y) || i >= data_length
+            set_module(x, y, data_codewords[i >> 3].bit(7 - i & 7) == 1)
+            i += 1
           end
         end
 
@@ -155,7 +151,7 @@ struct Goban::QRCode
       g = v // 7 + 2
       step = v == 32 ? 26 : (v * 4 + g * 2 + 1) // (g * 2 - 2) * 2
       result = (0...g - 1).map do |i|
-        @version.symbol_size - 7 - i * step
+        @size - 7 - i * step
       end
       result.push(6)
       result.reverse!
@@ -164,7 +160,10 @@ struct Goban::QRCode
     end
 
     protected def set_module(x : Int, y : Int, value : Bool? = true)
-      @modules[y * @size + x] = value
+      # We are absolutely sure that the index is in bounds,
+      # as the arrays are pre-allocated based on the given version
+      # and all the set/get methods are called based on that size
+      @modules.unsafe_put(y * @size + x, value)
     end
 
     protected def fill_module(x : Int, y : Int, w : Int, value : Bool? = true)
@@ -172,23 +171,23 @@ struct Goban::QRCode
     end
 
     def get_module(x : Int, y : Int)
-      @modules[y * @size + x]
-    end
-
-    private def reserve_module(x : Int, y : Int)
-      @reserved_modules[y * @size + x] = true
+      # We are absolutely sure that the index is in bounds,
+      # as the arrays are pre-allocated based on the given version
+      # and all the set/get methods are called based on that size
+      @modules.unsafe_fetch(y * @size + x)
     end
 
     private def reserve_modules(x : Int, y : Int, w : Int, h : Int)
       (y...y + h).each do |yy|
-        (x...x + w).each do |xx|
-          reserve_module(xx, yy)
-        end
+        @reserved_modules.fill(true, yy * @size + x, w)
       end
     end
 
     def is_module_reserved?(x : Int, y : Int)
-      @reserved_modules[y * @size + x]
+      # We are absolutely sure that the index is in bounds,
+      # as the arrays are pre-allocated based on the given version
+      # and all the set/get methods are called based on that size
+      @reserved_modules.unsafe_fetch(y * @size + x)
     end
 
     def apply_best_mask

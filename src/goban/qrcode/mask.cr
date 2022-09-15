@@ -19,7 +19,7 @@ struct Goban::QRCode
                    when 5; (x * y) % 2 + (x * y) % 3 == 0
                    when 6; ((x * y) % 2 + (x * y) % 3) % 2 == 0
                    when 7; ((x + y) % 2 + (x * y) % 3) % 2 == 0
-                   else; raise "Invalid mask number"
+                   else    raise "Invalid mask number"
                    end
 
           value = canvas.get_module(x, y) ^ invert
@@ -74,7 +74,7 @@ struct Goban::QRCode
           m3 = canvas.get_module(x, y + 1)
           m4 = canvas.get_module(x + 1, y + 1)
 
-          score += 3 if m1 == m2 && m2 == m3 && m3 == m4
+          score += 3 if m2 == m3 && m3 == m4
         end
       end
 
