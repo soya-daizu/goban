@@ -16,8 +16,28 @@ module Goban
       bit_stream = BitStream.new(digits.size * 3 + (digits.size + 2) // 3)
       segment = self.new(Segment::Mode::Numeric, digits.size, bit_stream)
       digits.each_slice(3) do |slice|
-        val = slice.join.to_u32
+        val = slice.join
         bit_stream.append_bits(val, slice.size * 3 + 1)
+      end
+
+      segment
+    end
+
+    def self.alpha_numeric(text : String)
+      chars = text.chars.map { |c| ALPHA_NUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters" }
+
+      bit_stream = BitStream.new(chars.size * 5 + (chars.size + 1) // 2)
+      segment = self.new(Segment::Mode::AlphaNumeric, chars.size, bit_stream)
+      chars.each_slice(2) do |slice|
+        if slice.size == 1
+          val = slice[0]
+          size = 6
+        else
+          val = slice[0] * 45 + slice[1]
+          size = 11
+        end
+
+        bit_stream.append_bits(val, size)
       end
 
       segment
