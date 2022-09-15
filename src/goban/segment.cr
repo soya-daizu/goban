@@ -16,7 +16,7 @@ module Goban
       bit_stream = BitStream.new(digits.size * 3 + (digits.size + 2) // 3)
       segment = self.new(Segment::Mode::Numeric, digits.size, bit_stream)
       digits.each_slice(3) do |slice|
-        val = slice.join
+        val = slice.join.to_u32
         bit_stream.append_bits(val, slice.size * 3 + 1)
       end
 
