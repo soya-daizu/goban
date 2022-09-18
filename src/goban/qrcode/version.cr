@@ -11,23 +11,6 @@ struct Goban::QRCode
       raise "Invalid version number" unless (MIN..MAX).includes?(@value)
     end
 
-    def self.minimum(for segments : Array(Segment), ecl : ECLevel)
-      v = self.new(MIN)
-
-      loop do
-        cap_bits = v.max_data_codewords(ecl) * 8
-        used_bits = Segment.count_total_bits(segments, v)
-
-        if used_bits <= cap_bits
-          return {v, used_bits}
-        elsif v >= Version::MAX
-          raise "Data over capacity"
-        end
-
-        v = Version.new(v.value + 1)
-      end
-    end
-
     def <=>(other : Int)
       @value <=> other
     end
@@ -50,7 +33,7 @@ struct Goban::QRCode
       else
         n = g + 1
         # 25(1 + ∑[k=1..n-1](2k+3))
-        align_pattern_mod = 25 * (n ** 2 + 2 * n - 2)
+        align_pattern_mod = 25 * ((1 << n) + 2 * n - 2)
       end
       overlaps = g * 10 # Overlaps of timing patterns and align patterns
 
