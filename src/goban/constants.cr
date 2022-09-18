@@ -1,5 +1,5 @@
 module Goban
-  ALPHA_NUMERIC_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
+  ALPHANUMERIC_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
 
   ECC_CODEWORDS_PER_BLOCK = {
     # Version: (note that index 0 is for padding, and is set to an illegal value)

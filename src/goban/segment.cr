@@ -11,7 +11,7 @@ module Goban
 
     def self.numeric(text : String)
       digits = text.chars
-      raise "Numeric data contains non-numeric characters" unless digits.all?(&.to_i?)
+      raise "Numeric data contains non-numeric characters" unless digits.all?(&.ascii_number?)
 
       bit_stream = BitStream.new(digits.size * 3 + (digits.size + 2) // 3)
       segment = self.new(Segment::Mode::Numeric, digits.size, bit_stream)
@@ -23,11 +23,11 @@ module Goban
       segment
     end
 
-    def self.alpha_numeric(text : String)
-      chars = text.chars.map { |c| ALPHA_NUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters" }
+    def self.alphanumeric(text : String)
+      chars = text.chars.map { |c| ALPHANUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters" }
 
       bit_stream = BitStream.new(chars.size * 5 + (chars.size + 1) // 2)
-      segment = self.new(Segment::Mode::AlphaNumeric, chars.size, bit_stream)
+      segment = self.new(Segment::Mode::Alphanumeric, chars.size, bit_stream)
       chars.each_slice(2) do |slice|
         if slice.size == 1
           val = slice[0]
@@ -64,8 +64,8 @@ module Goban
 
       bytes.each_slice(2).each do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
-          # Probably unnecessary, but make sure the least
-          # significant byte is in the range of SHIFT_JIS
+          # Probably unnecessary, but making sure that the least
+          # significant byte is within the range of SHIFT_JIS
           raise "Kanji data contains unencodable characters"
         end
 
@@ -88,7 +88,7 @@ module Goban
     end
 
     def self.count_total_bits(segments : Array(Segment), version : QRCode::Version)
-      result = 0_u64
+      result = 0
       segments.each do |segment|
         cci_bits_size = segment.mode.cci_bits_size(version)
         raise "Segment too long" if segment.char_count >= (1 << cci_bits_size)

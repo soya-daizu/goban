@@ -193,18 +193,22 @@ struct Goban::QRCode
     def apply_best_mask
       mask = nil
       min_score = Int32::MAX
+
       8_u8.times do |i|
         msk = Mask.new(i)
         draw_format_modules(msk)
         msk.apply_to(self)
+
         score = Mask.evaluate_score(self)
         if score < min_score
           mask = msk
           min_score = score
         end
+
         msk.apply_to(self)
       end
       raise "Unable to set the mask" unless mask
+
       draw_format_modules(mask)
       mask.apply_to(self)
     end
