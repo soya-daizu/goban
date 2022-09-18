@@ -1,4 +1,4 @@
-module Goban
+struct Goban::Segment
   module Optimizer
     extend self
 

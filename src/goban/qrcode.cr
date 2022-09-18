@@ -30,7 +30,7 @@ module Goban
       (Version::MIN..Version::MAX).each do |v|
         v = Version.new(v)
         if v == 1 || v == 10 || v == 27
-          segments = Optimizer.make_optimized_segments(text, v)
+          segments = Segment::Optimizer.make_optimized_segments(text, v)
         end
         raise "Segment optimization failed" unless segments
         
