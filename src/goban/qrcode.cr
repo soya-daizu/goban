@@ -22,15 +22,40 @@ module Goban
       print '\n'
     end
 
-    def self.encode_segments(segments : Array(Segment), ecl : ECLevel)
-      version, data_used_bits = Version.minimum(segments, ecl)
+    def self.encode_string(text : String, ecl : ECLevel = ECLevel::Medium, upgrade : Bool = false)
+      bytes = text.bytes
 
-      (ecl.value + 1..ECLevel::High.value).each do |new_ecl|
-        new_ecl = ECLevel.new(new_ecl)
-        break if data_used_bits > version.max_data_codewords(new_ecl) * 8
-        ecl = new_ecl
+      version, segments = nil, nil
+      used_bits = 0
+      (Version::MIN..Version::MAX).each do |v|
+        v = Version.new(v)
+        if v == 1 || v == 10 || v == 27
+          segments = Optimizer.make_optimized_segments(text, v)
+        end
+        raise "Segment optimization failed" unless segments
+        
+        cap_bits = v.max_data_codewords(ecl) * 8
+        used_bits = Segment.count_total_bits(segments, v)
+
+        if used_bits <= cap_bits
+          version = v
+          break
+        end
+      end
+      raise "Text too long" unless version && segments
+
+      if upgrade
+        (ecl.value + 1..ECLevel::High.value).each do |new_ecl|
+          new_ecl = ECLevel.new(new_ecl)
+          break if used_bits > version.max_data_codewords(new_ecl) * 8
+          ecl = new_ecl
+        end
       end
 
+      self.encode_segments(segments, ecl, version)
+    end
+
+    def self.encode_segments(segments : Array(Segment), ecl : ECLevel, version : Version)
       bit_stream = BitStream.new(version.max_data_codewords(ecl) * 8)
       segments.each do |segment|
         bit_stream.append_segment_bits(segment, version)

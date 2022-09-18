@@ -9,6 +9,21 @@ module Goban
     def initialize(@mode, @char_count, @bit_stream)
     end
 
+    def self.new(mode : Mode, text : String)
+      case mode
+      when .numeric?
+        self.numeric(text)
+      when .alphanumeric?
+        self.alphanumeric(text)
+      when .byte?
+        self.bytes(text)
+      when .kanji?
+        self.kanji(text)
+      else
+        raise "Unsupported mode"
+      end
+    end
+
     def self.numeric(text : String)
       digits = text.chars
       raise "Numeric data contains non-numeric characters" unless digits.all?(&.ascii_number?)
