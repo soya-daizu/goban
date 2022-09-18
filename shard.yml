@@ -5,8 +5,8 @@ authors:
   - soya_daizu <soya_daizu@protonmail.com>
 
 targets:
-  test:
-    main: src/goban.cr
+  sample_console:
+    main: examples/console.cr
 
 crystalline:
   main: src/goban.cr
