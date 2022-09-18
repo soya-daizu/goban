@@ -33,7 +33,7 @@ struct Goban::QRCode
       else
         n = g + 1
         # 25(1 + ∑[k=1..n-1](2k+3))
-        align_pattern_mod = 25 * ((1 << n) + 2 * n - 2)
+        align_pattern_mod = 25 * (n ** 2 + 2 * n - 2)
       end
       overlaps = g * 10 # Overlaps of timing patterns and align patterns
 
