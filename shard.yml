@@ -7,6 +7,12 @@ authors:
 targets:
   sample_console:
     main: examples/console.cr
+  sample_png:
+    main: examples/png.cr
+
+development_dependencies:
+  stumpy_png:
+    github: stumpycr/stumpy_png
 
 crystalline:
   main: src/goban.cr
