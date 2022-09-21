@@ -4,22 +4,11 @@ module Goban
   struct QRCode
     getter version : Version
     getter ecl : ECLevel
-    getter modules : Array(Bool)
+    getter canvas : Canvas
     getter size : Int32
 
-    def initialize(@version, @ecl, @modules)
+    def initialize(@version, @ecl, @canvas)
       @size = @version.symbol_size
-    end
-
-    def print_to_console
-      border = 4
-      @size.times do |y|
-        @size.times do |x|
-          print @modules[y * @size + x] ? "██" : "  "
-        end
-        print '\n'
-      end
-      print '\n'
     end
 
     def self.encode_string(text : String, ecl : ECLevel = ECLevel::Medium, upgrade : Bool = false)
@@ -33,7 +22,7 @@ module Goban
           segments = Segment::Optimizer.make_optimized_segments(text, v)
         end
         raise "Segment optimization failed" unless segments
-        
+
         cap_bits = v.max_data_codewords(ecl) * 8
         used_bits = Segment.count_total_bits(segments, v)
 
@@ -69,9 +58,19 @@ module Goban
       canvas.draw_function_patterns
       canvas.draw_data_codewords(data_codewords)
       canvas.apply_best_mask
-      modules = canvas.modules
 
-      self.new(version, ecl, modules)
+      self.new(version, ecl, canvas)
+    end
+
+    def print_to_console
+      border = 4
+      @size.times do |y|
+        @size.times do |x|
+          print @modules[y * @size + x] ? "██" : "  "
+        end
+        print '\n'
+      end
+      print '\n'
     end
   end
 end
