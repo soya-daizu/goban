@@ -46,7 +46,7 @@ module Goban
 
     def append_bits(val : Int, len : Int)
       raise "Value out of range" unless (0..31).includes?(len) && val >> len == 0
-      (len - 1).downto(0) do |i|
+      (0..len - 1).reverse_each do |i|
         push((val >> i).to_u8! & 1 != 0)
       end
     end
