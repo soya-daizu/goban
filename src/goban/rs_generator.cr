@@ -1,5 +1,5 @@
 module Goban
-  module RSCode
+  module RSGenerator
     extend self
 
     def add_ec_codewords(codewords : Slice(UInt8), version : QRCode::Version, ecl : QRCode::ECLevel)
