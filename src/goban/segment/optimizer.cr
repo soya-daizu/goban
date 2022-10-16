@@ -2,9 +2,29 @@ struct Goban::Segment
   module Optimizer
     extend self
 
-    def make_optimized_segments(for text : String, version : QRCode::Version)
-      char_modes = compute_char_modes(text.chars, version)
-      make_segments(text, char_modes)
+    def make_optimized_segments(text : String, ecl : QRCode::ECLevel)
+      chars = text.chars
+      segments, version = nil, nil
+      used_bits = 0
+      (QRCode::Version::MIN..QRCode::Version::MAX).each do |v|
+        v = QRCode::Version.new(v)
+        if v == 1 || v == 10 || v == 27
+          char_modes = compute_char_modes(chars, v)
+          segments = make_segments(text, char_modes)
+        end
+        raise "Segment optimization failed" unless segments
+
+        cap_bits = v.max_data_codewords(ecl) * 8
+        used_bits = Segment.count_total_bits(segments, v)
+
+        if used_bits <= cap_bits
+          version = v
+          break
+        end
+      end
+      raise "Text too long" unless segments && version
+
+      {segments, version}
     end
 
     private def compute_char_modes(chars : Array(Char), version : QRCode::Version)
@@ -17,7 +37,7 @@ struct Goban::Segment
         c_modes = StaticArray(Segment::Mode, 4).new(Segment::Mode::Invalid)
         cur_costs = StaticArray(Int32, 4).new(Int32::MAX)
 
-        # Byte
+        # Byte mode is always calculated
         cur_costs[0] = prev_costs[0] + c.bytesize * 8 * 6
         c_modes[0] = modes[0]
 
