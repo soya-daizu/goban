@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.6.0-dev">
+<meta name="crystal_docs.project_version" content="master-dev">
+<meta name="crystal_docs.project_name" content="goban">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="goban">
+  <title>Goban::BitStream - goban master-dev</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          goban
+        </a>
+      </h1>
+
+      <span class="project-version">
+        master-dev
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="goban/Goban" data-name="goban">
+      <a href="../Goban.html">Goban</a>
+      
+        <ul>
+  
+  <li class=" current" data-id="goban/Goban/BitStream" data-name="goban::bitstream">
+      <a href="../Goban/BitStream.html">BitStream</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
+      <a href="../Goban/PNGExporter.html">PNGExporter</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/QRCode" data-name="goban::qrcode">
+      <a href="../Goban/QRCode.html">QRCode</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/QRCode/Canvas" data-name="goban::qrcode::canvas">
+      <a href="../Goban/QRCode/Canvas.html">Canvas</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QRCode/ECLevel" data-name="goban::qrcode::eclevel">
+      <a href="../Goban/QRCode/ECLevel.html">ECLevel</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QRCode/Mask" data-name="goban::qrcode::mask">
+      <a href="../Goban/QRCode/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QRCode/Version" data-name="goban::qrcode::version">
+      <a href="../Goban/QRCode/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RSGenerator" data-name="goban::rsgenerator">
+      <a href="../Goban/RSGenerator.html">RSGenerator</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
+      <a href="../Goban/Segment.html">Segment</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
+      <a href="../Goban/Segment/Mode.html">Mode</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Segment/Optimizer" data-name="goban::segment::optimizer">
+      <a href="../Goban/Segment/Optimizer.html">Optimizer</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">struct</span> Goban::BitStream
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Goban/BitStream.html">Goban::BitStream</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="included-modules" class="anchor" href="#included-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Included Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type">Indexable::Mutable(Bool)</li>
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      goban/bit_stream.cr
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="PAD0">
+        <strong>PAD0</strong> = <code><span class="n">236</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="PAD1">
+        <strong>PAD1</strong> = <code><span class="n">17</span></code>
+      </dt>
+      
+    
+  </dl>
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28size%3AInt%29-class-method" class="signature"><strong>.new</strong>(size : Int)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#append_bit_stream%28bs%3ABitStream%29-instance-method" class="signature"><strong>#append_bit_stream</strong>(bs : BitStream)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#append_bits%28val%3AInt%2Clen%3AInt%29-instance-method" class="signature"><strong>#append_bits</strong>(val : Int, len : Int)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#append_padding_bits-instance-method" class="signature"><strong>#append_padding_bits</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#append_segment_bits%28segment%3ASegment%2Cversion%3AQRCode%3A%3AVersion%29-instance-method" class="signature"><strong>#append_segment_bits</strong>(segment : Segment, version : QRCode::Version)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#append_terminator_bits%28version%3AQRCode%3A%3AVersion%2Cecl%3AQRCode%3A%3AECLevel%29-instance-method" class="signature"><strong>#append_terminator_bits</strong>(version : QRCode::Version, ecl : QRCode::ECLevel)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#bits%3APointer%28UInt8%29-instance-method" class="signature"><strong>#bits</strong> : Pointer(UInt8)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#push%28value%3ABool%29-instance-method" class="signature"><strong>#push</strong>(value : Bool)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#size%3AInt32-instance-method" class="signature"><strong>#size</strong> : Int32</a>
+        
+          <div class="summary"><p>Returns the number of elements in this container.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#tail_idx%3AInt32-instance-method" class="signature"><strong>#tail_idx</strong> : Int32</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_bytes-instance-method" class="signature"><strong>#to_bytes</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_s%28io%3AIO%29-instance-method" class="signature"><strong>#to_s</strong>(io : IO)</a>
+        
+          <div class="summary"><p>Same as <code>#inspect(io)</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#unsafe_fetch%28index%3AInt%29%3ABool-instance-method" class="signature"><strong>#unsafe_fetch</strong>(index : Int) : Bool</a>
+        
+          <div class="summary"><p>Returns the element at the given <em>index</em>, without doing any bounds check.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#unsafe_put%28index%3AInt%2Cvalue%3ABool%29-instance-method" class="signature"><strong>#unsafe_put</strong>(index : Int, value : Bool)</a>
+        
+          <div class="summary"><p>Sets the element at the given <em>index</em> to <em>value</em>, without doing any bounds check.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(size:Int)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(size : Int)
+
+        <a class="method-permalink" href="#new%28size%3AInt%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="append_bit_stream(bs:BitStream)-instance-method">
+      <div class="signature">
+        
+        def <strong>append_bit_stream</strong>(bs : <a href="../Goban/BitStream.html">BitStream</a>)
+
+        <a class="method-permalink" href="#append_bit_stream%28bs%3ABitStream%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="append_bits(val:Int,len:Int)-instance-method">
+      <div class="signature">
+        
+        def <strong>append_bits</strong>(val : Int, len : Int)
+
+        <a class="method-permalink" href="#append_bits%28val%3AInt%2Clen%3AInt%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="append_padding_bits-instance-method">
+      <div class="signature">
+        
+        def <strong>append_padding_bits</strong>
+
+        <a class="method-permalink" href="#append_padding_bits-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="append_segment_bits(segment:Segment,version:QRCode::Version)-instance-method">
+      <div class="signature">
+        
+        def <strong>append_segment_bits</strong>(segment : <a href="../Goban/Segment.html">Segment</a>, version : <a href="../Goban/QRCode/Version.html">QRCode::Version</a>)
+
+        <a class="method-permalink" href="#append_segment_bits%28segment%3ASegment%2Cversion%3AQRCode%3A%3AVersion%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="append_terminator_bits(version:QRCode::Version,ecl:QRCode::ECLevel)-instance-method">
+      <div class="signature">
+        
+        def <strong>append_terminator_bits</strong>(version : <a href="../Goban/QRCode/Version.html">QRCode::Version</a>, ecl : <a href="../Goban/QRCode/ECLevel.html">QRCode::ECLevel</a>)
+
+        <a class="method-permalink" href="#append_terminator_bits%28version%3AQRCode%3A%3AVersion%2Cecl%3AQRCode%3A%3AECLevel%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="bits:Pointer(UInt8)-instance-method">
+      <div class="signature">
+        
+        def <strong>bits</strong> : Pointer(UInt8)
+
+        <a class="method-permalink" href="#bits%3APointer%28UInt8%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="push(value:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>push</strong>(value : Bool)
+
+        <a class="method-permalink" href="#push%28value%3ABool%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="size:Int32-instance-method">
+      <div class="signature">
+        
+        def <strong>size</strong> : Int32
+
+        <a class="method-permalink" href="#size%3AInt32-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Indexable(Bool)
+            </div>
+          
+          <p>Returns the number of elements in this container.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="tail_idx:Int32-instance-method">
+      <div class="signature">
+        
+        def <strong>tail_idx</strong> : Int32
+
+        <a class="method-permalink" href="#tail_idx%3AInt32-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_bytes-instance-method">
+      <div class="signature">
+        
+        def <strong>to_bytes</strong>
+
+        <a class="method-permalink" href="#to_bytes-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_s(io:IO)-instance-method">
+      <div class="signature">
+        
+        def <strong>to_s</strong>(io : IO)
+
+        <a class="method-permalink" href="#to_s%28io%3AIO%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from struct Struct
+            </div>
+          
+          <p>Same as <code>#inspect(io)</code>.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="unsafe_fetch(index:Int):Bool-instance-method">
+      <div class="signature">
+        
+        def <strong>unsafe_fetch</strong>(index : Int) : Bool
+
+        <a class="method-permalink" href="#unsafe_fetch%28index%3AInt%29%3ABool-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Indexable(Bool)
+            </div>
+          
+          <p>Returns the element at the given <em>index</em>, without doing any bounds check.</p>
+<p><code>Indexable</code> makes sure to invoke this method with <em>index</em> in <code>0..<a href="../Goban/BitStream.html#size%3AInt32-instance-method">.size</a></code>,
+so converting negative indices to positive ones is not needed here.</p>
+<p>Clients never invoke this method directly. Instead, they access
+elements with <code>#[](index)</code> and <code>#[]?(index)</code>.</p>
+<p>This method should only be directly invoked if you are absolutely
+sure the index is in bounds, to avoid a bounds check for a small boost
+of performance.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="unsafe_put(index:Int,value:Bool)-instance-method">
+      <div class="signature">
+        
+        def <strong>unsafe_put</strong>(index : Int, value : Bool)
+
+        <a class="method-permalink" href="#unsafe_put%28index%3AInt%2Cvalue%3ABool%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Indexable::Mutable(Bool)
+            </div>
+          
+          <p>Sets the element at the given <em>index</em> to <em>value</em>, without doing any bounds
+check.</p>
+<p><code>Indexable::Mutable</code> makes sure to invoke this method with <em>index</em> in
+<code>0..<a href="../Goban/BitStream.html#size%3AInt32-instance-method">.size</a></code>, so converting negative indices to positive ones is not needed
+here.</p>
+<p>Clients never invoke this method directly. Instead, they modify elements
+with <code>#[]=(index, value)</code>.</p>
+<p>This method should only be directly invoked if you are absolutely
+sure the index is in bounds, to avoid a bounds check for a small boost
+of performance.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
