@@ -15,7 +15,7 @@ development_dependencies:
     github: stumpycr/stumpy_png
 
 crystalline:
-  main: src/goban.cr
+  main: examples/console.cr
 
 crystal: 1.6.0-dev
 
