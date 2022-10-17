@@ -1,8 +1,30 @@
 # Goban
 
-A fast QR Code generation library written purely in Crystal. It uses less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.
+A fast and efficient QR Code encoder library written purely in Crystal. It uses less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.
+
+The encoder implementation is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html), and the text segmentation algorithm is based on [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
 The name comes from the board game [Go](https://en.wikipedia.org/wiki/Go_(game)), which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the Japanese name of the board used to play Go.
+
+## Benchmark
+
+Comparing op/s and heap allocations between Goban and [spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)
+
+```crystal
+require "benchmark"
+require "qr-code"
+require "goban"
+
+Benchmark.ips do |x|
+  x.report("qr-code") { QRCode.new("Hello World!", level: :h) }
+  x.report("goban") { Goban::QRCode.encode_string("Hello World!", Goban::QRCode::ECLevel::High) }
+end
+```
+
+```
+qr-code   2.14k (467.30µs) (± 0.69%)   149kB/op   2.12× slower
+  goban   4.55k (219.94µs) (± 0.54%)  2.71kB/op        fastest
+```
 
 ## Installation
 
