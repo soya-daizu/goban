@@ -145,6 +145,18 @@
 
 
 
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>An array data structure that holds bits.
+Based on the <code>BitArray</code> object of the standard library.</p>
+
 
 
 
@@ -182,7 +194,9 @@
   </h2>
   
     
-      goban/bit_stream.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L4" target="_blank">
+        goban/bit_stream.cr
+      </a>
     
     <br/>
   
@@ -247,54 +261,23 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#append_bit_stream%28bs%3ABitStream%29-instance-method" class="signature"><strong>#append_bit_stream</strong>(bs : BitStream)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#append_bits%28val%3AInt%2Clen%3AInt%29-instance-method" class="signature"><strong>#append_bits</strong>(val : Int, len : Int)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#append_padding_bits-instance-method" class="signature"><strong>#append_padding_bits</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#append_segment_bits%28segment%3ASegment%2Cversion%3AQRCode%3A%3AVersion%29-instance-method" class="signature"><strong>#append_segment_bits</strong>(segment : Segment, version : QRCode::Version)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#append_terminator_bits%28version%3AQRCode%3A%3AVersion%2Cecl%3AQRCode%3A%3AECLevel%29-instance-method" class="signature"><strong>#append_terminator_bits</strong>(version : QRCode::Version, ecl : QRCode::ECLevel)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#bits%3APointer%28UInt8%29-instance-method" class="signature"><strong>#bits</strong> : Pointer(UInt8)</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#push%28value%3ABool%29-instance-method" class="signature"><strong>#push</strong>(value : Bool)</a>
+          <div class="summary"><p>Pointer to the underlying UInt8 representation.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#size%3AInt32-instance-method" class="signature"><strong>#size</strong> : Int32</a>
         
-          <div class="summary"><p>Returns the number of elements in this container.</p></div>
+          <div class="summary"><p>Size of the array.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#tail_idx%3AInt32-instance-method" class="signature"><strong>#tail_idx</strong> : Int32</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#to_bytes-instance-method" class="signature"><strong>#to_bytes</strong></a>
+          <div class="summary"><p>Current tail index of the array.</p></div>
         
       </li>
     
@@ -302,20 +285,6 @@
         <a href="#to_s%28io%3AIO%29-instance-method" class="signature"><strong>#to_s</strong>(io : IO)</a>
         
           <div class="summary"><p>Same as <code>#inspect(io)</code>.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#unsafe_fetch%28index%3AInt%29%3ABool-instance-method" class="signature"><strong>#unsafe_fetch</strong>(index : Int) : Bool</a>
-        
-          <div class="summary"><p>Returns the element at the given <em>index</em>, without doing any bounds check.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#unsafe_put%28index%3AInt%2Cvalue%3ABool%29-instance-method" class="signature"><strong>#unsafe_put</strong>(index : Int, value : Bool)</a>
-        
-          <div class="summary"><p>Sets the element at the given <em>index</em> to <em>value</em>, without doing any bounds check.</p></div>
         
       </li>
     
@@ -420,6 +389,8 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L18" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -437,76 +408,6 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="append_bit_stream(bs:BitStream)-instance-method">
-      <div class="signature">
-        
-        def <strong>append_bit_stream</strong>(bs : <a href="../Goban/BitStream.html">BitStream</a>)
-
-        <a class="method-permalink" href="#append_bit_stream%28bs%3ABitStream%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="append_bits(val:Int,len:Int)-instance-method">
-      <div class="signature">
-        
-        def <strong>append_bits</strong>(val : Int, len : Int)
-
-        <a class="method-permalink" href="#append_bits%28val%3AInt%2Clen%3AInt%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="append_padding_bits-instance-method">
-      <div class="signature">
-        
-        def <strong>append_padding_bits</strong>
-
-        <a class="method-permalink" href="#append_padding_bits-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="append_segment_bits(segment:Segment,version:QRCode::Version)-instance-method">
-      <div class="signature">
-        
-        def <strong>append_segment_bits</strong>(segment : <a href="../Goban/Segment.html">Segment</a>, version : <a href="../Goban/QRCode/Version.html">QRCode::Version</a>)
-
-        <a class="method-permalink" href="#append_segment_bits%28segment%3ASegment%2Cversion%3AQRCode%3A%3AVersion%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="append_terminator_bits(version:QRCode::Version,ecl:QRCode::ECLevel)-instance-method">
-      <div class="signature">
-        
-        def <strong>append_terminator_bits</strong>(version : <a href="../Goban/QRCode/Version.html">QRCode::Version</a>, ecl : <a href="../Goban/QRCode/ECLevel.html">QRCode::ECLevel</a>)
-
-        <a class="method-permalink" href="#append_terminator_bits%28version%3AQRCode%3A%3AVersion%2Cecl%3AQRCode%3A%3AECLevel%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
     <div class="entry-detail" id="bits:Pointer(UInt8)-instance-method">
       <div class="signature">
         
@@ -515,22 +416,15 @@
         <a class="method-permalink" href="#bits%3APointer%28UInt8%29-instance-method">#</a>
       </div>
       
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="push(value:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>push</strong>(value : Bool)
-
-        <a class="method-permalink" href="#push%28value%3ABool%29-instance-method">#</a>
-      </div>
+        <div class="doc">
+          
+          <p>Pointer to the underlying UInt8 representation.</p>
+        </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -545,15 +439,13 @@
       
         <div class="doc">
           
-            <div class="doc-inherited">
-              Description copied from module Indexable(Bool)
-            </div>
-          
-          <p>Returns the number of elements in this container.</p>
+          <p>Size of the array.</p>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -566,22 +458,16 @@
         <a class="method-permalink" href="#tail_idx%3AInt32-instance-method">#</a>
       </div>
       
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="to_bytes-instance-method">
-      <div class="signature">
-        
-        def <strong>to_bytes</strong>
-
-        <a class="method-permalink" href="#to_bytes-instance-method">#</a>
-      </div>
+        <div class="doc">
+          
+          <p>Current tail index of the array. This increases as
+more bits are added to itself.</p>
+        </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -606,67 +492,7 @@
       <br/>
       <div>
         
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="unsafe_fetch(index:Int):Bool-instance-method">
-      <div class="signature">
-        
-        def <strong>unsafe_fetch</strong>(index : Int) : Bool
-
-        <a class="method-permalink" href="#unsafe_fetch%28index%3AInt%29%3ABool-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-            <div class="doc-inherited">
-              Description copied from module Indexable(Bool)
-            </div>
-          
-          <p>Returns the element at the given <em>index</em>, without doing any bounds check.</p>
-<p><code>Indexable</code> makes sure to invoke this method with <em>index</em> in <code>0..<a href="../Goban/BitStream.html#size%3AInt32-instance-method">.size</a></code>,
-so converting negative indices to positive ones is not needed here.</p>
-<p>Clients never invoke this method directly. Instead, they access
-elements with <code>#[](index)</code> and <code>#[]?(index)</code>.</p>
-<p>This method should only be directly invoked if you are absolutely
-sure the index is in bounds, to avoid a bounds check for a small boost
-of performance.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="unsafe_put(index:Int,value:Bool)-instance-method">
-      <div class="signature">
-        
-        def <strong>unsafe_put</strong>(index : Int, value : Bool)
-
-        <a class="method-permalink" href="#unsafe_put%28index%3AInt%2Cvalue%3ABool%29-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-            <div class="doc-inherited">
-              Description copied from module Indexable::Mutable(Bool)
-            </div>
-          
-          <p>Sets the element at the given <em>index</em> to <em>value</em>, without doing any bounds
-check.</p>
-<p><code>Indexable::Mutable</code> makes sure to invoke this method with <em>index</em> in
-<code>0..<a href="../Goban/BitStream.html#size%3AInt32-instance-method">.size</a></code>, so converting negative indices to positive ones is not needed
-here.</p>
-<p>Clients never invoke this method directly. Instead, they modify elements
-with <code>#[]=(index, value)</code>.</p>
-<p>This method should only be directly invoked if you are absolutely
-sure the index is in bounds, to avoid a bounds check for a small boost
-of performance.</p>
-        </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L100" target="_blank">View source</a>]
         
       </div>
     </div>

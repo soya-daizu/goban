@@ -145,6 +145,17 @@
 
 
 
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Holds information about each modules in a QR Code symbol.</p>
+
 
 
 
@@ -168,7 +179,9 @@
   </h2>
   
     
-      goban/qrcode/canvas.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L3" target="_blank">
+        goban/qrcode/canvas.cr
+      </a>
     
     <br/>
   
@@ -190,6 +203,8 @@
       <li class="entry-summary">
         <a href="#new%28version%3AVersion%2Cecl%3AECLevel%29-class-method" class="signature"><strong>.new</strong>(version : Version, ecl : ECLevel)</a>
         
+          <div class="summary"><p>Creates a blank canvas with the given version and error correction level.</p></div>
+        
       </li>
     
   </ul>
@@ -209,27 +224,16 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#apply_best_mask-instance-method" class="signature"><strong>#apply_best_mask</strong></a>
+        <a href="#get_module%28x%3AInt%2Cy%3AInt%29%3ABool-instance-method" class="signature"><strong>#get_module</strong>(x : Int, y : Int) : Bool</a>
+        
+          <div class="summary"><p>Returns whether a module at the given coordinate is dark or not.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#draw_data_codewords%28data_codewords%3AArray%28UInt8%29%29-instance-method" class="signature"><strong>#draw_data_codewords</strong>(data_codewords : Array(UInt8))</a>
+        <a href="#module_reserved%3F%28x%3AInt%2Cy%3AInt%29-instance-method" class="signature"><strong>#module_reserved?</strong>(x : Int, y : Int)</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#draw_function_patterns-instance-method" class="signature"><strong>#draw_function_patterns</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#get_module%28x%3AInt%2Cy%3AInt%29-instance-method" class="signature"><strong>#get_module</strong>(x : Int, y : Int)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#is_module_reserved%3F%28x%3AInt%2Cy%3AInt%29-instance-method" class="signature"><strong>#is_module_reserved?</strong>(x : Int, y : Int)</a>
+          <div class="summary"><p>Returns whether a module at the given coordinate is reserved for it being a part of function patterns.</p></div>
         
       </li>
     
@@ -240,6 +244,8 @@
     
       <li class="entry-summary">
         <a href="#print_to_console-instance-method" class="signature"><strong>#print_to_console</strong></a>
+        
+          <div class="summary"><p>Prints the modules on the canvas as a text in the console.</p></div>
         
       </li>
     
@@ -306,8 +312,15 @@
         <a class="method-permalink" href="#new%28version%3AVersion%2Cecl%3AECLevel%29-class-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Creates a blank canvas with the given version and error correction level.</p>
+        </div>
+      
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -326,72 +339,45 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="apply_best_mask-instance-method">
+    <div class="entry-detail" id="get_module(x:Int,y:Int):Bool-instance-method">
       <div class="signature">
         
-        def <strong>apply_best_mask</strong>
+        def <strong>get_module</strong>(x : Int, y : Int) : Bool
 
-        <a class="method-permalink" href="#apply_best_mask-instance-method">#</a>
+        <a class="method-permalink" href="#get_module%28x%3AInt%2Cy%3AInt%29%3ABool-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns whether a module at the given coordinate is dark or not.</p>
+        </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L200" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="draw_data_codewords(data_codewords:Array(UInt8))-instance-method">
+    <div class="entry-detail" id="module_reserved?(x:Int,y:Int)-instance-method">
       <div class="signature">
         
-        def <strong>draw_data_codewords</strong>(data_codewords : Array(UInt8))
+        def <strong>module_reserved?</strong>(x : Int, y : Int)
 
-        <a class="method-permalink" href="#draw_data_codewords%28data_codewords%3AArray%28UInt8%29%29-instance-method">#</a>
+        <a class="method-permalink" href="#module_reserved%3F%28x%3AInt%2Cy%3AInt%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns whether a module at the given coordinate is reserved for
+it being a part of function patterns.</p>
+        </div>
       
       <br/>
       <div>
         
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="draw_function_patterns-instance-method">
-      <div class="signature">
-        
-        def <strong>draw_function_patterns</strong>
-
-        <a class="method-permalink" href="#draw_function_patterns-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="get_module(x:Int,y:Int)-instance-method">
-      <div class="signature">
-        
-        def <strong>get_module</strong>(x : Int, y : Int)
-
-        <a class="method-permalink" href="#get_module%28x%3AInt%2Cy%3AInt%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="is_module_reserved?(x:Int,y:Int)-instance-method">
-      <div class="signature">
-        
-        def <strong>is_module_reserved?</strong>(x : Int, y : Int)
-
-        <a class="method-permalink" href="#is_module_reserved%3F%28x%3AInt%2Cy%3AInt%29-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L206" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -407,6 +393,8 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L4" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -418,8 +406,15 @@
         <a class="method-permalink" href="#print_to_console-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Prints the modules on the canvas as a text in the console.</p>
+        </div>
+      
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L211" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -434,6 +429,8 @@
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>

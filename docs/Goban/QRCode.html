@@ -179,27 +179,37 @@
   </h2>
   
     
-      goban/qrcode.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L5" target="_blank">
+        goban/qrcode.cr
+      </a>
     
     <br/>
   
     
-      goban/qrcode/canvas.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/canvas.cr#L1" target="_blank">
+        goban/qrcode/canvas.cr
+      </a>
     
     <br/>
   
     
-      goban/qrcode/ec_level.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/ec_level.cr#L1" target="_blank">
+        goban/qrcode/ec_level.cr
+      </a>
     
     <br/>
   
     
-      goban/qrcode/mask.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/mask.cr#L1" target="_blank">
+        goban/qrcode/mask.cr
+      </a>
     
     <br/>
   
     
-      goban/qrcode/version.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L1" target="_blank">
+        goban/qrcode/version.cr
+      </a>
     
     <br/>
   
@@ -361,6 +371,8 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L17" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -424,6 +436,8 @@ with the smallest character set that supports that supports it.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L128" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -465,12 +479,12 @@ qr.print_to_console
 <span class="c">#    ██  ██████  ██  ██████  ██    ██    ██    </span>
 <span class="c">#    ██          ██  ██    ██  ████████      ██</span>
 <span class="c">#    ██████████████  ██    ██  ██████    ██    </span></code></pre>
-<p>QR code data under the hood is encoded in one or more encoding types, such as Numeric,
+<p>QR Code data under the hood is encoded in one or more encoding types, such as Numeric,
 Alphanumeric, Byte, and Kanji. Each encoding type has a different set of characters
 supported. While Byte mode can express arbitrary types of data (usually interpreted as UTF-8
 text, thus it can express any Unicode characters), it often uses more bits to represent a single
 codepoint compared to other encoding types which have a limited set of characters supported,
-resulting in larger data size and a more challenging QR code to scan.</p>
+resulting in larger data size and a more challenging QR Code to scan.</p>
 <p>This string encoding uses an algorithm to figure out the best segmentation of the encoding
 types for the given string to make the resulting data size as small as possible. Here are the
 examples:</p>
@@ -491,12 +505,14 @@ examples:</p>
 <span class="c"># ]</span></code></pre>
 <p>If the type of characters used in your data strings is always the same, you may want to consider
 building data segments by yourself so that Goban doesn't have to do extra processing to figure
-it out every single time. See <code><a href="../Goban/QRCode.html#encode_segments%28segments%3AArray%28Segment%29%2Cecl%3AECLevel%2Cversion%3AVersion%29-class-method">#encode_segments</a></code> for how to create QR codes by manually creating
+it out every single time. See <code><a href="../Goban/QRCode.html#encode_segments%28segments%3AArray%28Segment%29%2Cecl%3AECLevel%2Cversion%3AVersion%29-class-method">#encode_segments</a></code> for how to create QR Codes by manually creating
 encoding segments.</p>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L86" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -530,6 +546,8 @@ each single module (pixel) in the symbol.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L13" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -548,6 +566,8 @@ each single module (pixel) in the symbol.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -569,6 +589,8 @@ use <code><a href="../Goban/PNGExporter.html">PNGExporter</a></code> or write yo
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L148" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -588,6 +610,8 @@ use <code><a href="../Goban/PNGExporter.html">PNGExporter</a></code> or write yo
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L15" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -602,11 +626,13 @@ use <code><a href="../Goban/PNGExporter.html">PNGExporter</a></code> or write yo
         <div class="doc">
           
           <p>Version of the QR Code symbol. Version in QR Code does not refer to its revision,
-but simply indicates the size format of the QR code symbol.</p>
+but simply indicates the size format of the QR Code symbol.</p>
         </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -145,6 +145,19 @@
 
 
 
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Represents a version number of the QR Code symbol.
+Possible versions range from 1 to 40, and the higher the number,
+the large the size of the final QR Code symbol.</p>
+
 
 
 
@@ -182,7 +195,9 @@
   </h2>
   
     
-      goban/qrcode/version.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L5" target="_blank">
+        goban/qrcode/version.cr
+      </a>
     
     <br/>
   
@@ -254,22 +269,37 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#max_data_codewords%28ecl%3AECLevel%29-instance-method" class="signature"><strong>#max_data_codewords</strong>(ecl : ECLevel)</a>
+        <a href="#alignment_pattern_positions-instance-method" class="signature"><strong>#alignment_pattern_positions</strong></a>
+        
+          <div class="summary"><p>Returns a list of the alignment pattern positions for thie version.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#raw_data_mods-instance-method" class="signature"><strong>#raw_data_mods</strong></a>
+        <a href="#max_data_codewords%28ecl%3AECLevel%29-instance-method" class="signature"><strong>#max_data_codewords</strong>(ecl : ECLevel)</a>
+        
+          <div class="summary"><p>Maximum number of codewords that can be contained in the QR Code symbol of this version.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#raw_data_mods_count-instance-method" class="signature"><strong>#raw_data_mods_count</strong></a>
+        
+          <div class="summary"><p>Number of the modules that are available for writing the actual data payload.</p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#symbol_size-instance-method" class="signature"><strong>#symbol_size</strong></a>
         
+          <div class="summary"><p>Size of the QR Code symbol for this version.</p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#timing_pattern_mods_count-instance-method" class="signature"><strong>#timing_pattern_mods_count</strong></a>
+        
+          <div class="summary"><p>Number of the timing pattern modules for this version.</p></div>
         
       </li>
     
@@ -349,6 +379,8 @@
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L13" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -396,6 +428,31 @@ or <code>nil</code> if the two objects are not comparable.</p>
       <br/>
       <div>
         
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="alignment_pattern_positions-instance-method">
+      <div class="signature">
+        
+        def <strong>alignment_pattern_positions</strong>
+
+        <a class="method-permalink" href="#alignment_pattern_positions-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns a list of the alignment pattern positions for thie version.
+The list may include positions in which drawing is not allowed due
+to overlap with the finder pattern, etc.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L34" target="_blank">View source</a>]
+        
       </div>
     </div>
   
@@ -407,22 +464,38 @@ or <code>nil</code> if the two objects are not comparable.</p>
         <a class="method-permalink" href="#max_data_codewords%28ecl%3AECLevel%29-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Maximum number of codewords that can be contained in the QR Code
+symbol of this version.</p>
+        </div>
+      
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L73" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="raw_data_mods-instance-method">
+    <div class="entry-detail" id="raw_data_mods_count-instance-method">
       <div class="signature">
         
-        def <strong>raw_data_mods</strong>
+        def <strong>raw_data_mods_count</strong>
 
-        <a class="method-permalink" href="#raw_data_mods-instance-method">#</a>
+        <a class="method-permalink" href="#raw_data_mods_count-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Number of the modules that are available for writing the actual
+data payload.</p>
+        </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L51" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -435,8 +508,15 @@ or <code>nil</code> if the two objects are not comparable.</p>
         <a class="method-permalink" href="#symbol_size-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Size of the QR Code symbol for this version.</p>
+        </div>
+      
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -449,8 +529,15 @@ or <code>nil</code> if the two objects are not comparable.</p>
         <a class="method-permalink" href="#timing_pattern_mods_count-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Number of the timing pattern modules for this version.</p>
+        </div>
+      
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -465,6 +552,8 @@ or <code>nil</code> if the two objects are not comparable.</p>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>

@@ -143,6 +143,18 @@
 
 
 
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Module for optimizing segmentations of the encoding modes for
+the given text.</p>
+
 
 
 
@@ -180,7 +192,9 @@
   </h2>
   
     
-      goban/segment/optimizer.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/optimizer.cr#L4" target="_blank">
+        goban/segment/optimizer.cr
+      </a>
     
     <br/>
   
@@ -204,7 +218,9 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#make_optimized_segments%28text%3AString%2Cecl%3AQRCode%3A%3AECLevel%29-instance-method" class="signature"><strong>#make_optimized_segments</strong>(text : String, ecl : QRCode::ECLevel)</a>
+        <a href="#make_optimized_segments%28text%3AString%2Cecl%3AQRCode%3A%3AECLevel%29%3ATuple%28Array%28Segment%29%2CQRCode%3A%3AVersion%29-instance-method" class="signature"><strong>#make_optimized_segments</strong>(text : String, ecl : QRCode::ECLevel) : Tuple(Array(Segment), QRCode::Version)</a>
+        
+          <div class="summary"><p>Returns a tuple of the optimized segments and QR Code version for the given text and error correction level.</p></div>
         
       </li>
     
@@ -232,16 +248,24 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="make_optimized_segments(text:String,ecl:QRCode::ECLevel)-instance-method">
+    <div class="entry-detail" id="make_optimized_segments(text:String,ecl:QRCode::ECLevel):Tuple(Array(Segment),QRCode::Version)-instance-method">
       <div class="signature">
         
-        def <strong>make_optimized_segments</strong>(text : String, ecl : <a href="../../Goban/QRCode/ECLevel.html">QRCode::ECLevel</a>)
+        def <strong>make_optimized_segments</strong>(text : String, ecl : <a href="../../Goban/QRCode/ECLevel.html">QRCode::ECLevel</a>) : Tuple(Array(<a href="../../Goban/Segment.html">Segment</a>), <a href="../../Goban/QRCode/Version.html">QRCode::Version</a>)
 
-        <a class="method-permalink" href="#make_optimized_segments%28text%3AString%2Cecl%3AQRCode%3A%3AECLevel%29-instance-method">#</a>
+        <a class="method-permalink" href="#make_optimized_segments%28text%3AString%2Cecl%3AQRCode%3A%3AECLevel%29%3ATuple%28Array%28Segment%29%2CQRCode%3A%3AVersion%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns a tuple of the optimized segments and QR Code version
+for the given text and error correction level.</p>
+        </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/optimizer.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>

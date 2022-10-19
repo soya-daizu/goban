@@ -137,8 +137,25 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Goban</h1>
-<p>A fast QR Code generation library written purely in Crystal. It uses less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.</p>
-<p>The name comes from the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>, which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the Japanese name of the board used to play Go.</p>
+<p>A fast and efficient QR Code encoder library written purely in Crystal. It uses less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.</p>
+<p>The encoder implementation is based on <a href="https://www.iso.org/standard/62021.html">ISO/IEC 18004:2015</a>, and the text segmentation algorithm is based on <a href="https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes">Optimal text segmentation for QR Codes</a>.</p>
+<p>The name comes from the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a> (No, not that programming language!), which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the name of the <a href="https://en.wikipedia.org/wiki/Go_equipment#Board">Go board</a> in Japanese.</p>
+<h2><a id="benchmark" class="anchor" href="#benchmark">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Benchmark</h2>
+<p>Comparing op/s and heap allocations between Goban and <a href="https://github.com/spider-gazelle/qr-code">spider-gazelle/qr-code</a></p>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;benchmark&quot;</span>
+<span class="k">require</span> <span class="s">&quot;qr-code&quot;</span>
+<span class="k">require</span> <span class="s">&quot;goban&quot;</span>
+
+<span class="t">Benchmark</span>.ips <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x.report(<span class="s">&quot;qr-code&quot;</span>) { <span class="t">QRCode</span>.new(<span class="s">&quot;Hello World!&quot;</span>, level: <span class="n">:h</span>) }
+  x.report(<span class="s">&quot;goban&quot;</span>) { <span class="t">Goban</span><span class="t">::</span><span class="t">QRCode</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">QRCode</span><span class="t">::</span><span class="t">ECLevel</span><span class="t">::</span><span class="t">High</span>) }
+<span class="k">end</span></code></pre>
+<pre><code class="language-crystal">qr<span class="o">-</span>code   <span class="n">2.14</span>k (<span class="n">467.30</span>µs) (± <span class="n">0.69</span><span class="o">%</span>)   <span class="n">149</span>kB<span class="o">/</span>op   <span class="n">2.12</span>× slower
+  goban   <span class="n">4.55</span>k (<span class="n">219.94</span>µs) (± <span class="n">0.54</span><span class="o">%</span>)  <span class="n">2.71</span>kB<span class="o">/</span>op        fastest</code></pre>
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -186,10 +203,12 @@ qr.print_to_console
 <span class="c">#    ██          ██  ██    ██  ████████      ██</span>
 <span class="c">#    ██████████████  ██    ██  ██████    ██    </span></code></pre>
 <p>To generate a PNG image, add <a href="https://github.com/stumpycr/stumpy_png">stumpy_png</a> as a dependency in your shard.yml, and <code>require &quot;goban/exporters/png&quot;</code> to use <code>PNGExporter</code>.</p>
-<pre><code class="language-crystal">qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QRCode</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban/exporters/png&quot;</span>
+
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QRCode</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
 puts <span class="s">&quot;Exporting with targeted size: 500&quot;</span>
 size <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">PNGExporter</span>.export(qr, <span class="s">&quot;output.png&quot;</span>, <span class="n">500</span>)
-puts <span class="s">&quot;Actual QR code size: </span><span class="i">#{</span>size<span class="i">}</span><span class="s">&quot;</span></code></pre>
+puts <span class="s">&quot;Actual QR Code size: </span><span class="i">#{</span>size<span class="i">}</span><span class="s">&quot;</span></code></pre>
 <p>See <a href="https://soya-daizu.github.io/goban/">API docs</a> for more details.</p>
 <h2><a id="contributing" class="anchor" href="#contributing">
   <svg class="octicon-link" aria-hidden="true">
