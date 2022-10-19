@@ -4,7 +4,7 @@ A fast and efficient QR Code encoder library written purely in Crystal. It uses 
 
 The encoder implementation is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html), and the text segmentation algorithm is based on [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
-The name comes from the board game [Go](https://en.wikipedia.org/wiki/Go_(game)), which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the Japanese name of the board used to play Go.
+The name comes from the board game [Go](https://en.wikipedia.org/wiki/Go_(game)) (No, not that programming language!), which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the name of the [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
 ## Benchmark
 
@@ -71,10 +71,12 @@ qr.print_to_console
 To generate a PNG image, add [stumpy_png](https://github.com/stumpycr/stumpy_png) as a dependency in your shard.yml, and `require "goban/exporters/png"` to use `PNGExporter`.
 
 ```crystal
+require "goban/exporters/png"
+
 qr = Goban::QRCode.encode_string("Hello World!")
 puts "Exporting with targeted size: 500"
 size = Goban::PNGExporter.export(qr, "output.png", 500)
-puts "Actual QR code size: #{size}"
+puts "Actual QR Code size: #{size}"
 ```
 
 See [API docs](https://soya-daizu.github.io/goban/) for more details.
