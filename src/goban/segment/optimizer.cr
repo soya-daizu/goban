@@ -1,8 +1,12 @@
 struct Goban::Segment
+  # Module for optimizing segmentations of the encoding modes for
+  # the given text.
   module Optimizer
     extend self
 
-    def make_optimized_segments(text : String, ecl : QRCode::ECLevel)
+    # Returns a tuple of the optimized segments and QR Code version
+    # for the given text and error correction level. 
+    def make_optimized_segments(text : String, ecl : QRCode::ECLevel) : Tuple(Array(Segment), QRCode::Version)
       chars = text.chars
       segments, version = nil, nil
       used_bits = 0
@@ -34,7 +38,7 @@ struct Goban::Segment
       prev_costs = head_costs.clone
 
       chars.each do |c|
-        c_modes = StaticArray(Segment::Mode, 4).new(Segment::Mode::Invalid)
+        c_modes = StaticArray(Segment::Mode, 4).new(Segment::Mode::Undefined)
         cur_costs = StaticArray(Int32, 4).new(Int32::MAX)
 
         # Byte mode is always calculated
@@ -67,7 +71,7 @@ struct Goban::Segment
               new_cost = cur_costs[k] + head_costs[j]
             end
 
-            if c_modes[k] != Segment::Mode::Invalid && new_cost < cur_costs[j]
+            if c_modes[k] != Segment::Mode::Undefined && new_cost < cur_costs[j]
               cur_costs[j] = new_cost
               c_modes[j] = from_mode
             end

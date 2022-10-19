@@ -1,33 +1,41 @@
 struct Goban::QRCode
+  # Holds information about each modules in a QR Code symbol.
   struct Canvas
     getter modules : Array(Bool)
     getter size : Int32
 
+    # Creates a blank canvas with the given version and error correction level.
     def initialize(@version : Version, @ecl : ECLevel)
       @size = @version.symbol_size
       @modules = Array(Bool).new(@size ** 2, false)
       @reserved_modules = @modules.clone
     end
 
-    def draw_function_patterns
+    # Draws all function patterns on the canvas.
+    # The function patterns are:
+    #
+    # - Finder patterns on each corner except bottom right
+    # - Alignment patterns depending on the QR Code version
+    # - Timing patterns in both directions
+    protected def draw_function_patterns
       draw_finder_pattern(0, 0)
       draw_finder_pattern(@size - 7, 0)
       draw_finder_pattern(0, @size - 7)
 
-      # Reserve finder pattern and format info area at once
+      # Reserving areas for the finder patterns and format info at once
       # as they belong to the same adjacent square area
       reserve_modules(0, 0, 9, 9)
       reserve_modules(@size - 8, 0, 8, 9)
       reserve_modules(0, @size - 8, 9, 8)
 
-      ali_pat_pos = alignment_pattern_positions
-      ali_pat_count = ali_pat_pos.size
+      positions = @version.alignment_pattern_positions
+      ali_pat_count = positions.size
       ali_pat_count.times do |i|
         ali_pat_count.times do |j|
           next if i == 0 && j == 0 ||
                   i == 0 && j == ali_pat_count - 1 ||
                   i == ali_pat_count - 1 && j == 0
-          x, y = ali_pat_pos[i], ali_pat_pos[j]
+          x, y = positions[i], positions[j]
 
           draw_alignment_pattern(x, y)
           reserve_modules(x - 2, y - 2, 5, 5)
@@ -43,19 +51,21 @@ struct Goban::QRCode
       reserve_modules(8, 6, tim_pat_mods_count, 1)
       reserve_modules(6, 8, 1, tim_pat_mods_count)
 
-      if draw_version_modules
+      version_modules_exist = draw_version_modules
+      if version_modules_exist
         # Reserve version info area
         reserve_modules(@size - 11, 0, 3, 6)
         reserve_modules(0, @size - 11, 6, 3)
       end
     end
 
-    def draw_data_codewords(data_codewords : Array(UInt8))
+    # Draws data bits from the given data codewords.
+    protected def draw_data_codewords(data_codewords : Array(UInt8))
       data_length = data_codewords.size * 8
 
       i = 0
-      upward = true
-      base_x = @size - 1
+      upward = true # Current filling direction
+      base_x = @size - 1 # Zig zag filling starts from bottom right
       while base_x > 0
         base_x = 5 if base_x == 6 # Skip vertical timing pattern
 
@@ -63,7 +73,8 @@ struct Goban::QRCode
           (0..1).each do |alt|
             x = base_x - alt
             y = upward ? base_y : @size - 1 - base_y
-            next if is_module_reserved?(x, y) || i >= data_length
+            next if module_reserved?(x, y) || i >= data_length
+
             set_module(x, y, data_codewords[i >> 3].bit(7 - i & 7) == 1)
             i += 1
           end
@@ -72,6 +83,30 @@ struct Goban::QRCode
         upward = !upward
         base_x -= 2
       end
+    end
+
+    # Test each mask patterns and apply one with the lowest (= best) score
+    protected def apply_best_mask
+      mask = nil
+      min_score = Int32::MAX
+
+      8_u8.times do |i|
+        msk = Mask.new(i)
+        draw_format_modules(msk)
+        msk.apply_to(self)
+
+        score = Mask.evaluate_score(self)
+        if score < min_score
+          mask = msk
+          min_score = score
+        end
+
+        msk.apply_to(self)
+      end
+      raise "Unable to set the mask" unless mask
+
+      draw_format_modules(mask)
+      mask.apply_to(self)
     end
 
     private def draw_finder_pattern(x : Int, y : Int)
@@ -97,7 +132,7 @@ struct Goban::QRCode
     end
 
     private def draw_version_modules
-      return if @version < 7
+      return false if @version < 7
 
       data = @version.value.to_u32
       rem = data
@@ -144,23 +179,8 @@ struct Goban::QRCode
       set_module(8, @size - 8, true)
     end
 
-    private def alignment_pattern_positions
-      v = @version.value
-      return [] of Int32 if v == 1
-
-      g = v // 7 + 2
-      step = v == 32 ? 26 : (v * 4 + g * 2 + 1) // (g * 2 - 2) * 2
-      result = (0...g - 1).map do |i|
-        @size - 7 - i * step
-      end
-      result.push(6)
-      result.reverse!
-
-      result
-    end
-
     protected def set_module(x : Int, y : Int, value : Bool? = true)
-      # We are absolutely sure that the index is in bounds,
+      # We are absolutely sure that the index is within the bounds,
       # as the arrays are pre-allocated based on the given version
       # and all the set/get methods are called based on that size
       @modules.unsafe_put(y * @size + x, value)
@@ -170,51 +190,25 @@ struct Goban::QRCode
       @modules.fill(value, y * @size + x, w)
     end
 
-    def get_module(x : Int, y : Int)
-      # We are absolutely sure that the index is in bounds,
-      # as the arrays are pre-allocated based on the given version
-      # and all the set/get methods are called based on that size
-      @modules.unsafe_fetch(y * @size + x)
-    end
-
     private def reserve_modules(x : Int, y : Int, w : Int, h : Int)
       (y...y + h).each do |yy|
         @reserved_modules.fill(true, yy * @size + x, w)
       end
     end
 
-    def is_module_reserved?(x : Int, y : Int)
-      # We are absolutely sure that the index is in bounds,
-      # as the arrays are pre-allocated based on the given version
-      # and all the set/get methods are called based on that size
-      @reserved_modules.unsafe_fetch(y * @size + x)
+    # Returns whether a module at the given coordinate is dark or not.
+    def get_module(x : Int, y : Int) : Bool
+      @modules[y * @size + x]
     end
 
-    def apply_best_mask
-      mask = nil
-      min_score = Int32::MAX
-
-      8_u8.times do |i|
-        msk = Mask.new(i)
-        draw_format_modules(msk)
-        msk.apply_to(self)
-
-        score = Mask.evaluate_score(self)
-        if score < min_score
-          mask = msk
-          min_score = score
-        end
-
-        msk.apply_to(self)
-      end
-      raise "Unable to set the mask" unless mask
-
-      draw_format_modules(mask)
-      mask.apply_to(self)
+    # Returns whether a module at the given coordinate is reserved for
+    # it being a part of function patterns.
+    def module_reserved?(x : Int, y : Int)
+      @reserved_modules[y * @size + x]
     end
 
+    # Prints the modules on the canvas as a text in the console.
     def print_to_console
-      border = 4
       @size.times do |y|
         @size.times do |x|
           print get_module(x, y) ? "██" : "  "

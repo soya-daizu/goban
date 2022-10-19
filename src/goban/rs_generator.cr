@@ -1,4 +1,5 @@
 module Goban
+  # Module for generating redundant Reed-Solomon error correction bits.
   module RSGenerator
     extend self
 
@@ -7,12 +8,12 @@ module Goban
 
       ec_blocks_count = ERROR_CORRECTION_BLOCKS[ecl.value][version.value]
       block_ecc_size = ECC_CODEWORDS_PER_BLOCK[ecl.value][version.value]
-      raw_codewords = version.raw_data_mods // 8
+      raw_codewords = version.raw_data_mods_count // 8
       short_blocks_count = ec_blocks_count - raw_codewords % ec_blocks_count
       short_block_size = raw_codewords // ec_blocks_count
 
       blocks = Array(Array(UInt8)).new(ec_blocks_count)
-      gen_poly = self.generator_polynomial(block_ecc_size)
+      gen_poly = self.get_generator_polynomial(block_ecc_size)
       k = 0
       ec_blocks_count.times do |i|
         data_size = short_block_size - block_ecc_size + (i >= short_blocks_count ? 1 : 0)
@@ -41,7 +42,7 @@ module Goban
       result
     end
 
-    private def generator_polynomial(for degree : Int)
+    private def get_generator_polynomial(for degree : Int)
       result = Array(UInt8).new(degree - 1, 0)
       result.push(1)
 

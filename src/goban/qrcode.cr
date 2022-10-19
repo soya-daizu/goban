@@ -4,7 +4,7 @@ module Goban
   # Object that represents an encoded QR Code symbol.
   struct QRCode
     # Version of the QR Code symbol. Version in QR Code does not refer to its revision,
-    # but simply indicates the size format of the QR code symbol.
+    # but simply indicates the size format of the QR Code symbol.
     getter version : Version
     # Error correction level of the QR Code symbol.
     getter ecl : ECLevel
@@ -50,12 +50,12 @@ module Goban
     # #    ██████████████  ██    ██  ██████    ██    
     # ```
     #
-    # QR code data under the hood is encoded in one or more encoding types, such as Numeric,
+    # QR Code data under the hood is encoded in one or more encoding types, such as Numeric,
     # Alphanumeric, Byte, and Kanji. Each encoding type has a different set of characters
     # supported. While Byte mode can express arbitrary types of data (usually interpreted as UTF-8
     # text, thus it can express any Unicode characters), it often uses more bits to represent a single
     # codepoint compared to other encoding types which have a limited set of characters supported,
-    # resulting in larger data size and a more challenging QR code to scan.
+    # resulting in larger data size and a more challenging QR Code to scan.
     #
     # This string encoding uses an algorithm to figure out the best segmentation of the encoding
     # types for the given string to make the resulting data size as small as possible. Here are the
@@ -81,7 +81,7 @@ module Goban
     #
     # If the type of characters used in your data strings is always the same, you may want to consider
     # building data segments by yourself so that Goban doesn't have to do extra processing to figure
-    # it out every single time. See `#encode_segments` for how to create QR codes by manually creating
+    # it out every single time. See `#encode_segments` for how to create QR Codes by manually creating
     # encoding segments.
     def self.encode_string(text : String, ecl : ECLevel = ECLevel::Medium)
       segments, version = Segment::Optimizer.make_optimized_segments(text, ecl)
@@ -146,13 +146,7 @@ module Goban
     # Prints the QR Code symbol as a text in the console. To generate the actual image file,
     # use `PNGExporter` or write your own exporter by reading each modules in `#canvas`.
     def print_to_console
-      @size.times do |y|
-        @size.times do |x|
-          print @canvas.get_module(x, y) ? "██" : "  "
-        end
-        print '\n'
-      end
-      print '\n'
+      @canvas.print_to_console
     end
   end
 end

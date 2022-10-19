@@ -1,6 +1,7 @@
 require "./segment/*"
 
 module Goban
+  # Represents a segment of QR Code data that holds its data bits and encoding type.
   struct Segment
     getter mode : Mode
     getter char_count : Int32
@@ -24,6 +25,7 @@ module Goban
       end
     end
 
+    # Shorthand method for creating a Numeric mode segment.
     def self.numeric(text : String)
       digits = text.chars
       raise "Numeric data contains non-numeric characters" unless digits.all?(&.ascii_number?)
@@ -38,6 +40,7 @@ module Goban
       segment
     end
 
+    # Shorthand method for creating a Alphanumeric mode segment.
     def self.alphanumeric(text : String)
       chars = text.chars.map { |c| ALPHANUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters" }
 
@@ -58,6 +61,7 @@ module Goban
       segment
     end
 
+    # Shorthand method for creating a Byte mode segment.
     def self.bytes(text : String)
       bytes = text.bytes
       bit_stream = BitStream.new(bytes.size * 8)
@@ -69,6 +73,7 @@ module Goban
       segment
     end
 
+    # Shorthand method for creating a Kanji mode segment.
     def self.kanji(text : String)
       # In accordance to JIS X 0208, this doesn't include
       # extended characters as in CP932 or other variants
@@ -102,6 +107,7 @@ module Goban
       segment
     end
 
+    # Count number of bits in the given list of segments.
     def self.count_total_bits(segments : Array(Segment), version : QRCode::Version)
       result = 0
       segments.each do |segment|

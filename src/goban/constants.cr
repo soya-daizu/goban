@@ -19,6 +19,7 @@ module Goban
     {-1, 1, 1, 2, 4, 4, 4, 5, 6, 8, 8, 11, 11, 16, 16, 18, 16, 19, 21, 25, 25, 25, 34, 30, 32, 35, 37, 40, 42, 45, 48, 51, 54, 57, 60, 63, 66, 70, 74, 77, 81}, # High
   }
 
+  # Tables of galois field values
   GF256_MAP    = StaticArray(UInt8, 256).new(1)
   GF256_INVMAP = StaticArray(UInt8, 256).new(0)
 

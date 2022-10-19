@@ -1,4 +1,5 @@
 struct Goban::Segment
+  # Represents a encoding mode of a data segment.
   enum Mode : UInt8
     ECI              = 0b0111
     Numeric          = 0b0001
@@ -6,10 +7,10 @@ struct Goban::Segment
     Byte             = 0b0100
     Kanji            = 0b1000
     StructuredAppend = 0b0011
-    Invalid          = UInt8::MAX
+    Undefined        = UInt8::MAX
 
-    # Number of character count indicator bits for this mode
-    def cci_bits_size(ver : QRCode::Version)
+    # Number of character count indicator bits for this mode.
+    protected def cci_bits_size(ver : QRCode::Version)
       case self
       when Numeric
         values = {10, 12, 14}

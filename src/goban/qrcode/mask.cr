@@ -1,15 +1,18 @@
 struct Goban::QRCode
   struct Mask
+    # Mask identifier. Valid values are integers from 0 to 7.
     getter value : UInt8
 
     def initialize(@value)
       raise "Invalid mask number" if @value > 7
     end
 
-    def apply_to(canvas : Canvas)
+    # Apply mask to the given canvas.
+    # Call this method again to reverse the applied mask.
+    protected def apply_to(canvas : Canvas)
       canvas.size.times do |y|
         canvas.size.times do |x|
-          next if canvas.is_module_reserved?(x, y)
+          next if canvas.module_reserved?(x, y)
           invert = case @value
                    when 0; (x + y) % 2 == 0
                    when 1; y % 2 == 0
@@ -28,7 +31,9 @@ struct Goban::QRCode
       end
     end
 
-    def self.evaluate_score(canvas : Canvas)
+    # Evaluate penalty score for the given canvas.
+    # It assumes that one of the masks is applied to the canvas.
+    protected def self.evaluate_score(canvas : Canvas)
       s1_a = self.compute_adjacent_score(canvas, true)
       s1_b = self.compute_adjacent_score(canvas, false)
       s2 = self.compute_block_score(canvas)
