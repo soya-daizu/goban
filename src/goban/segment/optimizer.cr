@@ -5,32 +5,42 @@ struct Goban::Segment
     extend self
 
     # Returns a tuple of the optimized segments and QR Code version
-    # for the given text and error correction level. 
+    # for the given text and error correction level.
     def make_optimized_segments(text : String, ecl : QRCode::ECLevel) : Tuple(Array(Segment), QRCode::Version)
       chars = text.chars
       segments, version = nil, nil
       used_bits = 0
-      (QRCode::Version::MIN..QRCode::Version::MAX).each do |v|
-        v = QRCode::Version.new(v)
 
-        # The number of the character count indicator bits which affect
-        # the result of the optimal segmentation changes at the version
-        # 1, 10, and 27, so we re-calculate the segmentation when the v
-        # reaches that number.
-        if v == 1 || v == 10 || v == 27
-          char_modes = compute_char_modes(chars, v)
-          segments = make_segments(text, char_modes)
-        end
-        raise "Segment optimization failed" unless segments
+      # The number of the character count indicator bits which affect
+      # the result of segmentation changes at the version 1, 10, and 27,
+      # so we first calculate the segments at those boundaries, and adjust
+      # the version number later
+      {(1..9), (10..26), (27..40)}.each do |group|
+        v = QRCode::Version.new(group.end)
+        char_modes = compute_char_modes(chars, v)
+        segments = make_segments(text, char_modes)
 
-        # Get the maximum data bit count for the current version
-        # and compare it with the bit count of the generated segment.
         cap_bits = v.max_data_codewords(ecl) * 8
-        used_bits = Segment.count_total_bits(segments, v)
+        begin
+          used_bits = Segment.count_total_bits(segments, v)
+        rescue e
+          next if e.message == "Segment too long"
+          raise e
+        end
 
         # If it's within the bound, that is the optimal segmentation
+        # Now find the smallest version in that group that can hold its data
         if used_bits <= cap_bits
-          version = v
+          group.each do |i|
+            sml_v = QRCode::Version.new(i)
+            sml_cap_bits = sml_v.max_data_codewords(ecl) * 8
+
+            if used_bits <= sml_cap_bits
+              version = sml_v
+              break
+            end
+          end
+
           break
         end
       end
