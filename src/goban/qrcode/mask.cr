@@ -1,4 +1,5 @@
 struct Goban::QRCode
+  # Represents a mask pattern that can be applied to a canvas.
   struct Mask
     # Mask identifier. Valid values are integers from 0 to 7.
     getter value : UInt8

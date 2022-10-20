@@ -1,6 +1,6 @@
 struct Goban::Segment
-  # Module for optimizing segmentations of the encoding modes for
-  # the given text.
+  # Module for optimizing segmentations of the different encoding modes
+  # for the given text string.
   module Optimizer
     extend self
 
@@ -12,15 +12,23 @@ struct Goban::Segment
       used_bits = 0
       (QRCode::Version::MIN..QRCode::Version::MAX).each do |v|
         v = QRCode::Version.new(v)
+
+        # The number of the character count indicator bits which affect
+        # the result of the optimal segmentation changes at the version
+        # 1, 10, and 27, so we re-calculate the segmentation when the v
+        # reaches that number.
         if v == 1 || v == 10 || v == 27
           char_modes = compute_char_modes(chars, v)
           segments = make_segments(text, char_modes)
         end
         raise "Segment optimization failed" unless segments
 
+        # Get the maximum data bit count for the current version
+        # and compare it with the bit count of the generated segment.
         cap_bits = v.max_data_codewords(ecl) * 8
         used_bits = Segment.count_total_bits(segments, v)
 
+        # If it's within the bound, that is the optimal segmentation
         if used_bits <= cap_bits
           version = v
           break
@@ -31,6 +39,9 @@ struct Goban::Segment
       {segments, version}
     end
 
+    # Makes a list of the best encoding mode for the each given character
+    # by dynamic programming algorithm. The code is based on:
+    # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
     private def compute_char_modes(chars : Array(Char), version : QRCode::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
       head_costs = modes.map { |m| 4 + m.cci_bits_size(version) * 6 }
@@ -97,6 +108,7 @@ struct Goban::Segment
       result.reverse!
     end
 
+    # Converts a list of encoding modes for each character to an actual segment objects.
     private def make_segments(text : String, char_modes : Array(Segment::Mode))
       raise "Text size does not match the char modes" if text.size != char_modes.size
 
