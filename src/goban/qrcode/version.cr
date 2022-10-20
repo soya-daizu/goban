@@ -11,8 +11,8 @@ struct Goban::QRCode
     getter value : UInt8
 
     def initialize(value : Int)
-      raise "Invalid version number" unless (MIN..MAX).includes?(@value)
-      @value = value
+      raise "Invalid version number" unless (MIN..MAX).includes?(value)
+      @value = value.to_u8
     end
 
     def <=>(other : Int)
