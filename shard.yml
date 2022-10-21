@@ -9,6 +9,8 @@ targets:
     main: examples/console.cr
   sample_png:
     main: examples/png.cr
+  sample_svg:
+    main: examples/svg.cr
 
 development_dependencies:
   stumpy_png:
