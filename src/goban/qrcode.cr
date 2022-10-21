@@ -89,7 +89,9 @@ module Goban
     end
 
     # Creates a new QR Code object for the given data segments, error correction level, and QR Code
-    # version that is large enough to contain all the data in the segments.
+    # version that is large enough to contain all the data in the segments. Note that this method
+    # does not check the data length before encoding, so it will just raise `Index out of bounds`
+    # error if the data does not fit within the given version.
     # Use `PNGExporter` to generate the PNG image from the QR Code object generated.
     #
     # ```

@@ -42,7 +42,9 @@ module Goban
 
     # Shorthand method for creating a Alphanumeric mode segment.
     def self.alphanumeric(text : String)
-      chars = text.chars.map { |c| ALPHANUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters" }
+      chars = text.chars.map do |c|
+        ALPHANUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters"
+      end
 
       bit_stream = BitStream.new(chars.size * 5 + (chars.size + 1) // 2)
       segment = self.new(Segment::Mode::Alphanumeric, chars.size, bit_stream)

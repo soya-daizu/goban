@@ -9,7 +9,7 @@ struct Goban::Segment
     StructuredAppend = 0b0011
     Undefined        = UInt8::MAX
 
-    # Number of character count indicator bits for this mode.
+    # Number of the character count indicator bits for this mode.
     protected def cci_bits_size(ver : QRCode::Version)
       case self
       when Numeric
