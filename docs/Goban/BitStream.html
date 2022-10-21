@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Crystal Docs 1.6.0-dev">
-<meta name="crystal_docs.project_version" content="master-dev">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="goban">
 
 
@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::BitStream - goban master-dev</title>
+  <title>Goban::BitStream - goban master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -39,7 +39,7 @@
       </h1>
 
       <span class="project-version">
-        master-dev
+        master
       </span>
     </div>
   </div>
@@ -171,6 +171,8 @@ Based on the <code>BitArray</code> object of the standard library.</p>
   </h2>
   <ul class="other-types-list">
     
+      <li class="other-type">Comparable(<a href="../Goban/BitStream.html">Goban::BitStream</a>)</li>
+    
       <li class="other-type">Indexable::Mutable(Bool)</li>
     
   </ul>
@@ -194,8 +196,8 @@ Based on the <code>BitArray</code> object of the standard library.</p>
   </h2>
   
     
-      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L4" target="_blank">
-        goban/bit_stream.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L4" target="_blank">
+        goban/bitstream.cr
       </a>
     
     <br/>
@@ -259,6 +261,13 @@ Based on the <code>BitArray</code> object of the standard library.</p>
     Instance Method Summary
   </h2>
   <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#%3C%3D%3E%28other%3ABitStream%29-instance-method" class="signature"><strong>#<=></strong>(other : BitStream)</a>
+        
+          <div class="summary"><p>The comparison operator.</p></div>
+        
+      </li>
     
       <li class="entry-summary">
         <a href="#bits%3APointer%28UInt8%29-instance-method" class="signature"><strong>#bits</strong> : Pointer(UInt8)</a>
@@ -366,6 +375,16 @@ Based on the <code>BitArray</code> object of the standard library.</p>
 
 
   
+    
+
+
+    
+
+
+    
+
+
+  
 </div>
 
 
@@ -389,7 +408,7 @@ Based on the <code>BitArray</code> object of the standard library.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -408,6 +427,41 @@ Based on the <code>BitArray</code> object of the standard library.</p>
     Instance Method Detail
   </h2>
   
+    <div class="entry-detail" id="&lt;=&gt;(other:BitStream)-instance-method">
+      <div class="signature">
+        
+        def <strong><=></strong>(other : <a href="../Goban/BitStream.html">BitStream</a>)
+
+        <a class="method-permalink" href="#%3C%3D%3E%28other%3ABitStream%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Comparable(<a href="../Goban/BitStream.html">Goban::BitStream</a>)
+            </div>
+          
+          <p>The comparison operator. Returns <code>0</code> if the two objects are equal,
+a negative number if this object is considered less than <em>other</em>,
+a positive number if this object is considered greater than <em>other</em>,
+or <code>nil</code> if the two objects are not comparable.</p>
+<p>Subclasses define this method to provide class-specific ordering.</p>
+<p>The comparison operator is usually used to sort values:</p>
+<pre><code class="language-crystal"><span class="c"># Sort in a descending way:</span>
+[<span class="n">3</span>, <span class="n">1</span>, <span class="n">2</span>].sort { <span class="o">|</span>x, y<span class="o">|</span> y <span class="o">&lt;=&gt;</span> x } <span class="c"># =&gt; [3, 2, 1]</span>
+
+<span class="c"># Sort in an ascending way:</span>
+[<span class="n">3</span>, <span class="n">1</span>, <span class="n">2</span>].sort { <span class="o">|</span>x, y<span class="o">|</span> x <span class="o">&lt;=&gt;</span> y } <span class="c"># =&gt; [1, 2, 3]</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L116" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="bits:Pointer(UInt8)-instance-method">
       <div class="signature">
         
@@ -424,7 +478,7 @@ Based on the <code>BitArray</code> object of the standard library.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -445,7 +499,7 @@ Based on the <code>BitArray</code> object of the standard library.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -467,7 +521,7 @@ more bits are added to itself.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -492,7 +546,7 @@ more bits are added to itself.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bit_stream.cr#L100" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/bitstream.cr#L101" target="_blank">View source</a>]
         
       </div>
     </div>

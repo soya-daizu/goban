@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Crystal Docs 1.6.0-dev">
-<meta name="crystal_docs.project_version" content="master-dev">
+<meta name="crystal_docs.project_version" content="master">
 <meta name="crystal_docs.project_name" content="goban">
 
 
@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::QRCode::Version - goban master-dev</title>
+  <title>Goban::QRCode::Version - goban master</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -39,7 +39,7 @@
       </h1>
 
       <span class="project-version">
-        master-dev
+        master
       </span>
     </div>
   </div>
@@ -241,7 +241,7 @@ the large the size of the final QR Code symbol.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28value%3AUInt8%29-class-method" class="signature"><strong>.new</strong>(value : UInt8)</a>
+        <a href="#new%28value%3AInt%29-class-method" class="signature"><strong>.new</strong>(value : Int)</a>
         
       </li>
     
@@ -269,13 +269,6 @@ the large the size of the final QR Code symbol.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#alignment_pattern_positions-instance-method" class="signature"><strong>#alignment_pattern_positions</strong></a>
-        
-          <div class="summary"><p>Returns a list of the alignment pattern positions for thie version.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#max_data_codewords%28ecl%3AECLevel%29-instance-method" class="signature"><strong>#max_data_codewords</strong>(ecl : ECLevel)</a>
         
           <div class="summary"><p>Maximum number of codewords that can be contained in the QR Code symbol of this version.</p></div>
@@ -283,23 +276,9 @@ the large the size of the final QR Code symbol.</p>
       </li>
     
       <li class="entry-summary">
-        <a href="#raw_data_mods_count-instance-method" class="signature"><strong>#raw_data_mods_count</strong></a>
-        
-          <div class="summary"><p>Number of the modules that are available for writing the actual data payload.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#symbol_size-instance-method" class="signature"><strong>#symbol_size</strong></a>
         
           <div class="summary"><p>Size of the QR Code symbol for this version.</p></div>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#timing_pattern_mods_count-instance-method" class="signature"><strong>#timing_pattern_mods_count</strong></a>
-        
-          <div class="summary"><p>Number of the timing pattern modules for this version.</p></div>
         
       </li>
     
@@ -368,12 +347,12 @@ the large the size of the final QR Code symbol.</p>
     Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="new(value:UInt8)-class-method">
+    <div class="entry-detail" id="new(value:Int)-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(value : UInt8)
+        def self.<strong>new</strong>(value : Int)
 
-        <a class="method-permalink" href="#new%28value%3AUInt8%29-class-method">#</a>
+        <a class="method-permalink" href="#new%28value%3AInt%29-class-method">#</a>
       </div>
       
       <br/>
@@ -428,30 +407,7 @@ or <code>nil</code> if the two objects are not comparable.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L17" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="alignment_pattern_positions-instance-method">
-      <div class="signature">
-        
-        def <strong>alignment_pattern_positions</strong>
-
-        <a class="method-permalink" href="#alignment_pattern_positions-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Returns a list of the alignment pattern positions for thie version.
-The list may include positions in which drawing is not allowed due
-to overlap with the finder pattern, etc.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L34" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -473,29 +429,7 @@ symbol of this version.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L73" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="raw_data_mods_count-instance-method">
-      <div class="signature">
-        
-        def <strong>raw_data_mods_count</strong>
-
-        <a class="method-permalink" href="#raw_data_mods_count-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Number of the modules that are available for writing the actual
-data payload.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L51" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L74" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -516,28 +450,7 @@ data payload.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L22" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="timing_pattern_mods_count-instance-method">
-      <div class="signature">
-        
-        def <strong>timing_pattern_mods_count</strong>
-
-        <a class="method-permalink" href="#timing_pattern_mods_count-instance-method">#</a>
-      </div>
-      
-        <div class="doc">
-          
-          <p>Number of the timing pattern modules for this version.</p>
-        </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L27" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qrcode/version.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
