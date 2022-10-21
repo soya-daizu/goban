@@ -1,14 +1,19 @@
 struct Goban::QRCode
   # Holds information about each modules in a QR Code symbol.
   struct Canvas
+    # Returns the array of modules drawn on the canvas.
     getter modules : Array(Bool)
+    # Length of the canvas's side.
     getter size : Int32
+    # Returns the mask applied to the canvas.
+    getter mask : Mask
 
     # Creates a blank canvas with the given version and error correction level.
     def initialize(@version : Version, @ecl : ECLevel)
       @size = @version.symbol_size
       @modules = Array(Bool).new(@size ** 2, false)
       @reserved_modules = @modules.clone
+      @mask = Mask.new(0) # Temporal value
     end
 
     # Draws all function patterns on the canvas.
@@ -107,6 +112,7 @@ struct Goban::QRCode
 
       draw_format_modules(mask)
       mask.apply_to(self)
+      @mask = mask
     end
 
     private def draw_finder_pattern(x : Int, y : Int)
