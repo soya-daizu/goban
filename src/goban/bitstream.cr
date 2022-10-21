@@ -3,6 +3,7 @@ module Goban
   # Based on the `BitArray` object of the standard library.
   struct BitStream
     include Indexable::Mutable(Bool)
+    include Comparable(BitStream)
 
     # Pointer to the underlying UInt8 representation.
     getter bits : Pointer(UInt8)
@@ -110,6 +111,14 @@ module Goban
         end
       end
       io << "])"
+    end
+
+    def <=>(other : BitStream)
+      min_size = Math.min(size, other.size)
+      0.upto(min_size - 1) do |i|
+        return nil if self[i] != other[i]
+      end
+      size <=> other.size
     end
 
     private def bit_idx_and_sub_idx(idx)
