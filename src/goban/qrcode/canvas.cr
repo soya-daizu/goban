@@ -69,7 +69,7 @@ struct Goban::QRCode
       data_length = data_codewords.size * 8
 
       i = 0
-      upward = true # Current filling direction
+      upward = true      # Current filling direction
       base_x = @size - 1 # Zig zag filling starts from bottom right
       while base_x > 0
         base_x = 5 if base_x == 6 # Skip vertical timing pattern
