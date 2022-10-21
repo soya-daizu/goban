@@ -54,13 +54,13 @@ struct Goban::Segment
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
     private def compute_char_modes(chars : Array(Char), version : QRCode::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
-      head_costs = modes.map { |m| 4 + m.cci_bits_size(version) * 6 }
+      head_costs = modes.map { |m| ((4 + m.cci_bits_size(version)) * 6).to_f32 }
       char_modes = Array(StaticArray(Segment::Mode, 4)).new(chars.size)
       prev_costs = head_costs.clone
 
       chars.each do |c|
         c_modes = StaticArray(Segment::Mode, 4).new(Segment::Mode::Undefined)
-        cur_costs = StaticArray(Int32, 4).new(Int32::MAX)
+        cur_costs = StaticArray(Float32, 4).new(Float32::INFINITY)
 
         # Byte mode is always calculated
         cur_costs[0] = prev_costs[0] + c.bytesize * 8 * 6
@@ -86,11 +86,7 @@ struct Goban::Segment
 
         modes.size.times do |j|
           modes.each_with_index do |from_mode, k|
-            if cur_costs[k] == Int32::MAX
-              new_cost = cur_costs[k]
-            else
-              new_cost = cur_costs[k] + head_costs[j]
-            end
+            new_cost = (cur_costs[k] / 6).ceil * 6 + head_costs[j]
 
             if c_modes[k] != Segment::Mode::Undefined && new_cost < cur_costs[j]
               cur_costs[j] = new_cost
