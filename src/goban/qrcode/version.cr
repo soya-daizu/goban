@@ -25,14 +25,14 @@ struct Goban::QRCode
     end
 
     # Number of the timing pattern modules for this version.
-    def timing_pattern_mods_count
+    protected def timing_pattern_mods_count
       4 * @value + 1 # 5 + 4(v - 1)
     end
 
     # Returns a list of the alignment pattern positions for thie version.
     # The list may include positions in which drawing is not allowed due
     # to overlap with the finder pattern, etc.
-    def alignment_pattern_positions
+    protected def alignment_pattern_positions
       v = @value
       return [] of Int32 if v == 1
 
@@ -49,7 +49,7 @@ struct Goban::QRCode
 
     # Number of the modules that are available for writing the actual
     # data payload.
-    def raw_data_mods_count
+    protected def raw_data_mods_count
       v = @value
       g = v // 7
 

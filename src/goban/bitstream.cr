@@ -28,7 +28,7 @@ module Goban
       append_bit_stream(segment.bit_stream)
     end
 
-    protected def append_bit_stream(bs : BitStream)
+    private def append_bit_stream(bs : BitStream)
       bs.each do |bit|
         push(bit)
       end
@@ -73,7 +73,7 @@ module Goban
     end
 
     # Adds a value to the current tail of the array.
-    protected def push(value : Bool)
+    private def push(value : Bool)
       bit_idx, sub_idx = bit_idx_and_sub_idx(@tail_idx)
       if value
         @bits[bit_idx] |= 1 << sub_idx
