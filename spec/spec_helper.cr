@@ -21,7 +21,7 @@ ALL_ALPHANUMERIC_SEGS = [
 
 ALL_BYTE_STR  = "aЉ윇😱"
 ALL_BYTE_SEGS = [
-  Goban::Segment.bytes("aЉ윇😱"),
+  Goban::Segment.byte("aЉ윇😱"),
 ]
 
 ALL_KANJI_STR  = "水星の魔女"
@@ -41,28 +41,28 @@ NUMERIC_ALPHANUMERIC_2_SEGS = [
 
 NUMERIC_BYTE_1_STR  = "012a"
 NUMERIC_BYTE_1_SEGS = [
-  Goban::Segment.bytes("012a"),
+  Goban::Segment.byte("012a"),
 ]
 NUMERIC_BYTE_2_STR  = "0123a"
 NUMERIC_BYTE_2_SEGS = [
   Goban::Segment.numeric("0123"),
-  Goban::Segment.bytes("a"),
+  Goban::Segment.byte("a"),
 ]
 
 ALPHANUMERIC_BYTE_1_STR  = "ABCDEa"
 ALPHANUMERIC_BYTE_1_SEGS = [
-  Goban::Segment.bytes("ABCDEa"),
+  Goban::Segment.byte("ABCDEa"),
 ]
 ALPHANUMERIC_BYTE_2_STR  = "ABCDEFa"
 ALPHANUMERIC_BYTE_2_SEGS = [
   Goban::Segment.alphanumeric("ABCDEF"),
-  Goban::Segment.bytes("a"),
+  Goban::Segment.byte("a"),
 ]
 
 SAMPLE_STR  = "こんにちwa、世界！ 123"
 SAMPLE_SEGS = [
   Goban::Segment.kanji("こんにち"),
-  Goban::Segment.bytes("wa"),
+  Goban::Segment.byte("wa"),
   Goban::Segment.kanji("、世界！"),
   Goban::Segment.alphanumeric(" 123"),
 ]

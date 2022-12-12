@@ -97,7 +97,7 @@ module Goban
     # ```
     # segments = [
     #   Goban::Segment.alphanumeric("HELLO WORLD"),
-    #   Goban::Segment.bytes("!"),
+    #   Goban::Segment.byte("!"),
     # ]
     # qr = Goban::QR.encode_segments(segments, Goban::QR::ECLevel::Low, Goban::QR::Version.new(1))
     # qr.print_to_console

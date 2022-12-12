@@ -28,8 +28,8 @@ module Goban
       end
     end
 
-    describe ".bytes" do
-      segment = Segment.bytes(ALL_BYTE_STR)
+    describe ".byte" do
+      segment = Segment.byte(ALL_BYTE_STR)
 
       it "reports correct character count" do
         segment.char_count.should eq(ALL_BYTE_STR.bytesize)

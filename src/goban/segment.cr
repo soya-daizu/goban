@@ -17,7 +17,7 @@ module Goban
       when .alphanumeric?
         self.alphanumeric(text)
       when .byte?
-        self.bytes(text)
+        self.byte(text)
       when .kanji?
         self.kanji(text)
       else
@@ -64,7 +64,7 @@ module Goban
     end
 
     # Shorthand method for creating a Byte mode segment.
-    def self.bytes(text : String)
+    def self.byte(text : String)
       bytes = text.bytes
       bit_stream = BitStream.new(bytes.size * 8)
       segment = self.new(Segment::Mode::Byte, bytes.size, bit_stream)
