@@ -8,7 +8,7 @@ module Goban
 
     # Generates a PNG image with the given target size and exports to the given path.
     # Note that the size of the resulting image may not be equal to the target size specified.
-    def export(qr : QRCode, path : String, target_size : Int)
+    def export(qr : QR, path : String, target_size : Int)
       size = qr.size + 4 * 2
       ratio = target_size / size
       self.export(qr, path, ratio.round.to_i, 4)
@@ -19,7 +19,7 @@ module Goban
     #
     # `mod_size` refers to the number of pixels used for each module in the QR Code symbol,
     # and `blank_mods` is the size of the white border around the symbol.
-    def export(qr : QRCode, path : String, mod_size : Int, blank_mods : Int)
+    def export(qr : QR, path : String, mod_size : Int, blank_mods : Int)
       blank_size = blank_mods * mod_size
       size = qr.size * mod_size + blank_size * 2
 

@@ -1,4 +1,4 @@
-struct Goban::QRCode
+struct Goban::QR
   # Represents a version number of the QR Code symbol.
   # Possible versions range from 1 to 40, and the higher the number,
   # the large the size of the final QR Code symbol.
@@ -17,6 +17,10 @@ struct Goban::QRCode
 
     def <=>(other : Int)
       @value <=> other
+    end
+
+    def to_i
+      value
     end
 
     # Size of the QR Code symbol for this version.

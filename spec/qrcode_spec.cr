@@ -1,16 +1,16 @@
 require "./spec_helper"
 
 module Goban
-  describe QRCode do
+  describe QR do
     describe ".encode_string" do
-      qr = QRCode.encode_string(SAMPLE_STR, QRCode::ECLevel::Medium)
+      qr = QR.encode_string(SAMPLE_STR, QR::ECLevel::Medium)
 
       it "reports correct version" do
         qr.version.value.should eq(2)
       end
 
       it "reports correct ec level" do
-        qr.ecl.should eq(QRCode::ECLevel::Medium)
+        qr.ecl.should eq(QR::ECLevel::Medium)
       end
 
       it "encodes properly" do
@@ -23,20 +23,20 @@ module Goban
         end
 
         expect_raises(Exception, "Text too long") do
-          QRCode.encode_string(long_str, QRCode::ECLevel::Low)
+          QR.encode_string(long_str, QR::ECLevel::Low)
         end
       end
     end
 
     describe ".encode_segments" do
-      qr = QRCode.encode_segments(SAMPLE_SEGS, QRCode::ECLevel::Medium, QRCode::Version.new(2))
+      qr = QR.encode_segments(SAMPLE_SEGS, QR::ECLevel::Medium, QR::Version.new(2))
 
       it "reports correct version" do
         qr.version.value.should eq(2)
       end
 
       it "reports correct ec level" do
-        qr.ecl.should eq(QRCode::ECLevel::Medium)
+        qr.ecl.should eq(QR::ECLevel::Medium)
       end
 
       it "encodes properly" do

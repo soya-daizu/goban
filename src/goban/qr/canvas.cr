@@ -1,4 +1,4 @@
-struct Goban::QRCode
+struct Goban::QR
   # Holds information about each modules in a QR Code symbol.
   struct Canvas
     # Returns the array of modules drawn on the canvas.

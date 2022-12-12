@@ -58,7 +58,7 @@ module Goban
       segments = SAMPLE_SEGS
 
       it "reports correct bit count" do
-        count = Segment.count_total_bits(segments, QRCode::Version.new(2))
+        count = Segment.count_total_bits(segments, QR::Version.new(2))
         count.should eq(191)
       end
 
@@ -68,7 +68,7 @@ module Goban
         end
 
         expect_raises(Exception, "Segment too long") do
-          Segment.count_total_bits([Segment.kanji(long_str)], QRCode::Version.new(1))
+          Segment.count_total_bits([Segment.kanji(long_str)], QR::Version.new(1))
         end
       end
     end

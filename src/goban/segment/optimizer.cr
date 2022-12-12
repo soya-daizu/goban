@@ -6,7 +6,7 @@ struct Goban::Segment
 
     # Returns a tuple of the optimized segments and QR Code version
     # for the given text and error correction level.
-    def make_optimized_segments(text : String, ecl : QRCode::ECLevel) : Tuple(Array(Segment), QRCode::Version)
+    def make_optimized_segments(text : String, ecl : QR::ECLevel) : Tuple(Array(Segment), QR::Version)
       chars = text.chars
       segments, version = nil, nil
       used_bits = 0
@@ -16,7 +16,7 @@ struct Goban::Segment
       # so we first calculate the segments at those boundaries, and adjust
       # the version number later
       {(1..9), (10..26), (27..40)}.each do |group|
-        v = QRCode::Version.new(group.end)
+        v = QR::Version.new(group.end)
         char_modes = compute_char_modes(chars, v)
         segments = make_segments(text, char_modes)
 
@@ -32,7 +32,7 @@ struct Goban::Segment
         # Now find the smallest version in that group that can hold its data
         if used_bits <= cap_bits
           group.each do |i|
-            sml_v = QRCode::Version.new(i)
+            sml_v = QR::Version.new(i)
             sml_cap_bits = sml_v.max_data_codewords(ecl) * 8
 
             if used_bits <= sml_cap_bits
@@ -52,7 +52,7 @@ struct Goban::Segment
     # Makes a list of the best encoding mode for the each given character
     # by dynamic programming algorithm. The code is based on:
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
-    private def compute_char_modes(chars : Array(Char), version : QRCode::Version)
+    private def compute_char_modes(chars : Array(Char), version : QR::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
       head_costs = modes.map { |m| ((4 + m.cci_bits_size(version)) * 6).to_f32 }
       char_modes = Array(StaticArray(Segment::Mode, 4)).new(chars.size)

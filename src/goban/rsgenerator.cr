@@ -3,7 +3,7 @@ module Goban
   module RSGenerator
     extend self
 
-    def add_ec_codewords(codewords : Slice(UInt8), version : QRCode::Version, ecl : QRCode::ECLevel)
+    def add_ec_codewords(codewords : Slice(UInt8), version : QR::Version, ecl : QR::ECLevel)
       raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
 
       ec_blocks_count = ERROR_CORRECTION_BLOCKS[ecl.value][version.value]

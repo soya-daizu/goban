@@ -2,12 +2,12 @@ module Goban
   module SVGExporter
     extend self
 
-    def export(qr : QRCode, path : String)
+    def export(qr : QR, path : String)
       string = svg_string(qr, 4)
       File.write(path, string)
     end
 
-    def svg_string(qr : QRCode, blank_mods : Int)
+    def svg_string(qr : QR, blank_mods : Int)
       parts = [] of String
 
       qr.size.times do |x|

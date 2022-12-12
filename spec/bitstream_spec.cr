@@ -3,8 +3,8 @@ require "./spec_helper"
 module Goban
   describe BitStream do
     it "builds data bits properly" do
-      v = QRCode::Version.new(1)
-      ecl = QRCode::ECLevel::Low
+      v = QR::Version.new(1)
+      ecl = QR::ECLevel::Low
       bit_stream = BitStream.new(v.max_data_codewords(ecl) * 8)
       bit_stream.append_segment_bits(Segment.numeric("0123456789"), v)
       bit_stream.append_terminator_bits(v, ecl)

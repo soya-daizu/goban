@@ -1,4 +1,4 @@
-struct Goban::QRCode
+struct Goban::QR
   # Error correction level of the QR Code.
   # QR Code symbols include redundant bits based on the selected error
   # correction level, so that even if some part the symbol is not readable,

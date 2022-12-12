@@ -22,7 +22,7 @@ module Goban
       @bits = Pointer(UInt8).malloc(malloc_size, 0)
     end
 
-    protected def append_segment_bits(segment : Segment, version : QRCode::Version)
+    protected def append_segment_bits(segment : Segment, version : QR::Version)
       append_bits(segment.mode.to_i, 4)
       append_bits(segment.char_count, segment.mode.cci_bits_size(version))
       append_bit_stream(segment.bit_stream)
@@ -34,7 +34,7 @@ module Goban
       end
     end
 
-    protected def append_terminator_bits(version : QRCode::Version, ecl : QRCode::ECLevel)
+    protected def append_terminator_bits(version : QR::Version, ecl : QR::ECLevel)
       cap_bits = version.max_data_codewords(ecl) * 8
       terminator_bits_size = Math.min(4, cap_bits - @tail_idx)
       append_bits(0, terminator_bits_size)

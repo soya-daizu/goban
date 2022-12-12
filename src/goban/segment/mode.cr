@@ -10,7 +10,7 @@ struct Goban::Segment
     Undefined        = UInt8::MAX
 
     # Number of the character count indicator bits for this mode.
-    protected def cci_bits_size(ver : QRCode::Version)
+    protected def cci_bits_size(ver : QR::Version)
       case self
       when Numeric
         values = {10, 12, 14}

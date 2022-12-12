@@ -110,7 +110,7 @@ module Goban
     end
 
     # Count number of bits in the given list of segments.
-    def self.count_total_bits(segments : Array(Segment), version : QRCode::Version)
+    def self.count_total_bits(segments : Array(Segment), version : QR::Version)
       result = 0
       segments.each do |segment|
         cci_bits_size = segment.mode.cci_bits_size(version)
