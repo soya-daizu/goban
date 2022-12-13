@@ -1,4 +1,5 @@
 require "./qr/*"
+require "./ecc/*"
 
 module Goban
   # Object that represents an encoded QR Code symbol.
@@ -7,7 +8,7 @@ module Goban
     # but simply indicates the size format of the QR Code symbol.
     getter version : Version
     # Error correction level of the QR Code symbol.
-    getter ecl : ECLevel
+    getter ecl : ECC::Level
     # Returns the canvas of the QR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
     getter canvas : Canvas
@@ -25,7 +26,7 @@ module Goban
     # Use `PNGExporter` to generate the PNG image from the QR Code object generated.
     #
     # ```
-    # qr = Goban::QR.encode_string("Hello World!", Goban::QR::ECLevel::Low)
+    # qr = Goban::QR.encode_string("Hello World!", Goban::ECC::Level::Low)
     # qr.print_to_console
     # # => ██████████████  ████    ██  ██████████████
     # #    ██          ██    ██    ██  ██          ██
@@ -62,7 +63,7 @@ module Goban
     # examples:
     #
     # ```
-    # # These examples are the optimal segmentations when the ECLevel is Medium.
+    # # These examples are the optimal segmentations when the EC Level is Medium.
     # # Note that the Segment object shown in these examples are not the actual Segment object used
     # # in the Goban's codebase but they are just pseudo objects.
     #
@@ -83,7 +84,7 @@ module Goban
     # building data segments by yourself so that Goban doesn't have to do extra processing to figure
     # it out every single time. See `#encode_segments` for how to create QR Codes by manually creating
     # encoding segments.
-    def self.encode_string(text : String, ecl : ECLevel = ECLevel::Medium)
+    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
       segments, version = Segment::Optimizer.make_optimized_segments(text, ecl)
       self.encode_segments(segments, ecl, version)
     end
@@ -99,7 +100,7 @@ module Goban
     #   Goban::Segment.alphanumeric("HELLO WORLD"),
     #   Goban::Segment.byte("!"),
     # ]
-    # qr = Goban::QR.encode_segments(segments, Goban::QR::ECLevel::Low, Goban::QR::Version.new(1))
+    # qr = Goban::QR.encode_segments(segments, Goban::ECC::Level::Low, Goban::QR::Version.new(1))
     # qr.print_to_console
     # # => ██████████████    ██  ████  ██████████████
     # #    ██          ██    ██████    ██          ██
@@ -127,7 +128,7 @@ module Goban
     # When constructing your own segments, note that it may not result in the segments that has the
     # shortest data length even if for each character in the source string you choose an encoding type
     # with the smallest character set that supports that supports it.
-    def self.encode_segments(segments : Array(Segment), ecl : ECLevel, version : Version | Int)
+    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
       bit_stream = BitStream.new(version.max_data_codewords(ecl) * 8)
       segments.each do |segment|
@@ -136,7 +137,7 @@ module Goban
       bit_stream.append_terminator_bits(version, ecl)
       bit_stream.append_padding_bits
 
-      data_codewords = RSGenerator.add_ec_codewords(bit_stream.to_bytes, version, ecl)
+      data_codewords = ECC::RSGenerator.add_ec_codewords(bit_stream.to_bytes, version, ecl)
 
       canvas = Canvas.new(version, ecl)
       canvas.draw_function_patterns

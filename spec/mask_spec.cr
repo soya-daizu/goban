@@ -4,7 +4,7 @@ module Goban
   describe QR::Mask do
     describe ".evaluate_score" do
       it "reports correct score", tags: "a" do
-        canvas = QR::Canvas.new(QR::Version.new(1), QR::ECLevel::Low)
+        canvas = QR::Canvas.new(QR::Version.new(1), ECC::Level::Low)
         canvas.draw_function_patterns
 
         # 286 + 286 + 723 + 360 + 360 + 50

@@ -34,7 +34,7 @@ module Goban
       end
     end
 
-    protected def append_terminator_bits(version : QR::Version, ecl : QR::ECLevel)
+    protected def append_terminator_bits(version : QR::Version, ecl : ECC::Level)
       cap_bits = version.max_data_codewords(ecl) * 8
       terminator_bits_size = Math.min(4, cap_bits - @tail_idx)
       append_bits(0, terminator_bits_size)

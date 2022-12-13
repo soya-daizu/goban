@@ -9,7 +9,7 @@ struct Goban::QR
     getter mask : Mask
 
     # Creates a blank canvas with the given version and error correction level.
-    def initialize(@version : Version, @ecl : ECLevel)
+    def initialize(@version : Version, @ecl : ECC::Level)
       @size = @version.symbol_size
       @modules = Array(Bool).new(@size ** 2, false)
       @reserved_modules = @modules.clone

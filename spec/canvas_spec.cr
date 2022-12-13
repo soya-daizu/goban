@@ -10,7 +10,7 @@ module Goban
   describe QR::Canvas do
     describe "#draw_function_patterns" do
       it "draws all function patterns" do
-        canvas = QR::Canvas.new(QR::Version.new(7), QR::ECLevel::Low)
+        canvas = QR::Canvas.new(QR::Version.new(7), ECC::Level::Low)
         canvas.draw_function_patterns
 
         canvas.modules.should eq(FUNCTION_PATTERN_MODS)
@@ -19,7 +19,7 @@ module Goban
 
     describe "#draw_data_codewords" do
       it "fills codewords properly" do
-        canvas = QR::Canvas.new(QR::Version.new(1), QR::ECLevel::Low)
+        canvas = QR::Canvas.new(QR::Version.new(1), ECC::Level::Low)
         canvas.reserve_modules_for_test
 
         codewords = Array(UInt8).new(21 ** 2 - 7 ** 2, 154)
@@ -31,7 +31,7 @@ module Goban
 
     describe "#apply_best_mask" do
       it "applies best mask" do
-        canvas = QR::Canvas.new(QR::Version.new(1), QR::ECLevel::Low)
+        canvas = QR::Canvas.new(QR::Version.new(1), ECC::Level::Low)
         canvas.modules.map_with_index! { |_, idx| idx.odd? }
 
         canvas.apply_best_mask.value.should eq(2)

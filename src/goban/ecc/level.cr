@@ -1,4 +1,4 @@
-struct Goban::QR
+module Goban::ECC
   # Error correction level of the QR Code.
   # QR Code symbols include redundant bits based on the selected error
   # correction level, so that even if some part the symbol is not readable,
@@ -11,7 +11,7 @@ struct Goban::QR
   #
   # Note that choosing a higher error correction level requires more redundant
   # bits, meaning that the resulting QR Code symbol can get larger.
-  enum ECLevel : UInt8
+  enum Level : UInt8
     Low      = 0
     Medium   = 1
     Quartile = 2

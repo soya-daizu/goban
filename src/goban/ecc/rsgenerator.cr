@@ -1,9 +1,9 @@
-module Goban
+module Goban::ECC
   # Module for generating redundant Reed-Solomon error correction bits.
   module RSGenerator
     extend self
 
-    def add_ec_codewords(codewords : Slice(UInt8), version : QR::Version, ecl : QR::ECLevel)
+    def add_ec_codewords(codewords : Slice(UInt8), version : QR::Version, ecl : Level)
       raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
 
       ec_blocks_count = ERROR_CORRECTION_BLOCKS[ecl.value][version.value]

@@ -6,7 +6,7 @@ struct Goban::Segment
 
     # Returns a tuple of the optimized segments and QR Code version
     # for the given text and error correction level.
-    def make_optimized_segments(text : String, ecl : QR::ECLevel) : Tuple(Array(Segment), QR::Version)
+    def make_optimized_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
       chars = text.chars
       segments, version = nil, nil
       used_bits = 0
