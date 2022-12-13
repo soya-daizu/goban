@@ -28,7 +28,7 @@ struct Goban::QR
       4 * @value + 17 # 21 + 4(v - 1)
     end
 
-    # Number of the timing pattern modules for this version.
+    # Number of the timing pattern modules in one direction for this version.
     protected def timing_pattern_mods_count
       4 * @value + 1 # 5 + 4(v - 1)
     end
