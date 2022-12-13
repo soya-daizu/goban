@@ -1,10 +1,10 @@
 # Goban
 
-A fast and efficient QR Code encoder library written purely in Crystal. It uses less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.
+A fast and efficient QR Code encoder library written purely in Crystal. It uses significantly less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.
 
-The encoder implementation is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html), and the text segmentation algorithm is based on [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
+The encoder implementation is mostly independent of other implementations and is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html), however the efficient text segmentation is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
-The name comes from the board game [Go](https://en.wikipedia.org/wiki/Go_(game)) (No, not that programming language!), which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the name of the [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
+The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the name of the [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
 ## Benchmark
 
@@ -16,15 +16,32 @@ require "qr-code"
 require "goban"
 
 Benchmark.ips do |x|
-  x.report("qr-code") { QRCode.new("Hello World!", level: :h) }
-  x.report("goban") { Goban::QRCode.encode_string("Hello World!", Goban::QRCode::ECLevel::High) }
+  x.report("qr-code") { QR.new("Hello World!", level: :h) }
+  x.report("goban") { Goban::QR.encode_string("Hello World!", Goban::ECC::Level::High) }
 end
 ```
 
 ```
-qr-code   2.14k (467.30µs) (± 0.69%)   149kB/op   2.12× slower
-  goban   4.55k (219.94µs) (± 0.54%)  2.71kB/op        fastest
+qr-code   3.39k (295.26µs) (± 1.40%)   149kB/op   2.13× slower
+  goban   7.20k (138.80µs) (± 1.99%)  2.71kB/op        fastest
 ```
+
+## Features
+
+- [x] Encoding a sequence of text segments
+  - [x] Numeric mode
+  - [x] Alphanumeric mode
+  - [x] Byte mode
+  - [x] Kanji mode
+- [x] Building optimized text segments from a string
+- [x] Error correction coding using Reed-Solomon Codes
+- [x] Data masking with all 8 mask patterns
+- [x] Support for all QR Code versions from 1 to 40
+- [] Structured append of symbols
+- [] Micro QR Code (In development)
+- [] rMQR Code (Not a part of ISO/IEC 18004:2015 standard)
+
+Goban will not support generation of QR Code Model 1 symbols as it is considered obsolete.
 
 ## Installation
 
@@ -43,7 +60,7 @@ qr-code   2.14k (467.30µs) (± 0.69%)   149kB/op   2.12× slower
 ```crystal
 require "goban"
 
-qr = Goban::QRCode.encode_string("Hello World!", Goban::QRCode::ECLevel::Low)
+qr = Goban::QR.encode_string("Hello World!", Goban::ECC::Level::Low)
 qr.print_to_console
 # => ██████████████  ████    ██  ██████████████
 #    ██          ██    ██    ██  ██          ██
@@ -52,20 +69,20 @@ qr.print_to_console
 #    ██  ██████  ██  ██████      ██  ██████  ██
 #    ██          ██              ██          ██
 #    ██████████████  ██  ██  ██  ██████████████
-#                      ████                    
+#                      ████
 #    ████████    ██  ██  ██    ██    ██████  ██
 #    ██████████    ██  ██    ██████████████  ██
 #        ██    ████    ██    ████  ██      ████
-#    ████  ██      ██████    ██    ██  ██  ██  
+#    ████  ██      ██████    ██    ██  ██  ██
 #    ████  ██████████  ██████  ████          ██
 #                    ████████    ████    ██  ██
-#    ██████████████      ██    ████████        
-#    ██          ██    ██████████  ██  ████    
-#    ██  ██████  ██    ██  ██          ██████  
-#    ██  ██████  ██  ██  ██  ██  ██    ██████  
-#    ██  ██████  ██  ██████  ██    ██    ██    
+#    ██████████████      ██    ████████
+#    ██          ██    ██████████  ██  ████
+#    ██  ██████  ██    ██  ██          ██████
+#    ██  ██████  ██  ██  ██  ██  ██    ██████
+#    ██  ██████  ██  ██████  ██    ██    ██
 #    ██          ██  ██    ██  ████████      ██
-#    ██████████████  ██    ██  ██████    ██    
+#    ██████████████  ██    ██  ██████    ██
 ```
 
 To generate a PNG image, add [stumpy_png](https://github.com/stumpycr/stumpy_png) as a dependency in your shard.yml, and `require "goban/exporters/png"` to use `PNGExporter`.
@@ -73,13 +90,13 @@ To generate a PNG image, add [stumpy_png](https://github.com/stumpycr/stumpy_png
 ```crystal
 require "goban/exporters/png"
 
-qr = Goban::QRCode.encode_string("Hello World!")
+qr = Goban::QR.encode_string("Hello World!")
 puts "Exporting with targeted size: 500"
 size = Goban::PNGExporter.export(qr, "output.png", 500)
 puts "Actual QR Code size: #{size}"
 ```
 
-See [API docs](https://soya-daizu.github.io/goban/) for more details.
+See [API docs](https://soya-daizu.github.io/goban/Goban/QR.html) for more details.
 
 ## Contributing
 
