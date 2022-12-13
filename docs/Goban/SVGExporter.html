@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.6.0-dev">
+<meta name="generator" content="Crystal Docs 1.6.1">
 <meta name="crystal_docs.project_version" content="master-dev">
 <meta name="crystal_docs.project_name" content="goban">
 
@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::RSCode - goban master-dev</title>
+  <title>Goban::SVGExporter - goban master-dev</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -61,33 +61,18 @@
       
     </li>
   
-  <li class=" " data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
-      <a href="../Goban/PNGExporter.html">PNGExporter</a>
-      
-    </li>
-  
-  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qrcode">
-      <a href="../Goban/QR.html">QR</a>
+  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+      <a href="../Goban/ECC.html">ECC</a>
       
         <ul>
   
-  <li class=" " data-id="goban/Goban/QR/Canvas" data-name="goban::qrcode::canvas">
-      <a href="../Goban/QR/Canvas.html">Canvas</a>
+  <li class=" " data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
+      <a href="../Goban/ECC/Level.html">Level</a>
       
     </li>
   
-  <li class=" " data-id="goban/Goban/QR/ECLevel" data-name="goban::qrcode::eclevel">
-      <a href="../Goban/QR/ECLevel.html">ECLevel</a>
-      
-    </li>
-  
-  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qrcode::mask">
-      <a href="../Goban/QR/Mask.html">Mask</a>
-      
-    </li>
-  
-  <li class=" " data-id="goban/Goban/QR/Version" data-name="goban::qrcode::version">
-      <a href="../Goban/QR/Version.html">Version</a>
+  <li class=" " data-id="goban/Goban/ECC/RSGenerator" data-name="goban::ecc::rsgenerator">
+      <a href="../Goban/ECC/RSGenerator.html">RSGenerator</a>
       
     </li>
   
@@ -96,8 +81,48 @@
       
     </li>
   
-  <li class=" current" data-id="goban/Goban/RSCode" data-name="goban::rscode">
-      <a href="../Goban/RSCode.html">RSCode</a>
+  <li class="parent " data-id="goban/Goban/MQR" data-name="goban::mqr">
+      <a href="../Goban/MQR.html">MQR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/MQR/Version" data-name="goban::mqr::version">
+      <a href="../Goban/MQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
+      <a href="../Goban/PNGExporter.html">PNGExporter</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qr">
+      <a href="../Goban/QR.html">QR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/QR/Canvas" data-name="goban::qr::canvas">
+      <a href="../Goban/QR/Canvas.html">Canvas</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
+      <a href="../Goban/QR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Version" data-name="goban::qr::version">
+      <a href="../Goban/QR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -121,6 +146,11 @@
       
     </li>
   
+  <li class=" current" data-id="goban/Goban/SVGExporter" data-name="goban::svgexporter">
+      <a href="../Goban/SVGExporter.html">SVGExporter</a>
+      
+    </li>
+  
 </ul>
 
       
@@ -135,7 +165,7 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Goban::RSCode
+  <span class="kind">module</span> Goban::SVGExporter
 
 </h1>
 
@@ -159,7 +189,7 @@
   </h2>
   <ul class="other-types-list">
     
-      <li class="other-type"><a href="../Goban/RSCode.html">Goban::RSCode</a></li>
+      <li class="other-type"><a href="../Goban/SVGExporter.html">Goban::SVGExporter</a></li>
     
   </ul>
 
@@ -180,7 +210,9 @@
   </h2>
   
     
-      goban/rs_code.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/exporters/svg.cr#L2" target="_blank">
+        goban/exporters/svg.cr
+      </a>
     
     <br/>
   
@@ -204,7 +236,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#add_ec_codewords%28codewords%3ASlice%28UInt8%29%2Cversion%3AQR%3A%3AVersion%2Cecl%3AQR%3A%3AECLevel%29-instance-method" class="signature"><strong>#add_ec_codewords</strong>(codewords : Slice(UInt8), version : QR::Version, ecl : QR::ECLevel)</a>
+        <a href="#export%28qr%3AQR%2Cpath%3AString%29-instance-method" class="signature"><strong>#export</strong>(qr : QR, path : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#svg_string%28qr%3AQR%2Cblank_mods%3AInt%29-instance-method" class="signature"><strong>#svg_string</strong>(qr : QR, blank_mods : Int)</a>
         
       </li>
     
@@ -232,16 +269,34 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="add_ec_codewords(codewords:Slice(UInt8),version:QR::Version,ecl:QR::ECLevel)-instance-method">
+    <div class="entry-detail" id="export(qr:QR,path:String)-instance-method">
       <div class="signature">
         
-        def <strong>add_ec_codewords</strong>(codewords : Slice(UInt8), version : <a href="../Goban/QR/Version.html">QR::Version</a>, ecl : <a href="../Goban/QR/ECLevel.html">QR::ECLevel</a>)
+        def <strong>export</strong>(qr : <a href="../Goban/QR.html">QR</a>, path : String)
 
-        <a class="method-permalink" href="#add_ec_codewords%28codewords%3ASlice%28UInt8%29%2Cversion%3AQR%3A%3AVersion%2Cecl%3AQR%3A%3AECLevel%29-instance-method">#</a>
+        <a class="method-permalink" href="#export%28qr%3AQR%2Cpath%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/exporters/svg.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="svg_string(qr:QR,blank_mods:Int)-instance-method">
+      <div class="signature">
+        
+        def <strong>svg_string</strong>(qr : <a href="../Goban/QR.html">QR</a>, blank_mods : Int)
+
+        <a class="method-permalink" href="#svg_string%28qr%3AQR%2Cblank_mods%3AInt%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/exporters/svg.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>

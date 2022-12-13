@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::Segment::Optimizer - goban master-dev</title>
+  <title>Goban::QR::Mask - goban master-dev</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -101,7 +101,7 @@
       
     </li>
   
-  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qr">
+  <li class="parent open current" data-id="goban/Goban/QR" data-name="goban::qr">
       <a href="../../Goban/QR.html">QR</a>
       
         <ul>
@@ -111,7 +111,7 @@
       
     </li>
   
-  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
+  <li class=" current" data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
       <a href="../../Goban/QR/Mask.html">Mask</a>
       
     </li>
@@ -126,7 +126,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="goban/Goban/Segment" data-name="goban::segment">
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
       <a href="../../Goban/Segment.html">Segment</a>
       
         <ul>
@@ -136,7 +136,7 @@
       
     </li>
   
-  <li class=" current" data-id="goban/Goban/Segment/Optimizer" data-name="goban::segment::optimizer">
+  <li class=" " data-id="goban/Goban/Segment/Optimizer" data-name="goban::segment::optimizer">
       <a href="../../Goban/Segment/Optimizer.html">Optimizer</a>
       
     </li>
@@ -165,10 +165,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Goban::Segment::Optimizer
+  <span class="kind">struct</span> Goban::QR::Mask
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Goban/QR/Mask.html">Goban::QR::Mask</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
 
 
 
@@ -182,28 +184,13 @@
     Overview
   </h2>
 
-  <p>Module for optimizing segmentations of the different encoding modes
-for the given text string.</p>
+  <p>Represents a mask pattern that can be applied to a canvas.</p>
 
 
 
 
 
 
-
-  <h2>
-    <a id="extended-modules" class="anchor" href="#extended-modules">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Extended Modules
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../../Goban/Segment/Optimizer.html">Goban::Segment::Optimizer</a></li>
-    
-  </ul>
 
 
 
@@ -222,8 +209,8 @@ for the given text string.</p>
   </h2>
   
     
-      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/optimizer.cr#L4" target="_blank">
-        goban/segment/optimizer.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/mask.cr#L3" target="_blank">
+        goban/qr/mask.cr
       </a>
     
     <br/>
@@ -232,6 +219,23 @@ for the given text string.</p>
 
 
 
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28value%3AUInt8%29-class-method" class="signature"><strong>.new</strong>(value : UInt8)</a>
+        
+      </li>
+    
+  </ul>
 
 
 
@@ -248,9 +252,9 @@ for the given text string.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#make_optimized_segments%28text%3AString%2Cecl%3AECC%3A%3ALevel%29%3ATuple%28Array%28Segment%29%2CQR%3A%3AVersion%29-instance-method" class="signature"><strong>#make_optimized_segments</strong>(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)</a>
+        <a href="#value%3AUInt8-instance-method" class="signature"><strong>#value</strong> : UInt8</a>
         
-          <div class="summary"><p>Returns a tuple of the optimized segments and QR Code version for the given text and error correction level.</p></div>
+          <div class="summary"><p>Mask identifier.</p></div>
         
       </li>
     
@@ -262,8 +266,64 @@ for the given text string.</p>
 
 <div class="methods-inherited">
   
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
 </div>
 
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(value:UInt8)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(value : UInt8)
+
+        <a class="method-permalink" href="#new%28value%3AUInt8%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/mask.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
@@ -278,24 +338,23 @@ for the given text string.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="make_optimized_segments(text:String,ecl:ECC::Level):Tuple(Array(Segment),QR::Version)-instance-method">
+    <div class="entry-detail" id="value:UInt8-instance-method">
       <div class="signature">
         
-        def <strong>make_optimized_segments</strong>(text : String, ecl : <a href="../../Goban/ECC/Level.html">ECC::Level</a>) : Tuple(Array(<a href="../../Goban/Segment.html">Segment</a>), <a href="../../Goban/QR/Version.html">QR::Version</a>)
+        def <strong>value</strong> : UInt8
 
-        <a class="method-permalink" href="#make_optimized_segments%28text%3AString%2Cecl%3AECC%3A%3ALevel%29%3ATuple%28Array%28Segment%29%2CQR%3A%3AVersion%29-instance-method">#</a>
+        <a class="method-permalink" href="#value%3AUInt8-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Returns a tuple of the optimized segments and QR Code version
-for the given text and error correction level.</p>
+          <p>Mask identifier. Valid values are integers from 0 to 7.</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/optimizer.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/mask.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>

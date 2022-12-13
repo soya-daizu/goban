@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Crystal Docs 1.6.0-dev">
-<meta name="crystal_docs.project_version" content="master">
+<meta name="generator" content="Crystal Docs 1.6.1">
+<meta name="crystal_docs.project_version" content="master-dev">
 <meta name="crystal_docs.project_name" content="goban">
 
 
@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::PNGExporter - goban master</title>
+  <title>Goban::PNGExporter - goban master-dev</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -39,7 +39,7 @@
       </h1>
 
       <span class="project-version">
-        master
+        master-dev
       </span>
     </div>
   </div>
@@ -61,33 +61,18 @@
       
     </li>
   
-  <li class=" current" data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
-      <a href="../Goban/PNGExporter.html">PNGExporter</a>
-      
-    </li>
-  
-  <li class="parent " data-id="goban/Goban/QRCode" data-name="goban::qrcode">
-      <a href="../Goban/QRCode.html">QRCode</a>
+  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+      <a href="../Goban/ECC.html">ECC</a>
       
         <ul>
   
-  <li class=" " data-id="goban/Goban/QRCode/Canvas" data-name="goban::qrcode::canvas">
-      <a href="../Goban/QRCode/Canvas.html">Canvas</a>
+  <li class=" " data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
+      <a href="../Goban/ECC/Level.html">Level</a>
       
     </li>
   
-  <li class=" " data-id="goban/Goban/QRCode/ECLevel" data-name="goban::qrcode::eclevel">
-      <a href="../Goban/QRCode/ECLevel.html">ECLevel</a>
-      
-    </li>
-  
-  <li class=" " data-id="goban/Goban/QRCode/Mask" data-name="goban::qrcode::mask">
-      <a href="../Goban/QRCode/Mask.html">Mask</a>
-      
-    </li>
-  
-  <li class=" " data-id="goban/Goban/QRCode/Version" data-name="goban::qrcode::version">
-      <a href="../Goban/QRCode/Version.html">Version</a>
+  <li class=" " data-id="goban/Goban/ECC/RSGenerator" data-name="goban::ecc::rsgenerator">
+      <a href="../Goban/ECC/RSGenerator.html">RSGenerator</a>
       
     </li>
   
@@ -96,8 +81,48 @@
       
     </li>
   
-  <li class=" " data-id="goban/Goban/RSGenerator" data-name="goban::rsgenerator">
-      <a href="../Goban/RSGenerator.html">RSGenerator</a>
+  <li class="parent " data-id="goban/Goban/MQR" data-name="goban::mqr">
+      <a href="../Goban/MQR.html">MQR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/MQR/Version" data-name="goban::mqr::version">
+      <a href="../Goban/MQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" current" data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
+      <a href="../Goban/PNGExporter.html">PNGExporter</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qr">
+      <a href="../Goban/QR.html">QR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/QR/Canvas" data-name="goban::qr::canvas">
+      <a href="../Goban/QR/Canvas.html">Canvas</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
+      <a href="../Goban/QR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Version" data-name="goban::qr::version">
+      <a href="../Goban/QR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -118,6 +143,11 @@
   
 </ul>
 
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/SVGExporter" data-name="goban::svgexporter">
+      <a href="../Goban/SVGExporter.html">SVGExporter</a>
       
     </li>
   
@@ -231,14 +261,14 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#export%28qr%3AQRCode%2Cpath%3AString%2Cmod_size%3AInt%2Cblank_mods%3AInt%29-instance-method" class="signature"><strong>#export</strong>(qr : QRCode, path : String, mod_size : Int, blank_mods : Int)</a>
+        <a href="#export%28qr%3AQR%2Cpath%3AString%2Cmod_size%3AInt%2Cblank_mods%3AInt%29-instance-method" class="signature"><strong>#export</strong>(qr : QR, path : String, mod_size : Int, blank_mods : Int)</a>
         
           <div class="summary"><p>Generates a PNG image with the given module size and blank modules, and exportes to the given path.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#export%28qr%3AQRCode%2Cpath%3AString%2Ctarget_size%3AInt%29-instance-method" class="signature"><strong>#export</strong>(qr : QRCode, path : String, target_size : Int)</a>
+        <a href="#export%28qr%3AQR%2Cpath%3AString%2Ctarget_size%3AInt%29-instance-method" class="signature"><strong>#export</strong>(qr : QR, path : String, target_size : Int)</a>
         
           <div class="summary"><p>Generates a PNG image with the given target size and exports to the given path.</p></div>
         
@@ -288,12 +318,12 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="export(qr:QRCode,path:String,mod_size:Int,blank_mods:Int)-instance-method">
+    <div class="entry-detail" id="export(qr:QR,path:String,mod_size:Int,blank_mods:Int)-instance-method">
       <div class="signature">
         
-        def <strong>export</strong>(qr : <a href="../Goban/QRCode.html">QRCode</a>, path : String, mod_size : Int, blank_mods : Int)
+        def <strong>export</strong>(qr : <a href="../Goban/QR.html">QR</a>, path : String, mod_size : Int, blank_mods : Int)
 
-        <a class="method-permalink" href="#export%28qr%3AQRCode%2Cpath%3AString%2Cmod_size%3AInt%2Cblank_mods%3AInt%29-instance-method">#</a>
+        <a class="method-permalink" href="#export%28qr%3AQR%2Cpath%3AString%2Cmod_size%3AInt%2Cblank_mods%3AInt%29-instance-method">#</a>
       </div>
       
         <div class="doc">
@@ -312,12 +342,12 @@ and <code>blank_mods</code> is the size of the white border around the symbol.</
       </div>
     </div>
   
-    <div class="entry-detail" id="export(qr:QRCode,path:String,target_size:Int)-instance-method">
+    <div class="entry-detail" id="export(qr:QR,path:String,target_size:Int)-instance-method">
       <div class="signature">
         
-        def <strong>export</strong>(qr : <a href="../Goban/QRCode.html">QRCode</a>, path : String, target_size : Int)
+        def <strong>export</strong>(qr : <a href="../Goban/QR.html">QR</a>, path : String, target_size : Int)
 
-        <a class="method-permalink" href="#export%28qr%3AQRCode%2Cpath%3AString%2Ctarget_size%3AInt%29-instance-method">#</a>
+        <a class="method-permalink" href="#export%28qr%3AQR%2Cpath%3AString%2Ctarget_size%3AInt%29-instance-method">#</a>
       </div>
       
         <div class="doc">

@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::Segment::Optimizer - goban master-dev</title>
+  <title>Goban::ECC::RSGenerator - goban master-dev</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -61,7 +61,7 @@
       
     </li>
   
-  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+  <li class="parent open current" data-id="goban/Goban/ECC" data-name="goban::ecc">
       <a href="../../Goban/ECC.html">ECC</a>
       
         <ul>
@@ -71,7 +71,7 @@
       
     </li>
   
-  <li class=" " data-id="goban/Goban/ECC/RSGenerator" data-name="goban::ecc::rsgenerator">
+  <li class=" current" data-id="goban/Goban/ECC/RSGenerator" data-name="goban::ecc::rsgenerator">
       <a href="../../Goban/ECC/RSGenerator.html">RSGenerator</a>
       
     </li>
@@ -126,7 +126,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="goban/Goban/Segment" data-name="goban::segment">
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
       <a href="../../Goban/Segment.html">Segment</a>
       
         <ul>
@@ -136,7 +136,7 @@
       
     </li>
   
-  <li class=" current" data-id="goban/Goban/Segment/Optimizer" data-name="goban::segment::optimizer">
+  <li class=" " data-id="goban/Goban/Segment/Optimizer" data-name="goban::segment::optimizer">
       <a href="../../Goban/Segment/Optimizer.html">Optimizer</a>
       
     </li>
@@ -165,7 +165,7 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Goban::Segment::Optimizer
+  <span class="kind">module</span> Goban::ECC::RSGenerator
 
 </h1>
 
@@ -182,8 +182,7 @@
     Overview
   </h2>
 
-  <p>Module for optimizing segmentations of the different encoding modes
-for the given text string.</p>
+  <p>Module for generating redundant Reed-Solomon error correction bits.</p>
 
 
 
@@ -201,7 +200,7 @@ for the given text string.</p>
   </h2>
   <ul class="other-types-list">
     
-      <li class="other-type"><a href="../../Goban/Segment/Optimizer.html">Goban::Segment::Optimizer</a></li>
+      <li class="other-type"><a href="../../Goban/ECC/RSGenerator.html">Goban::ECC::RSGenerator</a></li>
     
   </ul>
 
@@ -222,8 +221,8 @@ for the given text string.</p>
   </h2>
   
     
-      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/optimizer.cr#L4" target="_blank">
-        goban/segment/optimizer.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/rsgenerator.cr#L3" target="_blank">
+        goban/ecc/rsgenerator.cr
       </a>
     
     <br/>
@@ -248,9 +247,7 @@ for the given text string.</p>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#make_optimized_segments%28text%3AString%2Cecl%3AECC%3A%3ALevel%29%3ATuple%28Array%28Segment%29%2CQR%3A%3AVersion%29-instance-method" class="signature"><strong>#make_optimized_segments</strong>(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)</a>
-        
-          <div class="summary"><p>Returns a tuple of the optimized segments and QR Code version for the given text and error correction level.</p></div>
+        <a href="#add_ec_codewords%28codewords%3ASlice%28UInt8%29%2Cversion%3AQR%3A%3AVersion%2Cecl%3ALevel%29-instance-method" class="signature"><strong>#add_ec_codewords</strong>(codewords : Slice(UInt8), version : QR::Version, ecl : Level)</a>
         
       </li>
     
@@ -278,24 +275,18 @@ for the given text string.</p>
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="make_optimized_segments(text:String,ecl:ECC::Level):Tuple(Array(Segment),QR::Version)-instance-method">
+    <div class="entry-detail" id="add_ec_codewords(codewords:Slice(UInt8),version:QR::Version,ecl:Level)-instance-method">
       <div class="signature">
         
-        def <strong>make_optimized_segments</strong>(text : String, ecl : <a href="../../Goban/ECC/Level.html">ECC::Level</a>) : Tuple(Array(<a href="../../Goban/Segment.html">Segment</a>), <a href="../../Goban/QR/Version.html">QR::Version</a>)
+        def <strong>add_ec_codewords</strong>(codewords : Slice(UInt8), version : <a href="../../Goban/QR/Version.html">QR::Version</a>, ecl : <a href="../../Goban/ECC/Level.html">Level</a>)
 
-        <a class="method-permalink" href="#make_optimized_segments%28text%3AString%2Cecl%3AECC%3A%3ALevel%29%3ATuple%28Array%28Segment%29%2CQR%3A%3AVersion%29-instance-method">#</a>
+        <a class="method-permalink" href="#add_ec_codewords%28codewords%3ASlice%28UInt8%29%2Cversion%3AQR%3A%3AVersion%2Cecl%3ALevel%29-instance-method">#</a>
       </div>
-      
-        <div class="doc">
-          
-          <p>Returns a tuple of the optimized segments and QR Code version
-for the given text and error correction level.</p>
-        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/optimizer.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/rsgenerator.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>

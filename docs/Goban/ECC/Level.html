@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::Segment::Mode - goban master-dev</title>
+  <title>Goban::ECC::Level - goban master-dev</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -61,12 +61,12 @@
       
     </li>
   
-  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+  <li class="parent open current" data-id="goban/Goban/ECC" data-name="goban::ecc">
       <a href="../../Goban/ECC.html">ECC</a>
       
         <ul>
   
-  <li class=" " data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
+  <li class=" current" data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
       <a href="../../Goban/ECC/Level.html">Level</a>
       
     </li>
@@ -126,12 +126,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="goban/Goban/Segment" data-name="goban::segment">
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
       <a href="../../Goban/Segment.html">Segment</a>
       
         <ul>
   
-  <li class=" current" data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
+  <li class=" " data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
       <a href="../../Goban/Segment/Mode.html">Mode</a>
       
     </li>
@@ -165,7 +165,7 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Goban::Segment::Mode
+  <span class="kind">enum</span> Goban::ECC::Level
 
 </h1>
 
@@ -182,7 +182,18 @@
     Overview
   </h2>
 
-  <p>Represents a encoding mode of a data segment.</p>
+  <p>Error correction level of the QR Code.
+QR Code symbols include redundant bits based on the selected error
+correction level, so that even if some part the symbol is not readable,
+the decoder can recover the loss for up to:</p>
+<ul>
+<li>7% for <code><a href="../../Goban/ECC/Level.html#Low">Low</a></code></li>
+<li>15% for <code><a href="../../Goban/ECC/Level.html#Medium">Medium</a></code></li>
+<li>25% for <code><a href="../../Goban/ECC/Level.html#Quartile">Quartile</a></code></li>
+<li>30% for <code><a href="../../Goban/ECC/Level.html#High">High</a></code></li>
+</ul>
+<p>Note that choosing a higher error correction level requires more redundant
+bits, meaning that the resulting QR Code symbol can get larger.</p>
 
 
 
@@ -207,8 +218,8 @@
   </h2>
   
     
-      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L3" target="_blank">
-        goban/segment/mode.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/level.cr#L14" target="_blank">
+        goban/ecc/level.cr
       </a>
     
     <br/>
@@ -228,38 +239,23 @@
   
   <dl>
     
-      <dt class="entry-const" id="ECI">
-        <strong>ECI</strong> = <code><span class="n">7_u8</span></code>
+      <dt class="entry-const" id="Low">
+        <strong>Low</strong> = <code><span class="n">0_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="Numeric">
-        <strong>Numeric</strong> = <code><span class="n">1_u8</span></code>
+      <dt class="entry-const" id="Medium">
+        <strong>Medium</strong> = <code><span class="n">1_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="Alphanumeric">
-        <strong>Alphanumeric</strong> = <code><span class="n">2_u8</span></code>
+      <dt class="entry-const" id="Quartile">
+        <strong>Quartile</strong> = <code><span class="n">2_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="Byte">
-        <strong>Byte</strong> = <code><span class="n">4_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Kanji">
-        <strong>Kanji</strong> = <code><span class="n">8_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="StructuredAppend">
-        <strong>StructuredAppend</strong> = <code><span class="n">3_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Undefined">
-        <strong>Undefined</strong> = <code><span class="n">255_u8</span></code>
+      <dt class="entry-const" id="High">
+        <strong>High</strong> = <code><span class="n">3_u8</span></code>
       </dt>
       
     
@@ -282,37 +278,22 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#alphanumeric%3F-instance-method" class="signature"><strong>#alphanumeric?</strong></a>
+        <a href="#high%3F-instance-method" class="signature"><strong>#high?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#byte%3F-instance-method" class="signature"><strong>#byte?</strong></a>
+        <a href="#low%3F-instance-method" class="signature"><strong>#low?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#eci%3F-instance-method" class="signature"><strong>#eci?</strong></a>
+        <a href="#medium%3F-instance-method" class="signature"><strong>#medium?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#kanji%3F-instance-method" class="signature"><strong>#kanji?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#numeric%3F-instance-method" class="signature"><strong>#numeric?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#structured_append%3F-instance-method" class="signature"><strong>#structured_append?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#undefined%3F-instance-method" class="signature"><strong>#undefined?</strong></a>
+        <a href="#quartile%3F-instance-method" class="signature"><strong>#quartile?</strong></a>
         
       </li>
     
@@ -380,114 +361,66 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="alphanumeric?-instance-method">
+    <div class="entry-detail" id="high?-instance-method">
       <div class="signature">
         
-        def <strong>alphanumeric?</strong>
+        def <strong>high?</strong>
 
-        <a class="method-permalink" href="#alphanumeric%3F-instance-method">#</a>
+        <a class="method-permalink" href="#high%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/level.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="byte?-instance-method">
+    <div class="entry-detail" id="low?-instance-method">
       <div class="signature">
         
-        def <strong>byte?</strong>
+        def <strong>low?</strong>
 
-        <a class="method-permalink" href="#byte%3F-instance-method">#</a>
+        <a class="method-permalink" href="#low%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/level.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="eci?-instance-method">
+    <div class="entry-detail" id="medium?-instance-method">
       <div class="signature">
         
-        def <strong>eci?</strong>
+        def <strong>medium?</strong>
 
-        <a class="method-permalink" href="#eci%3F-instance-method">#</a>
+        <a class="method-permalink" href="#medium%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/level.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="kanji?-instance-method">
+    <div class="entry-detail" id="quartile?-instance-method">
       <div class="signature">
         
-        def <strong>kanji?</strong>
+        def <strong>quartile?</strong>
 
-        <a class="method-permalink" href="#kanji%3F-instance-method">#</a>
+        <a class="method-permalink" href="#quartile%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="numeric?-instance-method">
-      <div class="signature">
-        
-        def <strong>numeric?</strong>
-
-        <a class="method-permalink" href="#numeric%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L5" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="structured_append?-instance-method">
-      <div class="signature">
-        
-        def <strong>structured_append?</strong>
-
-        <a class="method-permalink" href="#structured_append%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L9" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="undefined?-instance-method">
-      <div class="signature">
-        
-        def <strong>undefined?</strong>
-
-        <a class="method-permalink" href="#undefined%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/ecc/level.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
