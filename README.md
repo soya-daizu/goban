@@ -37,9 +37,9 @@ qr-code   3.39k (295.26µs) (± 1.40%)   149kB/op   2.13× slower
 - [x] Error correction coding using Reed-Solomon Codes
 - [x] Data masking with all 8 mask patterns
 - [x] Support for all QR Code versions from 1 to 40
-- [] Structured append of symbols
-- [] Micro QR Code (In development)
-- [] rMQR Code (Not a part of ISO/IEC 18004:2015 standard)
+- [ ] Structured append of symbols
+- [ ] Micro QR Code (In development)
+- [ ] rMQR Code (Not a part of ISO/IEC 18004:2015 standard but planned)
 
 Goban will not support generation of QR Code Model 1 symbols as it is considered obsolete.
 
