@@ -167,15 +167,15 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Goban</h1>
-<p>A fast and efficient QR Code encoder library written purely in Crystal. It uses significantly less heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.</p>
-<p>The encoder implementation is mostly independent of other implementations and is based on <a href="https://www.iso.org/standard/62021.html">ISO/IEC 18004:2015</a>, however the efficient text segmentation is made possible thanks to the following article: <a href="https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes">Optimal text segmentation for QR Codes</a>.</p>
-<p>The name comes from the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>, which have inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. Goban is the name of the <a href="https://en.wikipedia.org/wiki/Go_equipment#Board">Go board</a> in Japanese.</p>
+<p>A fast and efficient QR Code encoder library written purely in Crystal. It uses significantly fewer heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.</p>
+<p>The implementation is based on <a href="https://www.iso.org/standard/62021.html">ISO/IEC 18004:2015</a>/[JIS <a href="https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510:2018">X 0510:2018</a> standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: <a href="https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes">Optimal text segmentation for QR Codes</a>.</p>
+<p>The name comes from the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>, which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means <a href="https://en.wikipedia.org/wiki/Go_equipment#Board">Go board</a> in Japanese.</p>
 <h2><a id="benchmark" class="anchor" href="#benchmark">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Benchmark</h2>
-<p>Comparing op/s and heap allocations between Goban and <a href="https://github.com/spider-gazelle/qr-code">spider-gazelle/qr-code</a></p>
+<p>Comparing it/s and heap allocations between Goban and <a href="https://github.com/spider-gazelle/qr-code">spider-gazelle/qr-code</a>:</p>
 <pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;benchmark&quot;</span>
 <span class="k">require</span> <span class="s">&quot;qr-code&quot;</span>
 <span class="k">require</span> <span class="s">&quot;goban&quot;</span>
@@ -204,11 +204,11 @@
 <li>[x] Error correction coding using Reed-Solomon Codes</li>
 <li>[x] Data masking with all 8 mask patterns</li>
 <li>[x] Support for all QR Code versions from 1 to 40</li>
-<li>[] Structured append of symbols</li>
-<li>[] Micro QR Code (In development)</li>
-<li>[] rMQR Code (Not a part of ISO/IEC 18004:2015 standard)</li>
+<li>[ ] Structured append of symbols</li>
+<li>[ ] Micro QR Code (In development)</li>
+<li>[ ] rMQR Code (Not a part of ISO/IEC 18004:2015 standard but planned)</li>
 </ul>
-<p>Goban will not support generation of QR Code Model 1 symbols as it is considered obsolete.</p>
+<p>Goban will not support the generation of QR Code Model 1 symbols as it is considered obsolete.</p>
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -230,6 +230,7 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h2>
+<p>A simple example to generate a QR Code for the given string and output to the console:</p>
 <pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban&quot;</span>
 
 qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Low</span>)
@@ -255,14 +256,59 @@ qr.print_to_console
 <span class="c">#    ██  ██████  ██  ██████  ██    ██    ██</span>
 <span class="c">#    ██          ██  ██    ██  ████████      ██</span>
 <span class="c">#    ██████████████  ██    ██  ██████    ██</span></code></pre>
-<p>To generate a PNG image, add <a href="https://github.com/stumpycr/stumpy_png">stumpy_png</a> as a dependency in your shard.yml, and <code>require &quot;goban/exporters/png&quot;</code> to use <code>PNGExporter</code>.</p>
+<h3><a id="using-exporters-to-generate-a-png-and-svg-image" class="anchor" href="#using-exporters-to-generate-a-png-and-svg-image">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Using exporters to generate a PNG and SVG image</h3>
+<p>To generate a PNG image, add <a href="https://github.com/stumpycr/stumpy_png">stumpy_png</a> as a dependency in your shard.yml, and <code>require &quot;goban/exporters/png&quot;</code> to use <code><a href="Goban/PNGExporter.html">Goban::PNGExporter</a></code>:</p>
 <pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban/exporters/png&quot;</span>
 
 qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
 puts <span class="s">&quot;Exporting with targeted size: 500&quot;</span>
 size <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">PNGExporter</span>.export(qr, <span class="s">&quot;output.png&quot;</span>, <span class="n">500</span>)
 puts <span class="s">&quot;Actual QR Code size: </span><span class="i">#{</span>size<span class="i">}</span><span class="s">&quot;</span></code></pre>
-<p>See <a href="https://soya-daizu.github.io/goban/Goban/QR.html">API docs</a> for more details.</p>
+<p><code><a href="Goban/SVGExporter.html">Goban::SVGExporter</a></code> requires no external dependency and can be used like below:</p>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban/exporters/svg&quot;</span>
+
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
+<span class="c"># Get SVG string</span>
+puts <span class="t">Goban</span><span class="t">::</span><span class="t">SVGExporter</span>.svg_string(qr, <span class="n">4</span>)
+<span class="c"># or export as a file</span>
+<span class="t">Goban</span><span class="t">::</span><span class="t">SVGExporter</span>.export(qr, <span class="s">&quot;test.svg&quot;</span>)</code></pre>
+<h3><a id="about-the-automatic-text-segmentation" class="anchor" href="#about-the-automatic-text-segmentation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>About the automatic text segmentation</h3>
+<p>The <code>Goban::QR.encode_string()</code> method encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:</p>
+<p>| Mode | Supported Characters |
+| --- | --- |
+| Numeric | 0-9 |
+| Alphanumeric | 0-9 A-Z \s $ % * + - . / : |
+| Byte | Any UTF-8 characters |
+| Kanji | Any Shift-JIS characters |</p>
+<p>The <code>Byte</code> mode supports the widest range of characters but it is inefficient and produces longer data bits, meaning that when comparing the two QR Code symbols, one encoded entirely in the <code>Byte</code> mode and the other encoded in the appropriate mode for each character*, the former one can be more challenging to scan and decode than the other given that both symbols are printed in the same size.</p>
+<p>* Because each text segment includes additional header bits to indicate its encoding mode, simply encoding each character in the supported mode that has the smallest character set may not always produce the most optimal segments. Goban addresses this by using the technique of dynamic programming.</p>
+<p>Finding out the optimal segmentation requires some processing, so if you are generating thousands of QR Codes with all the same limited sets of characters, you may want to hard-code the text segments and apply the characters to those to generate the QR Codes.</p>
+<p>This can be done by using the <code>Goban::QR.encode_segments()</code> method, which is the lower-level method used by the <code>Goban::QR.encode_string()</code> method.</p>
+<pre><code class="language-crystal">segments <span class="o">=</span> [
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.kanji(<span class="s">&quot;こんにち&quot;</span>),
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.byte(<span class="s">&quot;wa&quot;</span>),
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.kanji(<span class="s">&quot;、世界！&quot;</span>),
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.alphanumeric(<span class="s">&quot; 123&quot;</span>),
+]
+<span class="c"># Note that when using this method, you have to manually assign the version (= size) of the QR Code.</span>
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_segments(segments, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Low</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span><span class="t">::</span><span class="t">Version</span>.new(<span class="n">2</span>))</code></pre>
+<p>The optimal segments and version to hard-code can be figured out by using the <code>Goban::Segment::Optimizer.make_optimized_segments()</code> method.</p>
+<h2><a id="api-documentations" class="anchor" href="#api-documentations">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>API Documentations</h2>
+<p>The API docs for the current master branch are available from the link below:</p>
+<p><a href="https://soya-daizu.github.io/goban/">API docs</a></p>
+<p>You may want to first look at the <code><a href="Goban/QR.html">Goban::QR</a></code> or one of the exporters (<code><a href="Goban/PNGExporter.html">Goban::PNGExporter</a></code> and <code>Goban::SVGExporters</code>) to understand how to use this library.</p>
 <h2><a id="contributing" class="anchor" href="#contributing">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
