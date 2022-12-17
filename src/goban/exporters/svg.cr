@@ -10,9 +10,9 @@ module Goban
     def svg_string(qr : QR, blank_mods : Int)
       parts = [] of String
 
-      qr.size.times do |x|
-        qr.size.times do |y|
-          next unless qr.canvas.get_module(x, y)
+      qr.canvas.each do |row, x|
+        row.each do |mod, y|
+          next unless mod == 1
           parts.push("M#{x + blank_mods},#{y + blank_mods}h1v1h-1z")
         end
       end
