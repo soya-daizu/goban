@@ -27,9 +27,9 @@ module Goban
       light_color = RGBA.from_rgb_n(255, 255, 255, 8)
       canvas = Canvas.new(size, size, light_color)
 
-      qr.size.times do |x|
-        qr.size.times do |y|
-          next unless qr.canvas.get_module(x, y)
+      qr.canvas.each_row do |row, x|
+        row.each_with_index do |mod, y|
+          next unless mod == 1
 
           canvas_x = mod_size * x + blank_size
           canvas_y = mod_size * y + blank_size
