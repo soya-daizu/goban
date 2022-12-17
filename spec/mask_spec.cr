@@ -7,8 +7,8 @@ module Goban
         drawer = QR::CanvasDrawer.new(QR::Version.new(1), ECC::Level::Low)
         drawer.draw_function_patterns
 
-        # 286 + 286 + 723 + 360 + 360 + 50
-        QR::Mask.evaluate_score(drawer.canvas).should eq(2065)
+        # 283 + 283 + 711 + 360 + 360 + 50
+        QR::Mask.evaluate_score(drawer.canvas).should eq(2047)
       end
     end
   end
