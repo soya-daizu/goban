@@ -22,9 +22,6 @@ struct Goban::QR
       @mask_pattern = MASK_PATTERNS[@value]
     end
 
-    def self.apply_0(canvas : Canvas)
-    end
-
     # Apply mask to the given canvas.
     # Call this method again to reverse the applied mask.
     protected def apply_to(canvas : Canvas)
@@ -142,24 +139,6 @@ struct Goban::QR
 
     private def self.compute_score_v(canvas : Canvas)
       compute_score(true)
-    end
-
-    private def self.compute_block_score(canvas : Canvas)
-      score = 0
-
-      (canvas.size - 1).times do |y|
-        (canvas.size - 1).times do |x|
-          m1 = canvas.get_module(x, y) & 1
-          m2 = canvas.get_module(x + 1, y) & 1
-          next unless m1 == m2
-          m3 = canvas.get_module(x, y + 1) & 1
-          m4 = canvas.get_module(x + 1, y + 1) & 1
-
-          score += 3 if m2 == m3 && m3 == m4
-        end
-      end
-
-      score
     end
 
     private def self.compute_balance_score(dark_count : Int, size : Int)
