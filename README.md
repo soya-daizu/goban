@@ -16,7 +16,7 @@ require "qr-code"
 require "goban"
 
 Benchmark.ips do |x|
-  x.report("qr-code") { QR.new("Hello World!", level: :h) }
+  x.report("qr-code") { QRCode.new("Hello World!", level: :h) }
   x.report("goban") { Goban::QR.encode_string("Hello World!", Goban::ECC::Level::High) }
 end
 ```
