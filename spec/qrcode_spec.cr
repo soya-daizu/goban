@@ -14,7 +14,8 @@ module Goban
       end
 
       it "encodes properly" do
-        qr.canvas.modules.should eq(SAMPLE_RESULT_MODS)
+        rows = convert_canvas(qr.canvas)
+        rows.should eq(SAMPLE_RESULT_MODS)
       end
 
       it "raises if text is too long" do
@@ -40,7 +41,8 @@ module Goban
       end
 
       it "encodes properly" do
-        qr.canvas.modules.should eq(SAMPLE_RESULT_MODS)
+        rows = convert_canvas(qr.canvas)
+        rows.should eq(SAMPLE_RESULT_MODS)
       end
     end
   end

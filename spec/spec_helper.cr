@@ -9,6 +9,17 @@ def convert_bit_stream(bit_stream : Goban::BitStream)
   end
 end
 
+def convert_canvas(canvas : Goban::QR::Canvas)
+  String.build do |io|
+    canvas.each_row do |row|
+      row.each do |mod|
+        io << (mod == 1 ? "██" : "  ")
+      end
+      io << '\n'
+    end
+  end.lines
+end
+
 ALL_NUMERIC_STR  = "0123456789"
 ALL_NUMERIC_SEGS = [
   Goban::Segment.numeric("0123456789"),
@@ -67,102 +78,105 @@ SAMPLE_SEGS = [
   Goban::Segment.alphanumeric(" 123"),
 ]
 
-SAMPLE_RESULT_MODS = [
-  true, true, true, true, true, true, true, false, false, false, false, true, false, true, false, true, false, false, true, true, true, true, true, true, true,
-  true, false, false, false, false, false, true, false, false, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true,
-  true, false, true, true, true, false, true, false, true, true, true, false, true, false, true, true, false, false, true, false, true, true, true, false, true,
-  true, false, true, true, true, false, true, false, true, true, true, false, false, true, false, true, false, false, true, false, true, true, true, false, true,
-  true, false, true, true, true, false, true, false, true, false, true, false, false, false, false, false, false, false, true, false, true, true, true, false, true,
-  true, false, false, false, false, false, true, false, true, false, false, true, true, false, false, false, false, false, true, false, false, false, false, false, true,
-  true, true, true, true, true, true, true, false, true, false, true, false, true, false, true, false, true, false, true, true, true, true, true, true, true,
-  false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, true, false, false, false, false, false, false, false, false, false,
-  true, false, true, true, true, true, true, false, false, true, false, false, false, true, false, false, true, false, true, true, true, true, true, false, false,
-  true, true, true, true, true, true, false, true, false, false, true, false, false, false, false, true, true, false, false, true, false, false, true, true, true,
-  false, true, true, false, false, false, true, true, false, true, false, false, true, true, true, false, false, false, true, true, true, true, false, true, true,
-  false, false, false, true, true, true, false, true, false, false, true, false, true, false, false, true, false, true, true, true, false, false, false, false, true,
-  true, true, true, false, true, false, true, true, true, true, false, true, true, false, true, false, false, false, false, true, true, true, false, false, false,
-  true, true, false, false, true, false, false, false, false, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, true,
-  true, false, true, false, true, true, true, false, false, false, false, true, true, false, true, false, false, false, true, false, true, true, true, false, false,
-  true, false, true, false, true, false, false, true, false, true, true, true, false, false, true, false, true, false, true, false, false, true, true, true, true,
-  true, false, false, true, true, false, true, false, true, false, true, true, false, false, false, false, true, true, true, true, true, false, false, false, false,
-  false, false, false, false, false, false, false, false, true, true, true, false, true, true, false, true, true, false, false, false, true, true, false, false, true,
-  true, true, true, true, true, true, true, false, false, false, false, false, false, true, false, false, true, false, true, false, true, true, true, false, true,
-  true, false, false, false, false, false, true, false, true, false, false, false, true, true, true, true, true, false, false, false, true, true, false, false, true,
-  true, false, true, true, true, false, true, false, true, false, true, false, true, true, false, false, true, true, true, true, true, false, false, true, true,
-  true, false, true, true, true, false, true, false, true, false, true, false, false, false, false, true, false, true, true, false, false, true, false, false, true,
-  true, false, true, true, true, false, true, false, true, true, false, true, true, false, false, true, false, false, true, false, false, false, true, false, true,
-  true, false, false, false, false, false, true, false, false, false, true, true, false, false, false, true, false, false, true, false, false, false, true, false, true,
-  true, true, true, true, true, true, true, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false,
-]
+SAMPLE_RESULT_MODS = <<-STRING
+██████████████  ████  ██    ██      ██████████████
+██          ██    ██  ████████      ██          ██
+██  ██████  ██    ██  ██    ██████  ██  ██████  ██
+██  ██████  ██  ████  ██████  ████  ██  ██████  ██
+██  ██████  ██  ██████    ██████    ██  ██████  ██
+██          ██  ████  ██████████    ██          ██
+██████████████  ██  ██  ██  ██  ██  ██████████████
+                ████          ████                
+██      ██  ██████          ████████████████    ██
+██      ████    ██████    ████  ██      ██████████
+██████  ████████  ██████  ████  ████  ████████    
+██    ██      ██      ██      ████    ██    ████  
+██    ████  ██        ██████  ██                  
+██  ██████    ████        ██        ██  ██      ██
+    ██      ██      ██      ██  ████    ████  ████
+    ██    ██  ██  ██    ██  ██    ██      ██      
+██████  ██  ████  ██████  ██████████████████      
+                ██  ██  ██  ██  ██      ██      ██
+██████████████  ██  ████████    ██  ██  ████  ██  
+██          ██      ████  ████████      ████████  
+██  ██████  ██  ██████  ██  ████████████████  ████
+██  ██████  ██    ████    ████    ████████      ██
+██  ██████  ██    ████        ██████          ██  
+██          ██          ██    ██████          ██  
+██████████████  ████  ████████      ██  ██████    
+STRING
+  .lines
 
-FUNCTION_PATTERN_MODS = [
-  true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, true, true, true, true, true, true,
-  true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, true,
-  true, false, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, true, true, true, false, true,
-  true, false, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, false, true, true, true, false, true,
-  true, false, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, true, true, true, false, true, false, true, true, true, false, true,
-  true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, true,
-  true, true, true, true, true, true, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, true, true, true, true, true, true,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false,
-  false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false,
-  false, false, false, false, true, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false, false, false, false,
-  false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false,
-  false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  true, false, false, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false,
-  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false,
-  true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false, false, false, false,
-  true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false,
-  true, false, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false,
-  true, false, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  true, false, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-  true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
-]
+FUNCTION_PATTERN_MODS = <<-STRING
+██████████████                                                          ██  ██████████████
+██          ██                                                        ██    ██          ██
+██  ██████  ██                                                        ██    ██  ██████  ██
+██  ██████  ██                                                        ████  ██  ██████  ██
+██  ██████  ██                          ██████████                  ██████  ██  ██████  ██
+██          ██                          ██      ██                          ██          ██
+██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████████
+                                        ██      ██                                        
+            ██                          ██████████                                        
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+        ██████████                      ██████████                      ██████████        
+        ██      ██                      ██      ██                      ██      ██        
+        ██  ██  ██                      ██  ██  ██                      ██  ██  ██        
+        ██      ██                      ██      ██                      ██      ██        
+        ██████████                      ██████████                      ██████████        
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+            ██                                                                            
+                                                                                          
+        ██  ██                                                                            
+  ████████                                                                                
+██    ████  ██                          ██████████                      ██████████        
+                                        ██      ██                      ██      ██        
+██████████████                          ██  ██  ██                      ██  ██  ██        
+██          ██                          ██      ██                      ██      ██        
+██  ██████  ██                          ██████████                      ██████████        
+██  ██████  ██                                                                            
+██  ██████  ██                                                                            
+██          ██                                                                            
+██████████████                                                                            
+STRING
+  .lines
 
-CODEWORDS_FILL_MODS = [
-  false, false, true, false, true, false, false, true, true, false, true, false, true, false, true, false, true, true, false, false, true,
-  true, true, true, false, true, false, false, false, false, false, true, true, false, false, true, true, false, false, true, false, true,
-  true, false, true, true, false, false, false, true, false, true, false, false, true, true, false, false, true, false, true, false, true,
-  true, false, false, false, true, true, false, true, false, false, true, false, true, false, true, false, true, false, true, true, false,
-  false, false, true, false, true, false, false, true, true, false, true, false, true, false, true, false, true, true, false, false, true,
-  true, true, true, false, true, false, false, false, false, false, true, true, false, false, true, true, false, false, true, false, true,
-  true, false, true, true, false, false, false, true, false, true, false, false, true, true, false, false, true, false, true, false, true,
-  true, false, false, false, true, true, false, true, false, false, true, false, true, false, true, false, true, false, true, true, false,
-  false, false, true, false, true, false, false, true, false, false, false, false, false, false, false, false, true, true, false, false, true,
-  true, true, true, false, true, false, false, true, false, false, false, false, false, false, false, true, false, false, true, false, true,
-  true, false, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, true,
-  true, false, false, false, true, true, false, false, false, false, false, false, false, false, false, false, true, false, true, true, false,
-  false, false, true, false, true, false, false, true, false, false, false, false, false, false, false, false, true, true, false, false, true,
-  true, true, true, false, true, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, true,
-  true, false, true, true, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, false, true,
-  true, false, false, false, true, true, false, false, true, false, true, false, true, false, true, false, true, false, true, true, false,
-  false, false, true, false, true, false, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true,
-  true, true, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, true, false, true,
-  true, false, true, true, false, false, false, false, true, false, true, false, true, false, true, false, true, false, true, false, true,
-  true, false, false, false, true, true, false, false, true, false, true, false, true, false, true, false, true, false, true, true, false,
-  false, false, true, false, true, false, false, true, false, false, true, true, false, false, true, false, true, true, false, false, true,
-]
+CODEWORDS_FILL_MODS = <<-STRING
+    ██  ██    ████  ██  ██  ██  ████    ██
+██████  ██          ████    ████    ██  ██
+██  ████      ██  ██    ████    ██  ██  ██
+██      ████  ██    ██  ██  ██  ██  ████  
+    ██  ██    ████  ██  ██  ██  ████    ██
+██████  ██          ████    ████    ██  ██
+██  ████      ██  ██    ████    ██  ██  ██
+██      ████  ██    ██  ██  ██  ██  ████  
+    ██  ██    ██                ████    ██
+██████  ██    ██              ██    ██  ██
+██  ████                        ██  ██  ██
+██      ████                    ██  ████  
+    ██  ██    ██                ████    ██
+██████  ██                    ██    ██  ██
+██  ████      ██                ██  ██  ██
+██      ████    ██  ██  ██  ██  ██  ████  
+    ██  ██    ██    ████    ██  ████    ██
+██████  ██      ████    ████  ██    ██  ██
+██  ████        ██  ██  ██  ██  ██  ██  ██
+██      ████    ██  ██  ██  ██  ██  ████  
+    ██  ██    ██    ████    ██  ████    ██
+STRING
+  .lines
