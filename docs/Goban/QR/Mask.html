@@ -111,6 +111,11 @@
       
     </li>
   
+  <li class=" " data-id="goban/Goban/QR/CanvasDrawer" data-name="goban::qr::canvasdrawer">
+      <a href="../../Goban/QR/CanvasDrawer.html">CanvasDrawer</a>
+      
+    </li>
+  
   <li class=" current" data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
       <a href="../../Goban/QR/Mask.html">Mask</a>
       
@@ -218,6 +223,41 @@
 
 
 
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="MASK_PATTERNS">
+        <strong>MASK_PATTERNS</strong> = <code>{<span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  ((x <span class="o">+</span> y) <span class="o">&amp;</span> <span class="n">1</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  (y <span class="o">&amp;</span> <span class="n">1</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  (x <span class="o">%</span> <span class="n">3</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  ((x <span class="o">+</span> y) <span class="o">%</span> <span class="n">3</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  (((x <span class="o">//</span> <span class="n">3</span>) <span class="o">+</span> (y <span class="o">//</span> <span class="n">2</span>)) <span class="o">&amp;</span> <span class="n">1</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  ((x <span class="o">*</span> y) <span class="o">&amp;</span> (<span class="n">1</span> <span class="o">+</span> ((x <span class="o">*</span> y) <span class="o">%</span> <span class="n">3</span>))) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  (((x <span class="o">*</span> y) <span class="o">&amp;</span> (<span class="n">1</span> <span class="o">+</span> ((x <span class="o">*</span> y) <span class="o">%</span> <span class="n">3</span>))) <span class="o">&amp;</span> <span class="n">1</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>, <span class="o">-&gt;</span>(x : <span class="t">Int32</span>, y : <span class="t">Int32</span>) <span class="k">do</span>
+  (((x <span class="o">+</span> y) <span class="o">&amp;</span> (<span class="n">1</span> <span class="o">+</span> ((x <span class="o">*</span> y) <span class="o">%</span> <span class="n">3</span>))) <span class="o">&amp;</span> <span class="n">1</span>) <span class="o">==</span> <span class="n">0</span>
+<span class="k">end</span>}</code>
+      </dt>
+      
+    
+  </dl>
+
 
 
   <h2>
@@ -319,7 +359,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/mask.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/mask.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>

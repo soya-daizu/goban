@@ -111,6 +111,11 @@
       
     </li>
   
+  <li class=" " data-id="goban/Goban/QR/CanvasDrawer" data-name="goban::qr::canvasdrawer">
+      <a href="Goban/QR/CanvasDrawer.html">CanvasDrawer</a>
+      
+    </li>
+  
   <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
       <a href="Goban/QR/Mask.html">Mask</a>
       
@@ -167,8 +172,8 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Goban</h1>
-<p>A fast and efficient QR Code encoder library written purely in Crystal. It uses significantly fewer heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.</p>
-<p>The implementation is based on <a href="https://www.iso.org/standard/62021.html">ISO/IEC 18004:2015</a>/[JIS <a href="https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510:2018">X 0510:2018</a> standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: <a href="https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes">Optimal text segmentation for QR Codes</a>.</p>
+<p>A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (4.75x) and uses fewer heap allocations (-94.7%) compared to the other implementation in Crystal (<a href="https://github.com/spider-gazelle/qr-code">spider-gazelle/qr-code</a>), and it supports wider QR Code standard features such as Kanji mode encoding.</p>
+<p>The implementation is based on <a href="https://www.iso.org/standard/62021.html">ISO/IEC 18004:2015</a>/<a href="https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510:2018">JIS X 0510:2018</a> standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: <a href="https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes">Optimal text segmentation for QR Codes</a>.</p>
 <p>The name comes from the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>, which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means <a href="https://en.wikipedia.org/wiki/Go_equipment#Board">Go board</a> in Japanese.</p>
 <h2><a id="benchmark" class="anchor" href="#benchmark">
   <svg class="octicon-link" aria-hidden="true">
@@ -184,8 +189,8 @@
   x.report(<span class="s">&quot;qr-code&quot;</span>) { <span class="t">QR</span>.new(<span class="s">&quot;Hello World!&quot;</span>, level: <span class="n">:h</span>) }
   x.report(<span class="s">&quot;goban&quot;</span>) { <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">High</span>) }
 <span class="k">end</span></code></pre>
-<pre><code class="language-crystal">qr<span class="o">-</span>code   <span class="n">3.39</span>k (<span class="n">295.26</span>µs) (± <span class="n">1.40</span><span class="o">%</span>)   <span class="n">149</span>kB<span class="o">/</span>op   <span class="n">2.13</span>× slower
-  goban   <span class="n">7.20</span>k (<span class="n">138.80</span>µs) (± <span class="n">1.99</span><span class="o">%</span>)  <span class="n">2.71</span>kB<span class="o">/</span>op        fastest</code></pre>
+<pre><code class="language-crystal">qr<span class="o">-</span>code   <span class="n">3.40</span>k (<span class="n">293.86</span>µs) (± <span class="n">1.74</span><span class="o">%</span>)   <span class="n">149</span>kB<span class="o">/</span>op   <span class="n">4.75</span>× slower
+  goban  <span class="n">16.18</span>k ( <span class="n">61.81</span>µs) (± <span class="n">1.65</span><span class="o">%</span>)  <span class="n">8.08</span>kB<span class="o">/</span>op        fastest</code></pre>
 <h2><a id="features" class="anchor" href="#features">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -198,6 +203,7 @@
 <li>[x] Alphanumeric mode</li>
 <li>[x] Byte mode</li>
 <li>[x] Kanji mode</li>
+<li>[ ] ECI mode</li>
 </ul>
 </li>
 <li>[x] Building optimized text segments from a string</li>

@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../js/doc.js"></script>
 
   <meta name="repository-name" content="goban">
-  <title>Goban::Segment::Mode - goban master-dev</title>
+  <title>Goban::QR::CanvasDrawer - goban master-dev</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../../";
   </script>
@@ -101,7 +101,7 @@
       
     </li>
   
-  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qr">
+  <li class="parent open current" data-id="goban/Goban/QR" data-name="goban::qr">
       <a href="../../Goban/QR.html">QR</a>
       
         <ul>
@@ -111,7 +111,7 @@
       
     </li>
   
-  <li class=" " data-id="goban/Goban/QR/CanvasDrawer" data-name="goban::qr::canvasdrawer">
+  <li class=" current" data-id="goban/Goban/QR/CanvasDrawer" data-name="goban::qr::canvasdrawer">
       <a href="../../Goban/QR/CanvasDrawer.html">CanvasDrawer</a>
       
     </li>
@@ -131,12 +131,12 @@
       
     </li>
   
-  <li class="parent open current" data-id="goban/Goban/Segment" data-name="goban::segment">
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
       <a href="../../Goban/Segment.html">Segment</a>
       
         <ul>
   
-  <li class=" current" data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
+  <li class=" " data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
       <a href="../../Goban/Segment/Mode.html">Mode</a>
       
     </li>
@@ -170,10 +170,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Goban::Segment::Mode
+  <span class="kind">struct</span> Goban::QR::CanvasDrawer
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Goban/QR/CanvasDrawer.html">Goban::QR::CanvasDrawer</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
 
 
 
@@ -187,7 +189,7 @@
     Overview
   </h2>
 
-  <p>Represents a encoding mode of a data segment.</p>
+  <p>Holds information about each modules in a QR Code symbol.</p>
 
 
 
@@ -212,8 +214,8 @@
   </h2>
   
     
-      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L3" target="_blank">
-        goban/segment/mode.cr
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/canvasdrawer.cr#L3" target="_blank">
+        goban/qr/canvasdrawer.cr
       </a>
     
     <br/>
@@ -221,56 +223,26 @@
 
 
 
-  
-    <h2>
-      <a id="enum-members" class="anchor" href="#enum-members">
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-      Enum Members
-    </h2>
-  
-  <dl>
+    Constructors
+  </h2>
+  <ul class="list-summary">
     
-      <dt class="entry-const" id="ECI">
-        <strong>ECI</strong> = <code><span class="n">7_u8</span></code>
-      </dt>
-      
+      <li class="entry-summary">
+        <a href="#new%28version%3AVersion%2Cecl%3AECC%3A%3ALevel%29-class-method" class="signature"><strong>.new</strong>(version : Version, ecl : ECC::Level)</a>
+        
+          <div class="summary"><p>Creates a blank canvas with the given version and error correction level.</p></div>
+        
+      </li>
     
-      <dt class="entry-const" id="Numeric">
-        <strong>Numeric</strong> = <code><span class="n">1_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Alphanumeric">
-        <strong>Alphanumeric</strong> = <code><span class="n">2_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Byte">
-        <strong>Byte</strong> = <code><span class="n">4_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Kanji">
-        <strong>Kanji</strong> = <code><span class="n">8_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="StructuredAppend">
-        <strong>StructuredAppend</strong> = <code><span class="n">3_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Undefined">
-        <strong>Undefined</strong> = <code><span class="n">255_u8</span></code>
-      </dt>
-      
-    
-  </dl>
-
-
+  </ul>
 
 
 
@@ -287,37 +259,23 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#alphanumeric%3F-instance-method" class="signature"><strong>#alphanumeric?</strong></a>
+        <a href="#canvas%3ACanvas-instance-method" class="signature"><strong>#canvas</strong> : Canvas</a>
+        
+          <div class="summary"><p>Returns the array of modules drawn on the canvas.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#byte%3F-instance-method" class="signature"><strong>#byte?</strong></a>
+        <a href="#mask%3AMask-instance-method" class="signature"><strong>#mask</strong> : Mask</a>
+        
+          <div class="summary"><p>Returns the mask applied to the canvas.</p></div>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#eci%3F-instance-method" class="signature"><strong>#eci?</strong></a>
+        <a href="#size%3AInt32-instance-method" class="signature"><strong>#size</strong> : Int32</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#kanji%3F-instance-method" class="signature"><strong>#kanji?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#numeric%3F-instance-method" class="signature"><strong>#numeric?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#structured_append%3F-instance-method" class="signature"><strong>#structured_append?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#undefined%3F-instance-method" class="signature"><strong>#undefined?</strong></a>
+          <div class="summary"><p>Length of the canvas's side.</p></div>
         
       </li>
     
@@ -359,18 +317,39 @@
 
 
   
-    
-
-
-    
-
-
-    
-
-
-  
 </div>
 
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(version:Version,ecl:ECC::Level)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(version : <a href="../../Goban/QR/Version.html">Version</a>, ecl : <a href="../../Goban/ECC/Level.html">ECC::Level</a>)
+
+        <a class="method-permalink" href="#new%28version%3AVersion%2Cecl%3AECC%3A%3ALevel%29-class-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Creates a blank canvas with the given version and error correction level.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/canvasdrawer.cr#L12" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
@@ -385,114 +364,65 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="alphanumeric?-instance-method">
+    <div class="entry-detail" id="canvas:Canvas-instance-method">
       <div class="signature">
         
-        def <strong>alphanumeric?</strong>
+        def <strong>canvas</strong> : <a href="../../Goban/QR/Canvas.html">Canvas</a>
 
-        <a class="method-permalink" href="#alphanumeric%3F-instance-method">#</a>
+        <a class="method-permalink" href="#canvas%3ACanvas-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns the array of modules drawn on the canvas.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/canvasdrawer.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="byte?-instance-method">
+    <div class="entry-detail" id="mask:Mask-instance-method">
       <div class="signature">
         
-        def <strong>byte?</strong>
+        def <strong>mask</strong> : <a href="../../Goban/QR/Mask.html">Mask</a>
 
-        <a class="method-permalink" href="#byte%3F-instance-method">#</a>
+        <a class="method-permalink" href="#mask%3AMask-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Returns the mask applied to the canvas.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/canvasdrawer.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="eci?-instance-method">
+    <div class="entry-detail" id="size:Int32-instance-method">
       <div class="signature">
         
-        def <strong>eci?</strong>
+        def <strong>size</strong> : Int32
 
-        <a class="method-permalink" href="#eci%3F-instance-method">#</a>
+        <a class="method-permalink" href="#size%3AInt32-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Length of the canvas's side.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L4" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="kanji?-instance-method">
-      <div class="signature">
-        
-        def <strong>kanji?</strong>
-
-        <a class="method-permalink" href="#kanji%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L8" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="numeric?-instance-method">
-      <div class="signature">
-        
-        def <strong>numeric?</strong>
-
-        <a class="method-permalink" href="#numeric%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L5" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="structured_append?-instance-method">
-      <div class="signature">
-        
-        def <strong>structured_append?</strong>
-
-        <a class="method-permalink" href="#structured_append%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L9" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="undefined?-instance-method">
-      <div class="signature">
-        
-        def <strong>undefined?</strong>
-
-        <a class="method-permalink" href="#undefined%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/segment/mode.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/canvasdrawer.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>

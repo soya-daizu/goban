@@ -111,6 +111,11 @@
       
     </li>
   
+  <li class=" " data-id="goban/Goban/QR/CanvasDrawer" data-name="goban::qr::canvasdrawer">
+      <a href="../Goban/QR/CanvasDrawer.html">CanvasDrawer</a>
+      
+    </li>
+  
   <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
       <a href="../Goban/QR/Mask.html">Mask</a>
       
@@ -223,6 +228,13 @@
     <br/>
   
     
+      <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/canvasdrawer.cr#L1" target="_blank">
+        goban/qr/canvasdrawer.cr
+      </a>
+    
+    <br/>
+  
+    
       <a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr/mask.cr#L1" target="_blank">
         goban/qr/mask.cr
       </a>
@@ -240,23 +252,6 @@
 
 
 
-
-  <h2>
-    <a id="constructors" class="anchor" href="#constructors">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructors
-  </h2>
-  <ul class="list-summary">
-    
-      <li class="entry-summary">
-        <a href="#new%28version%3AGoban%3A%3AQR%3A%3AVersion%2Cecl%3AGoban%3A%3AECC%3A%3ALevel%2Ccanvas%3AGoban%3A%3AQR%3A%3ACanvas%29-class-method" class="signature"><strong>.new</strong>(version : Goban::QR::Version, ecl : Goban::ECC::Level, canvas : Goban::QR::Canvas)</a>
-        
-      </li>
-    
-  </ul>
 
 
 
@@ -309,6 +304,11 @@
         <a href="#ecl%3AECC%3A%3ALevel-instance-method" class="signature"><strong>#ecl</strong> : ECC::Level</a>
         
           <div class="summary"><p>Error correction level of the QR Code symbol.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#mask%3AUInt8-instance-method" class="signature"><strong>#mask</strong> : UInt8</a>
         
       </li>
     
@@ -374,32 +374,6 @@
 </div>
 
 
-  <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Constructor Detail
-  </h2>
-  
-    <div class="entry-detail" id="new(version:Goban::QR::Version,ecl:Goban::ECC::Level,canvas:Goban::QR::Canvas)-class-method">
-      <div class="signature">
-        
-        def self.<strong>new</strong>(version : <a href="../Goban/QR/Version.html">Goban::QR::Version</a>, ecl : <a href="../Goban/ECC/Level.html">Goban::ECC::Level</a>, canvas : <a href="../Goban/QR/Canvas.html">Goban::QR::Canvas</a>)
-
-        <a class="method-permalink" href="#new%28version%3AGoban%3A%3AQR%3A%3AVersion%2Cecl%3AGoban%3A%3AECC%3A%3ALevel%2Ccanvas%3AGoban%3A%3AQR%3A%3ACanvas%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L18" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-
 
 
   <h2>
@@ -461,7 +435,7 @@ with the smallest character set that supports that supports it.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L131" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L133" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -537,7 +511,7 @@ encoding segments.</p>
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L87" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L89" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -597,6 +571,22 @@ each single module (pixel) in the symbol.</p>
       </div>
     </div>
   
+    <div class="entry-detail" id="mask:UInt8-instance-method">
+      <div class="signature">
+        
+        def <strong>mask</strong> : UInt8
+
+        <a class="method-permalink" href="#mask%3AUInt8-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L18" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
     <div class="entry-detail" id="print_to_console-instance-method">
       <div class="signature">
         
@@ -614,7 +604,7 @@ use <code><a href="../Goban/PNGExporter.html">PNGExporter</a></code> or write yo
       <br/>
       <div>
         
-          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L152" target="_blank">View source</a>]
+          [<a href="https://github.com/soya-daizu/goban/blob/master/src/goban/qr.cr#L155" target="_blank">View source</a>]
         
       </div>
     </div>
