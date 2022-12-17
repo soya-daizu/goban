@@ -1,8 +1,8 @@
 # Goban
 
-A fast and efficient QR Code encoder library written purely in Crystal. It uses significantly fewer heap allocations than other implementations in Crystal, and it is more feature-complete with support for Kanji mode encoding.
+A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (4.75x) and uses fewer heap allocations (-94.7%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding.
 
-The implementation is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS [X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
+The implementation is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
 The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
@@ -22,8 +22,8 @@ end
 ```
 
 ```
-qr-code   3.39k (295.26µs) (± 1.40%)   149kB/op   2.13× slower
-  goban   7.20k (138.80µs) (± 1.99%)  2.71kB/op        fastest
+qr-code   3.40k (293.86µs) (± 1.74%)   149kB/op   4.75× slower
+  goban  16.18k ( 61.81µs) (± 1.65%)  8.08kB/op        fastest
 ```
 
 ## Features
@@ -33,6 +33,7 @@ qr-code   3.39k (295.26µs) (± 1.40%)   149kB/op   2.13× slower
   - [x] Alphanumeric mode
   - [x] Byte mode
   - [x] Kanji mode
+  - [ ] ECI mode
 - [x] Building optimized text segments from a string
 - [x] Error correction coding using Reed-Solomon Codes
 - [x] Data masking with all 8 mask patterns
