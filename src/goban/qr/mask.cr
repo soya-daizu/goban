@@ -4,8 +4,25 @@ struct Goban::QR
     # Mask identifier. Valid values are integers from 0 to 7.
     getter value : UInt8
 
+    @mask_pattern : Proc(Int32, Int32, Bool)
+
+    MASK_PATTERNS = {
+      ->(x : Int32, y : Int32) { (x + y) & 1 == 0 },
+      ->(x : Int32, y : Int32) { y & 1 == 0 },
+      ->(x : Int32, y : Int32) { x % 3 == 0 },
+      ->(x : Int32, y : Int32) { (x + y) % 3 == 0 },
+      ->(x : Int32, y : Int32) { (x // 3 + y // 2) & 1 == 0 },
+      ->(x : Int32, y : Int32) { (x * y) & 1 + (x * y) % 3 == 0 },
+      ->(x : Int32, y : Int32) { ((x * y) & 1 + (x * y) % 3) & 1 == 0 },
+      ->(x : Int32, y : Int32) { ((x + y) & 1 + (x * y) % 3) & 1 == 0 },
+    }
+
     def initialize(@value)
       raise "Invalid mask number" if @value > 7
+      @mask_pattern = MASK_PATTERNS[@value]
+    end
+
+    def self.apply_0(canvas : Canvas)
     end
 
     # Apply mask to the given canvas.
@@ -13,60 +30,118 @@ struct Goban::QR
     protected def apply_to(canvas : Canvas)
       canvas.size.times do |y|
         canvas.size.times do |x|
-          next if canvas.module_reserved?(x, y)
-          invert = case @value
-                   when 0; (x + y) % 2 == 0
-                   when 1; y % 2 == 0
-                   when 2; x % 3 == 0
-                   when 3; (x + y) % 3 == 0
-                   when 4; (x // 3 + y // 2) % 2 == 0
-                   when 5; (x * y) % 2 + (x * y) % 3 == 0
-                   when 6; ((x * y) % 2 + (x * y) % 3) % 2 == 0
-                   when 7; ((x + y) % 2 + (x * y) % 3) % 2 == 0
-                   else    raise "Invalid mask number"
-                   end
+          value = canvas.get_module(x, y)
+          next if value & 0x80 > 0
 
-          value = canvas.get_module(x, y) ^ invert
-          canvas.set_module(x, y, value)
+          invert = @mask_pattern.call(x, y) ? 1 : 0
+          canvas.set_module(x, y, value ^ invert)
         end
       end
+    end
+
+    protected def draw_format_modules(canvas : Canvas, ecl : ECC::Level)
+      data = (ecl.format_bits << 3 | @value).to_u32
+      rem = data
+      10.times do
+        rem = (rem << 1) ^ ((rem >> 9) * 0x537)
+      end
+      bits = (data << 10 | rem) ^ 0x5412
+
+      (0...8).each do |i|
+        bit = (bits >> i & 1).to_u8 | 0xc0
+        pos = i >= 6 ? i + 1 : i
+        canvas.set_module(8, pos, bit)
+        pos = canvas.size - 1 - i
+        canvas.set_module(pos, 8, bit)
+      end
+
+      (0...7).each do |i|
+        bit = (bits >> 14 - i & 1).to_u8 | 0xc0
+        pos = i >= 6 ? i + 1 : i
+        canvas.set_module(pos, 8, bit)
+        pos = canvas.size - 1 - i
+        canvas.set_module(8, pos, bit)
+      end
+
+      canvas.set_module(8, canvas.size - 8, 0xc1)
     end
 
     # Evaluate penalty score for the given canvas.
     # It assumes that one of the masks is applied to the canvas.
     protected def self.evaluate_score(canvas : Canvas)
-      s1_a = self.compute_adjacent_score(canvas, true)
-      s1_b = self.compute_adjacent_score(canvas, false)
-      s2 = self.compute_block_score(canvas)
-      s3_a = self.compute_finder_score(canvas, true)
-      s3_b = self.compute_finder_score(canvas, false)
-      s4 = self.compute_balance_score(canvas)
+      s1_a, s3_a, s2, dark_count = self.compute_score_h(canvas)
+      s1_b, s3_b = self.compute_score_v(canvas)
+      s4 = self.compute_balance_score(dark_count, canvas.size)
 
+      # puts "#{s1_a} + #{s1_b} + #{s2} + #{s3_a} + #{s3_b} + #{s4}"
       s1_a + s1_b + s2 + s3_a + s3_b + s4
     end
 
-    private def self.compute_adjacent_score(canvas : Canvas, is_horizontal : Bool)
-      score = 0
+    private macro compute_score(is_horizontal)
+      adj_score, fin_score = 0, 0
+      {% if is_horizontal %}
+        blk_score = 0
+        dark_count = 0
+      {% end %}
 
       # In horizontal mode, i is y coordinate and j is x coordinate
       canvas.size.times do |i|
+        buffer = 0b000_0000_0000_u16
         last_value = nil
         same_count = 1
 
         canvas.size.times do |j|
-          value = is_horizontal ? canvas.get_module(j, i) : canvas.get_module(i, j)
-          if value == last_value
-            same_count += 1
-            next unless j == canvas.size - 1
+          {% if is_horizontal %}
+            value = canvas.get_module(j, i) & 1
+            dark_count += value
+          {% else %}
+            value = canvas.get_module(i, j) & 1
+          {% end %}
+
+          buffer = ((buffer << 1) | value) & 0b111_1111_1111
+
+          # Finder pattern score
+          if j >= 10 && (buffer == 0b000_0101_1101 || buffer == 0b101_1101_0000)
+            fin_score += 40
           end
 
+          if value == last_value
+            same_count += 1
+
+            {% if is_horizontal %}
+              # Block score
+              if same_count >= 2 && i != canvas.size - 1
+                blk_score += 3 if value == canvas.get_module(j - 1, i + 1) & 1 &&
+                                  value == canvas.get_module(j, i + 1) & 1
+              end
+            {% end %}
+              
+            next unless j == canvas.size - 1
+          end
           last_value = value
-          score += same_count - 2 if same_count >= 5
+
+          # Adjacent score
+          adj_score += same_count - 2 if same_count >= 5
           same_count = 1
         end
       end
 
-      score
+      {
+        adj_score,
+        fin_score,
+        {% if is_horizontal %}
+        blk_score,
+        dark_count,
+        {% end %}
+      }
+    end
+
+    private def self.compute_score_h(canvas : Canvas)
+      compute_score(true)
+    end
+
+    private def self.compute_score_v(canvas : Canvas)
+      compute_score(true)
     end
 
     private def self.compute_block_score(canvas : Canvas)
@@ -74,11 +149,11 @@ struct Goban::QR
 
       (canvas.size - 1).times do |y|
         (canvas.size - 1).times do |x|
-          m1 = canvas.get_module(x, y)
-          m2 = canvas.get_module(x + 1, y)
+          m1 = canvas.get_module(x, y) & 1
+          m2 = canvas.get_module(x + 1, y) & 1
           next unless m1 == m2
-          m3 = canvas.get_module(x, y + 1)
-          m4 = canvas.get_module(x + 1, y + 1)
+          m3 = canvas.get_module(x, y + 1) & 1
+          m4 = canvas.get_module(x + 1, y + 1) & 1
 
           score += 3 if m2 == m3 && m3 == m4
         end
@@ -87,39 +162,9 @@ struct Goban::QR
       score
     end
 
-    private def self.compute_finder_score(canvas : Canvas, is_horizontal : Bool)
-      pattern = {true, false, true, true, true, false, true}
-      score = 0
-
-      # In horizontal mode, i is y coordinate and j is x coordinate
-      canvas.size.times do |i|
-        (0..canvas.size - 7).each do |j|
-          pattern_matches = (j..j + 6).all? do |k|
-            value = is_horizontal ? canvas.get_module(k, i) : canvas.get_module(i, k)
-            value == pattern[k - j]
-          end
-          next unless pattern_matches
-
-          score += 40 if (j - 4..j - 1).all? do |k|
-                           next false unless k > 0
-                           value = is_horizontal ? canvas.get_module(k, i) : canvas.get_module(i, k)
-                           value == false
-                         end
-          score += 40 if (j + 7..j + 10).all? do |k|
-                           next false unless k <= canvas.size - 1
-                           value = is_horizontal ? canvas.get_module(k, i) : canvas.get_module(i, k)
-                           value == false
-                         end
-        end
-      end
-
-      score
-    end
-
-    private def self.compute_balance_score(canvas : Canvas)
-      dark_modules = canvas.modules.count(true)
-      total_modules = canvas.size ** 2
-      ratio = dark_modules / total_modules * 100
+    private def self.compute_balance_score(dark_count : Int, size : Int)
+      total_modules = size ** 2
+      ratio = dark_count / total_modules * 100
       distance = (ratio.to_i - 50).abs
       distance // 5 * 10
     end

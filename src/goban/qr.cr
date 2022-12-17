@@ -15,7 +15,9 @@ module Goban
     # Length of a side in the symbol.
     getter size : Int32
 
-    def initialize(@version, @ecl, @canvas)
+    getter mask : UInt8
+
+    protected def initialize(@version, @ecl, @canvas, @mask)
       @size = @version.symbol_size
     end
 
@@ -139,12 +141,13 @@ module Goban
 
       data_codewords = ECC::RSGenerator.add_ec_codewords(bit_stream.to_bytes, version, ecl)
 
-      canvas = Canvas.new(version, ecl)
-      canvas.draw_function_patterns
-      canvas.draw_data_codewords(data_codewords)
-      canvas.apply_best_mask
+      drawer = CanvasDrawer.new(version, ecl)
+      drawer.draw_function_patterns
+      drawer.draw_data_codewords(data_codewords)
+      mask = drawer.apply_best_mask
+      drawer.canvas.normalize
 
-      self.new(version, ecl, canvas)
+      self.new(version, ecl, drawer.canvas, mask.value)
     end
 
     # Prints the QR Code symbol as a text in the console. To generate the actual image file,

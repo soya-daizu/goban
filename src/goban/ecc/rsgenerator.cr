@@ -27,14 +27,16 @@ module Goban::ECC
         blocks.push(data)
       end
 
-      result = Array(UInt8).new(raw_codewords)
+      result = Slice(UInt8).new(raw_codewords)
+      head = 0
       (short_block_size + 1).times do |i|
         blocks.each_with_index do |block, j|
           # Add to the result unless it's a filler codeword or
           # if there is no short block involved in the given
           # version and ec level
           if i != short_block_size - block_ecc_size || j >= short_blocks_count
-            result.push(block[i])
+            result[head] = block[i]
+            head += 1
           end
         end
       end
