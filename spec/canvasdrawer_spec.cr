@@ -3,7 +3,7 @@ require "./spec_helper"
 module Goban
   struct QR::CanvasDrawer
     def reserve_modules_for_test
-      @canvas.reserve_modules(8, 8, 7, 7)
+      @canvas.fill_module(8, 8, 7, 7, 0xc0)
     end
   end
 

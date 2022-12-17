@@ -60,7 +60,6 @@ struct Goban::QR
         canvas.set_module(8, pos, bit)
       end
 
-      canvas.set_module(8, canvas.size - 8, 0xc1)
     end
 
     # Evaluate penalty score for the given canvas.

@@ -37,16 +37,10 @@ struct Goban::QR
     end
 
     @[AlwaysInline]
-    protected def fill_module(x : Int, y : Int, w : Int, value : UInt8)
-      @modules.fill(value, y * @size + x, w)
-    end
-
-    @[AlwaysInline]
-    protected def reserve_modules(x : Int, y : Int, w : Int, h : Int)
+    protected def fill_module(x : Int, y : Int, w : Int, h : Int, value : UInt8)
       (x...x + w).each do |xx|
         (y...y + h).each do |yy|
-          next if get_module(xx, yy) == 0xc1
-          set_module(xx, yy, 0xc0)
+          set_module(xx, yy, value)
         end
       end
     end
@@ -59,9 +53,10 @@ struct Goban::QR
 
     # Prints the modules on the canvas as a text in the console.
     def print_to_console
+      chars = {"  ", "██"}
       each_row do |row|
         row.each do |mod|
-          print mod == 1 ? "██" : "  "
+          print chars[mod & 1]
         end
         print '\n'
       end

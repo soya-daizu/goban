@@ -28,9 +28,12 @@ struct Goban::QR
 
       # Reserving areas for the finder patterns and format info at once
       # as they belong to the same adjacent square area
-      @canvas.reserve_modules(0, 0, 9, 9)
-      @canvas.reserve_modules(@size - 8, 0, 8, 9)
-      @canvas.reserve_modules(0, @size - 8, 9, 8)
+      @canvas.fill_module(0, 7, 9, 2, 0xc0)
+      @canvas.fill_module(7, 0, 2, 7, 0xc0)
+      @canvas.fill_module(@size - 8, 0, 1, 7, 0xc0)
+      @canvas.fill_module(@size - 8, 7, 8, 2, 0xc0)
+      @canvas.fill_module(0, @size - 8, 8, 1, 0xc0)
+      @canvas.fill_module(7, @size - 7, 2, 7, 0xc0)
 
       positions = @version.alignment_pattern_positions
       ali_pat_count = positions.size
@@ -41,26 +44,15 @@ struct Goban::QR
                   i == ali_pat_count - 1 && j == 0
           x, y = positions[i], positions[j]
 
-          draw_alignment_pattern(x, y)
-          @canvas.reserve_modules(x - 2, y - 2, 5, 5)
+          draw_alignment_pattern(x - 2, y - 2)
         end
       end
 
-      tim_pat_mods_count = @version.timing_pattern_mods_count
-      (8...8 + tim_pat_mods_count).each do |i|
-        next unless i.even?
-        @canvas.set_module(i, 6, 0xc1)
-        @canvas.set_module(6, i, 0xc1)
-      end
-      @canvas.reserve_modules(8, 6, tim_pat_mods_count, 1)
-      @canvas.reserve_modules(6, 8, 1, tim_pat_mods_count)
+      draw_timing_pattern_modules
 
-      version_modules_exist = draw_version_modules
-      if version_modules_exist
-        # Reserve version info area
-        @canvas.reserve_modules(@size - 11, 0, 3, 6)
-        @canvas.reserve_modules(0, @size - 11, 6, 3)
-      end
+      draw_version_modules
+
+      canvas.set_module(8, canvas.size - 8, 0xc1)
     end
 
     # Draws data bits from the given data codewords.
@@ -108,37 +100,65 @@ struct Goban::QR
           best_canvas = canvas
           min_score = score
         end
+
+        # puts i, score
+        # canvas.print_to_console
       end
       raise "Unable to set the mask" unless best_canvas
+      # puts @mask
 
       @canvas = best_canvas
       @mask
     end
 
+    FINDER_PATTERN = {
+      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
+    }
+
     private def draw_finder_pattern(x : Int, y : Int)
-      @canvas.fill_module(x, y, 7, 0xc1)
-      (y + 1..y + 5).each do |yy|
-        @canvas.set_module(x, yy, 0xc1)
-        @canvas.set_module(x + 6, yy, 0xc1)
-        if (y + 2..y + 4).includes?(yy)
-          @canvas.fill_module(x + 2, yy, 3, 0xc1)
+      7.times do |i|
+        xx = x + i
+        7.times do |j|
+          yy = y + j
+          @canvas.set_module(xx, yy, FINDER_PATTERN[7 * j + i])
         end
       end
-      @canvas.fill_module(x, y + 6, 7, 0xc1)
     end
 
+    ALIGNMENT_PATTERN = {
+      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
+    }
+
     private def draw_alignment_pattern(x : Int, y : Int)
-      @canvas.fill_module(x - 2, y - 2, 5, 0xc1)
-      @canvas.set_module(x, y, 0xc1)
-      (y - 1..y + 1).each do |yy|
-        @canvas.set_module(x - 2, yy, 0xc1)
-        @canvas.set_module(x + 2, yy, 0xc1)
+      5.times do |i|
+        xx = x + i
+        5.times do |j|
+          yy = y + j
+          @canvas.set_module(xx, yy, ALIGNMENT_PATTERN[5 * j + i])
+        end
       end
-      @canvas.fill_module(x - 2, y + 2, 5, 0xc1)
+    end
+
+    private def draw_timing_pattern_modules
+      (8..@size - 9).each do |i|
+        mod = i.even? ? 0xc1_u8 : 0xc0_u8
+        @canvas.set_module(i, 6, mod)
+        @canvas.set_module(6, i, mod)
+      end
     end
 
     private def draw_version_modules
-      return false if @version < 7
+      return if @version < 7
 
       data = @version.value.to_u32
       rem = data
@@ -154,8 +174,6 @@ struct Goban::QR
         @canvas.set_module(x, y, bit)
         @canvas.set_module(y, x, bit)
       end
-
-      true
     end
   end
 end
