@@ -2,7 +2,7 @@
 
 A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (5.33x) and uses fewer heap allocations (-94.63%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding.
 
-The implementation is based on [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
+The implementation is compliant with [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
 The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
@@ -88,6 +88,19 @@ qr.print_to_console
 #    ██████████████  ██    ██  ██████    ██
 ```
 
+`Goban::ECC::Level` represents the ECC (Error Correction Coding) level to use when encoding the data. The available options are:
+
+| Level | Error Correction Capability |
+| --- | --- |
+| Low | Approx 7% |
+| Medium | Approx 15% |
+| Quartile | Approx 25% |
+| High | Approx 30% |
+
+The default ECC level is `Medium`. Use `Low` if you want your QR Code to be as compact as possible, or increase the level to `Quartile` or `High` if you want it to be more resistant to damage.
+
+Higher ECC levels are especially capable of interpolating a large chunk of loss in the symbol such as by tears and stains. Typically, it is not necessary to set the ECC level high for display purposes on the screen.
+
 ### Using exporters to generate a PNG and SVG image
 
 To generate a PNG image, add [stumpy_png](https://github.com/stumpycr/stumpy_png) as a dependency in your shard.yml, and `require "goban/exporters/png"` to use `Goban::PNGExporter`:
@@ -113,9 +126,21 @@ puts Goban::SVGExporter.svg_string(qr, 4)
 Goban::SVGExporter.export(qr, "test.svg")
 ```
 
+Alternatively, you can write your own export logic by iterating over the canvas of the QR Code object.
+
+```crystal
+qr = Goban::QR.encode_string("Hello World!")
+qr.canvas.each_row do |row, y|
+  row.each do |mod, x|
+    # mod is each module (pixel or dot in other words) included in the symbol
+    # and the value is either 0 (= light) or 1 (= dark)
+  end
+end
+```
+
 ### About the automatic text segmentation
 
-The `Goban::QR.encode_string()` method encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:
+The `Goban::QR.encode_string()` method under the hood encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:
 
 | Mode | Supported Characters |
 | --- | --- |
@@ -143,7 +168,7 @@ segments = [
 qr = Goban::QR.encode_segments(segments, Goban::ECC::Level::Low, Goban::QR::Version.new(2))
 ```
 
-The optimal segments and version to hard-code can be figured out by using the `Goban::Segment::Optimizer.make_optimized_segments()` method.
+The optimal segments and version to hard-code can be figured out by manually executing the `Goban::Segment::Optimizer.make_optimized_segments()` method.
 
 ## API Documentations
 
