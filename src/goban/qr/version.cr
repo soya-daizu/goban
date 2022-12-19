@@ -10,9 +10,12 @@ struct Goban::QR
 
     getter value : UInt8
 
+    getter symbol_size : Int32
+
     def initialize(value : Int)
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
       @value = value.to_u8
+      @symbol_size = 4 * @value + 17 # 21 + 4(v - 1)
     end
 
     def <=>(other : Int)
@@ -23,17 +26,7 @@ struct Goban::QR
       value
     end
 
-    # Size of the QR Code symbol for this version.
-    def symbol_size
-      4 * @value + 17 # 21 + 4(v - 1)
-    end
-
-    # Number of the timing pattern modules in one direction for this version.
-    protected def timing_pattern_mods_count
-      4 * @value + 1 # 5 + 4(v - 1)
-    end
-
-    # Returns a list of the alignment pattern positions for thie version.
+    # Returns a list of the alignment pattern positions for this version.
     # The list may include positions in which drawing is not allowed due
     # to overlap with the finder pattern, etc.
     protected def alignment_pattern_positions
@@ -57,17 +50,17 @@ struct Goban::QR
       v = @value
       g = v // 7
 
-      timing_pattern_mod = timing_pattern_mods_count * 2
-      if v == 1
-        align_pattern_mod = 0
-      else
-        n = g + 1
-        # 25(1 + ∑[k=1..n-1](2k+3))
-        align_pattern_mod = 25 * (n ** 2 + 2 * n - 2)
-      end
+      timing_pattern_mod = (symbol_size - 16) * 2
       overlaps = g * 10 # Overlaps of timing patterns and align patterns
 
-      func_pattern_mod = 192 + timing_pattern_mod + align_pattern_mod - overlaps
+      func_pattern_mod = 192 + timing_pattern_mod - overlaps
+      if v > 1
+        n = g + 1
+        # 5^2(1 + ∑[k=1 .. n-1](2k + 3))
+        align_pattern_mod = 25 * (n ** 2 + 2 * n - 2)
+
+        func_pattern_mod += align_pattern_mod
+      end
       fvi_mod = v < 7 ? 31 : 67 # Format and version info modules
 
       symbol_size ** 2 - func_pattern_mod - fvi_mod
