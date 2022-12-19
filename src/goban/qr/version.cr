@@ -77,7 +77,7 @@ struct Goban::QR
     # symbol of this version.
     def max_data_codewords(ecl : ECC::Level)
       raw_max_data_codewords = raw_data_mods_count // 8
-      ecc_codewords = ECC_CODEWORDS_PER_BLOCK[ecl.value][@value] * ERROR_CORRECTION_BLOCKS[ecl.value][@value]
+      ecc_codewords = EC_CODEWORDS_PER_BLOCK_QR[ecl.value][@value] * EC_BLOCKS_QR[ecl.value][@value]
       raw_max_data_codewords - ecc_codewords
     end
   end
