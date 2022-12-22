@@ -1,4 +1,4 @@
-struct Goban::QR
+module Goban
   struct Canvas
     # Returns the array of modules drawn on the canvas.
     getter modules : Slice(UInt8)

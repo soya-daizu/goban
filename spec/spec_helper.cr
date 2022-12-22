@@ -9,7 +9,7 @@ def convert_bit_stream(bit_stream : Goban::BitStream)
   end
 end
 
-def convert_canvas(canvas : Goban::QR::Canvas)
+def convert_canvas(canvas : Goban::Canvas)
   String.build do |io|
     canvas.each_row do |row|
       row.each do |mod|

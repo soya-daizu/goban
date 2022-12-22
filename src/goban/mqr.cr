@@ -12,7 +12,7 @@ module Goban
     getter ecl : ECC::Level
     # Returns the canvas of the QR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
-    getter canvas : QR::Canvas
+    getter canvas : Canvas
     # Length of a side in the symbol.
     getter size : Int32
 
