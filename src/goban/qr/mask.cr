@@ -12,9 +12,9 @@ struct Goban::QR
       ->(x : Int32, y : Int32) { x % 3 == 0 },
       ->(x : Int32, y : Int32) { (x + y) % 3 == 0 },
       ->(x : Int32, y : Int32) { (x // 3 + y // 2) & 1 == 0 },
-      ->(x : Int32, y : Int32) { (x * y) & 1 + (x * y) % 3 == 0 },
-      ->(x : Int32, y : Int32) { ((x * y) & 1 + (x * y) % 3) & 1 == 0 },
-      ->(x : Int32, y : Int32) { ((x + y) & 1 + (x * y) % 3) & 1 == 0 },
+      ->(x : Int32, y : Int32) { ((x * y) & 1) + (x * y) % 3 == 0 },
+      ->(x : Int32, y : Int32) { (((x * y) & 1) + (x * y) % 3) & 1 == 0 },
+      ->(x : Int32, y : Int32) { (((x + y) & 1) + (x * y) % 3) & 1 == 0 },
     }
 
     def initialize(@value)
@@ -59,7 +59,6 @@ struct Goban::QR
         pos = canvas.size - 1 - i
         canvas.set_module(8, pos, bit)
       end
-
     end
 
     # Evaluate penalty score for the given canvas.
