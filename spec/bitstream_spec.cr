@@ -5,10 +5,10 @@ module Goban
     it "builds data bits properly" do
       v = QR::Version.new(1)
       ecl = ECC::Level::Low
-      bit_stream = BitStream.new(v.max_data_codewords(ecl) * 8)
+      bit_stream = BitStream.new(v.max_data_bits(ecl))
       bit_stream.append_segment_bits(Segment.numeric("0123456789"), v)
       bit_stream.append_terminator_bits(v, ecl)
-      bit_stream.append_padding_bits
+      bit_stream.append_padding_bits(v)
 
       bit_str = convert_bit_stream(bit_stream)
       bit_str.should eq("00010000001010000000110001010110011010100110100100000000111011000001000111101100000100011110110000010001111011000001000111101100000100011110110000010001")
