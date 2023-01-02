@@ -1,0 +1,27 @@
+name: Deploy docs
+
+on:
+  push:
+    branches: [ "master" ]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal
+    steps:
+    - uses: actions/checkout@v3
+    - uses: crystal-lang/install-crystal@v1
+    - name: Install dependencies
+      run: shards install
+    - name: Build documentation
+      run: crystal docs --source-refname="master"
+    - name: Deploy documentation to gh-pages branch
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        force_orphan: true
