@@ -1,29 +1,17 @@
+require "../abstract/version"
+
 struct Goban::QR
   # Represents a version number of the QR Code symbol.
   # Possible versions range from 1 to 40, and the higher the number,
   # the large the size of the final QR Code symbol.
-  struct Version
-    include Comparable(Int)
-
+  struct Version < AbstractQR::Version
     MIN =  1_u8
     MAX = 40_u8
 
-    getter value : UInt8
-
-    getter symbol_size : Int32
-
-    def initialize(value : Int)
+    def initialize(value)
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
       @value = value.to_u8
       @symbol_size = 4 * @value + 17 # 21 + 4(v - 1)
-    end
-
-    def <=>(other : Int)
-      @value <=> other
-    end
-
-    def to_i
-      value
     end
 
     # Returns a list of the alignment pattern positions for this version.
@@ -81,6 +69,9 @@ struct Goban::QR
       raw_max_data_codewords - ecc_codewords
     end
 
+    # Maximum number of data bits that can be contained in the QR Code
+    # symbol of this version. This does not include the number of error correction
+    # codewords.
     def max_data_bits(ecl : ECC::Level)
       max_data_codewords(ecl) * 8
     end

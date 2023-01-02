@@ -1,11 +1,8 @@
+require "../abstract/mask"
+
 struct Goban::MQR
   # Represents a mask pattern that can be applied to a canvas.
-  struct Mask
-    # Mask identifier. Valid values are integers from 0 to 7.
-    getter value : UInt8
-
-    @mask_pattern : Proc(Int32, Int32, Bool)
-
+  struct Mask < AbstractQR::Mask
     MASK_PATTERNS = {
       ->(x : Int32, y : Int32) { y & 1 == 0 },
       ->(x : Int32, y : Int32) { (x // 3 + y // 2) & 1 == 0 },
@@ -13,23 +10,13 @@ struct Goban::MQR
       ->(x : Int32, y : Int32) { (((x + y) & 1) + (x * y) % 3) & 1 == 0 },
     }
 
-    def initialize(@value)
-      raise "Invalid mask number" if @value > 3
+    MIN = 0_u8
+    MAX = 3_u8
+
+    def initialize(value)
+      raise "Invalid mask number" unless (MIN..MAX).includes?(value)
+      @value = value.to_u8
       @mask_pattern = MASK_PATTERNS[@value]
-    end
-
-    # Apply mask to the given canvas.
-    # Call this method again to reverse the applied mask.
-    protected def apply_to(canvas : Canvas)
-      canvas.size.times do |y|
-        canvas.size.times do |x|
-          value = canvas.get_module(x, y)
-          next if value & 0x80 > 0
-
-          invert = @mask_pattern.call(x, y) ? 1 : 0
-          canvas.set_module(x, y, value ^ invert)
-        end
-      end
     end
 
     private def get_symbol_num(ver : Version, ecl : ECC::Level)

@@ -22,7 +22,7 @@ module Goban
       @bits = Pointer(UInt8).malloc(malloc_size, 0)
     end
 
-    protected def append_segment_bits(segment : Segment, version : QR::Version | MQR::Version)
+    protected def append_segment_bits(segment : Segment, version : AbstractQR::Version)
       append_bits(*segment.mode.indicator(version))
       append_bits(segment.char_count, segment.mode.cci_bits_count(version))
       append_bit_stream(segment.bit_stream)
@@ -34,7 +34,7 @@ module Goban
       end
     end
 
-    protected def append_terminator_bits(version : QR::Version | MQR::Version, ecl : ECC::Level)
+    protected def append_terminator_bits(version : AbstractQR::Version, ecl : ECC::Level)
       cap_bits = version.max_data_bits(ecl)
       case version
       when QR::Version
@@ -48,7 +48,7 @@ module Goban
       append_bits(0, terminator_bits_size)
     end
 
-    protected def append_padding_bits(version : QR::Version | MQR::Version)
+    protected def append_padding_bits(version : AbstractQR::Version)
       # In the version M1 and M3, we need to use the shorter padding bits 0000 to fill
       # the rest of the data stream, but the data stream is already filled with zeros,
       # so there's nothing more to do here

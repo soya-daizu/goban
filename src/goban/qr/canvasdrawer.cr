@@ -1,13 +1,8 @@
+require "../abstract/canvasdrawer"
+
 struct Goban::QR
   # Handles painting each QR Code modules on a canvas.
-  struct CanvasDrawer
-    # Canvas that holds color of each modules.
-    getter canvas : Canvas
-    # Length of the canvas's side.
-    getter size : Int32
-    # Returns the mask applied to the canvas.
-    getter mask : Mask
-
+  struct CanvasDrawer < AbstractQR::CanvasDrawer
     # Creates a blank canvas with the given version and error correction level.
     def initialize(@version : Version, @ecl : ECC::Level)
       @size = @version.symbol_size
@@ -48,7 +43,7 @@ struct Goban::QR
         end
       end
 
-      draw_timing_pattern_modules
+      draw_timing_pattern_modules(6, @size - 16)
 
       draw_version_modules
 
@@ -109,52 +104,6 @@ struct Goban::QR
 
       @canvas = best_canvas
       @mask
-    end
-
-    FINDER_PATTERN = {
-      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
-    }
-
-    private def draw_finder_pattern(x : Int, y : Int)
-      7.times do |i|
-        xx = x + i
-        7.times do |j|
-          yy = y + j
-          @canvas.set_module(xx, yy, FINDER_PATTERN[7 * j + i])
-        end
-      end
-    end
-
-    ALIGNMENT_PATTERN = {
-      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
-      0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
-    }
-
-    private def draw_alignment_pattern(x : Int, y : Int)
-      5.times do |i|
-        xx = x + i
-        5.times do |j|
-          yy = y + j
-          @canvas.set_module(xx, yy, ALIGNMENT_PATTERN[5 * j + i])
-        end
-      end
-    end
-
-    private def draw_timing_pattern_modules
-      (8..@size - 9).each do |i|
-        mod = i.even? ? 0xc1_u8 : 0xc0_u8
-        @canvas.set_module(i, 6, mod)
-        @canvas.set_module(6, i, mod)
-      end
     end
 
     private def draw_version_modules
