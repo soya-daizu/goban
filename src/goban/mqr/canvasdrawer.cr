@@ -30,7 +30,6 @@ struct Goban::MQR
 
     # Draws data bits from the given data codewords.
     protected def draw_data_codewords(data_codewords : Slice(UInt8))
-      puts data_codewords.map { |v| v.to_s(2).rjust(8, '0') }.join(' ')
       data_length = data_codewords.size * 8
 
       i = 0

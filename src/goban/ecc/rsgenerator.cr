@@ -48,7 +48,6 @@ module Goban::ECC
 
     def add_ec_codewords(codewords : Slice(UInt8), version : MQR::Version, ecl : Level)
       raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
-      puts codewords
 
       block_size = EC_CODEWORDS_MQR[ecl.value][version.value]
       raw_codewords = version.raw_max_data_codewords

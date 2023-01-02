@@ -30,7 +30,6 @@ module Goban
       end
       bit_stream.append_terminator_bits(version, ecl)
       bit_stream.append_padding_bits(version)
-      puts bit_stream
 
       data_codewords = ECC::RSGenerator.add_ec_codewords(bit_stream.to_bytes, version, ecl)
 
