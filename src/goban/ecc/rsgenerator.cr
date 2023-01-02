@@ -20,9 +20,11 @@ module Goban::ECC
         data = codewords[k, data_size].to_a
         k += data_size
 
-        ec_codewords = self.poly_modulo(data, gen_poly)
-        # Add a filler codeword if it's a short block
+        ec_codewords = self.poly_div(data, gen_poly)
+
+        # Add a filler bit if it's a short block
         data.push(0) if i < short_blocks_count
+
         data.concat(ec_codewords)
         blocks.push(data)
       end
@@ -44,6 +46,34 @@ module Goban::ECC
       result
     end
 
+    def add_ec_codewords(codewords : Slice(UInt8), version : MQR::Version, ecl : Level)
+      raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
+      puts codewords
+
+      block_size = EC_CODEWORDS_MQR[ecl.value][version.value]
+      raw_codewords = version.raw_max_data_codewords
+
+      gen_poly = self.get_generator_polynomial(block_size)
+      data = codewords.to_a
+      last_data_idx = codewords.size - 1
+
+      ec_codewords = self.poly_div(data, gen_poly)
+      data.concat(ec_codewords)
+
+      # Version M1 and M3 have a shorter last codeword of 4 bits,
+      # so we are shifting it by four here
+      data[last_data_idx] >>= 4 if version == 1 || version == 3
+
+      result = Slice(UInt8).new(raw_codewords)
+      head = 0
+      data.each do |block|
+        result[head] = block
+        head += 1
+      end
+
+      result
+    end
+
     private def get_generator_polynomial(for degree : Int)
       result = Array(UInt8).new(degree - 1, 0)
       result.push(1)
@@ -51,7 +81,6 @@ module Goban::ECC
       root = 1
       degree.times do |i|
         degree.times do |j|
-          temp = result[j]
           result[j] = gf_mul(result[j], root)
           result[j] ^= result[j + 1] if j + 1 < result.size
         end
@@ -62,7 +91,7 @@ module Goban::ECC
       result
     end
 
-    private def poly_modulo(data : Array(UInt8), generator : Array(UInt8))
+    private def poly_div(data : Array(UInt8), generator : Array(UInt8))
       result = Array(UInt8).new(generator.size, 0)
       data.each do |b|
         factor = b ^ result.shift

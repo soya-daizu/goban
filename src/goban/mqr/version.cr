@@ -10,9 +10,12 @@ struct Goban::MQR
 
     getter value : UInt8
 
+    getter symbol_size : Int32
+
     def initialize(value : Int)
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
       @value = value.to_u8
+      @symbol_size = 2 * @value + 9 # 11 + 2(v - 1)
     end
 
     def <=>(other : Int)
@@ -23,20 +26,10 @@ struct Goban::MQR
       value
     end
 
-    # Size of the Micro QR Code symbol for this version.
-    def symbol_size
-      2 * @value + 9 # 11 + 2(v - 1)
-    end
-
-    # Number of the timing pattern modules in one direction for this version.
-    protected def timing_pattern_mods_count
-      2 * @value + 1 # 3 + 2(v - 1)
-    end
-
     # Number of the modules that are available for writing the actual
     # data payload.
     protected def raw_data_mods_count
-      timing_pattern_mod = timing_pattern_mods_count * 2
+      timing_pattern_mod = (@symbol_size - 8) * 2
 
       func_pattern_mod = 64 + timing_pattern_mod
       fvi_mod = 15 # Format and version info modules
@@ -44,13 +37,27 @@ struct Goban::MQR
       symbol_size ** 2 - func_pattern_mod - fvi_mod
     end
 
-    # Maximum number of codewords that can be contained in the Micro QR Code
-    # symbol of this version.
+    # Maximum number of data codewords that can be contained in the Micro QR Code
+    # symbol of this version, including the number of error correction codewords.
+    protected def raw_max_data_codewords
+      # Version M1 and M3 have one codeword with the length of 4 bits
+      # so we're doing ceiling division here to simulate proper behavior
+      (raw_data_mods_count / 8).ceil.to_i
+    end
+
+    # Maximum number of data codewords that can be contained in the Micro QR Code
+    # symbol of this version. This does not include the number of error correction
+    # codewords.
     def max_data_codewords(ecl : ECC::Level)
-      raw_max_data_codewords = raw_data_mods_count // 8
-      ecc_codewords = ECC_CODEWORDS_MQR[ecl.value][@value]
+      ecc_codewords = EC_CODEWORDS_MQR[ecl.value][@value]
+      raise "Invalid EC level or version" if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
+    end
+
+    def max_data_bits(ecl : ECC::Level)
+      ecc_codewords = EC_CODEWORDS_MQR[ecl.value][@value]
+      raise "Invalid EC level or version" if ecc_codewords < 0
+      raw_data_mods_count - ecc_codewords * 8
     end
   end
 end
-

@@ -24,6 +24,23 @@ struct Goban::Segment
       end
     end
 
+    protected def indicator(ver : MQR::Version)
+      case self
+      when Numeric
+        values = {nil, 0b0, 0b00, 0b000}
+      when Alphanumeric
+        values = {nil, 0b1, 0b01, 0b001}
+      when Byte
+        values = {nil, nil, 0b10, 0b010}
+      when Kanji
+        values = {nil, nil, 0b11, 0b011}
+      else
+        raise "Unsupported mode"
+      end
+
+      {values[ver.to_i - 1], ver.to_i - 1}
+    end
+
     # Number of the character count indicator bits for this mode.
     protected def cci_bits_count(ver : QR::Version)
       case self
@@ -43,8 +60,22 @@ struct Goban::Segment
       values[index]
     end
 
+    # Number of the character count indicator bits for this mode.
+    protected def cci_bits_count(ver : MQR::Version)
+      case self
+      when Numeric
+        values = {3, 4, 5, 6}
+      when Alphanumeric
+        values = {nil, 3, 4, 5}
+      when Byte
+        values = {nil, nil, 4, 5}
+      when Kanji
+        values = {nil, nil, 3, 4}
       else
+        raise "Unsupported mode"
       end
+
+      values[ver.to_i - 1]
     end
   end
 end
