@@ -136,7 +136,7 @@ struct Goban::QR
     end
 
     private def self.compute_score_v(canvas : Canvas)
-      compute_score(true)
+      compute_score(false)
     end
 
     private def self.compute_balance_score(dark_count : Int, size : Int)
