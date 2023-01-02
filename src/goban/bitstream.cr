@@ -22,9 +22,9 @@ module Goban
       @bits = Pointer(UInt8).malloc(malloc_size, 0)
     end
 
-    protected def append_segment_bits(segment : Segment, version : QR::Version)
-      append_bits(segment.mode.to_i, 4)
-      append_bits(segment.char_count, segment.mode.cci_bits_size(version))
+    protected def append_segment_bits(segment : Segment, version : QR::Version | MQR::Version)
+      append_bits(*segment.mode.indicator(version))
+      append_bits(segment.char_count, segment.mode.cci_bits_count(version))
       append_bit_stream(segment.bit_stream)
     end
 
@@ -34,13 +34,27 @@ module Goban
       end
     end
 
-    protected def append_terminator_bits(version : QR::Version, ecl : ECC::Level)
-      cap_bits = version.max_data_codewords(ecl) * 8
-      terminator_bits_size = Math.min(4, cap_bits - @tail_idx)
+    protected def append_terminator_bits(version : QR::Version | MQR::Version, ecl : ECC::Level)
+      cap_bits = version.max_data_bits(ecl)
+      case version
+      when QR::Version
+        base = 4
+      when MQR::Version
+        base = 3 + (version.to_i - 1) * 2
+      else
+        raise "Invalid QR version"
+      end
+      terminator_bits_size = Math.min(base, cap_bits - @tail_idx)
       append_bits(0, terminator_bits_size)
     end
 
-    protected def append_padding_bits
+    protected def append_padding_bits(version : QR::Version | MQR::Version)
+      # In the version M1 and M3, we need to use the shorter padding bits 0000 to fill
+      # the rest of the data stream, but the data stream is already filled with zeros,
+      # so there's nothing more to do here
+      short_pad = typeof(version) == MQR::Version && (version == 1 || version == 3)
+      return if short_pad 
+
       while @tail_idx % 8 != 0
         push(false)
       end
@@ -51,7 +65,8 @@ module Goban
       end
     end
 
-    protected def append_bits(val : Int, len : Int)
+    protected def append_bits(val : Int?, len : Int?)
+      return if !val || !len
       raise "Value out of range" unless (0..31).includes?(len) && val >> len == 0
       (0..len - 1).reverse_each do |i|
         push((val >> i).to_u8! & 1 != 0)

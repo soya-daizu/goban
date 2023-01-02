@@ -20,7 +20,7 @@ struct Goban::Segment
         char_modes = compute_char_modes(chars, v)
         segments = make_segments(text, char_modes)
 
-        cap_bits = v.max_data_codewords(ecl) * 8
+        cap_bits = v.max_data_bits(ecl)
         begin
           used_bits = Segment.count_total_bits(segments, v)
         rescue e
@@ -33,7 +33,7 @@ struct Goban::Segment
         if used_bits <= cap_bits
           group.each do |i|
             sml_v = QR::Version.new(i)
-            sml_cap_bits = sml_v.max_data_codewords(ecl) * 8
+            sml_cap_bits = sml_v.max_data_bits(ecl)
 
             if used_bits <= sml_cap_bits
               version = sml_v
@@ -54,7 +54,7 @@ struct Goban::Segment
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
     private def compute_char_modes(chars : Array(Char), version : QR::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
-      head_costs = modes.map { |m| ((4 + m.cci_bits_size(version)) * 6).to_f32 }
+      head_costs = modes.map { |m| ((4 + m.cci_bits_count(version)) * 6).to_f32 }
       char_modes = Array(StaticArray(Segment::Mode, 4)).new(chars.size)
       prev_costs = head_costs.clone
 

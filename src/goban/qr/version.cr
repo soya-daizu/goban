@@ -50,7 +50,7 @@ struct Goban::QR
       v = @value
       g = v // 7
 
-      timing_pattern_mod = (symbol_size - 16) * 2
+      timing_pattern_mod = (@symbol_size - 16) * 2
       overlaps = g * 10 # Overlaps of timing patterns and align patterns
 
       func_pattern_mod = 192 + timing_pattern_mod - overlaps
@@ -66,12 +66,23 @@ struct Goban::QR
       symbol_size ** 2 - func_pattern_mod - fvi_mod
     end
 
-    # Maximum number of codewords that can be contained in the QR Code
-    # symbol of this version.
+    # Maximum number of data codewords that can be contained in the QR Code
+    # symbol of this version, including the number of error correction codewords.
+    protected def raw_max_data_codewords
+      raw_data_mods_count // 8
+    end
+
+    # Maximum number of data codewords that can be contained in the QR Code
+    # symbol of this version. This does not include the number of error correction
+    # codewords.
     def max_data_codewords(ecl : ECC::Level)
-      raw_max_data_codewords = raw_data_mods_count // 8
       ecc_codewords = EC_CODEWORDS_PER_BLOCK_QR[ecl.value][@value] * EC_BLOCKS_QR[ecl.value][@value]
+      raise "Invalid EC level or version" if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
+    end
+
+    def max_data_bits(ecl : ECC::Level)
+      max_data_codewords(ecl) * 8
     end
   end
 end

@@ -132,12 +132,12 @@ module Goban
     # with the smallest character set that supports that supports it.
     def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
-      bit_stream = BitStream.new(version.max_data_codewords(ecl) * 8)
+      bit_stream = BitStream.new(version.max_data_bits(ecl))
       segments.each do |segment|
         bit_stream.append_segment_bits(segment, version)
       end
       bit_stream.append_terminator_bits(version, ecl)
-      bit_stream.append_padding_bits
+      bit_stream.append_padding_bits(version)
 
       data_codewords = ECC::RSGenerator.add_ec_codewords(bit_stream.to_bytes, version, ecl)
 

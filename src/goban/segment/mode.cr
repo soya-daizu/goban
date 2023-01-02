@@ -1,16 +1,31 @@
 struct Goban::Segment
   # Represents a encoding mode of a data segment.
   enum Mode : UInt8
-    ECI              = 0b0111
-    Numeric          = 0b0001
-    Alphanumeric     = 0b0010
-    Byte             = 0b0100
-    Kanji            = 0b1000
-    StructuredAppend = 0b0011
+    ECI
+    Numeric
+    Alphanumeric
+    Byte
+    Kanji
+    StructuredAppend
     Undefined        = UInt8::MAX
 
+    protected def indicator(ver : QR::Version)
+      case self
+      when Numeric
+        {0b0001, 4}
+      when Alphanumeric
+        {0b0010, 4}
+      when Byte
+        {0b0100, 4}
+      when Kanji
+        {0b1000, 4}
+      else
+        raise "Unsupported mode"
+      end
+    end
+
     # Number of the character count indicator bits for this mode.
-    protected def cci_bits_size(ver : QR::Version)
+    protected def cci_bits_count(ver : QR::Version)
       case self
       when Numeric
         values = {10, 12, 14}
@@ -21,17 +36,14 @@ struct Goban::Segment
       when Kanji
         values = {8, 10, 12}
       else
-        raise "Incompatible mode"
+        raise "Unsupported mode"
       end
 
-      if (1..9).includes?(ver)
-        values[0]
-      elsif (10..26).includes?(ver)
-        values[1]
-      elsif (27..40).includes?(ver)
-        values[2]
+      index = {1..9, 10..26, 27..40}.index! { |range| range.includes?(ver) }
+      values[index]
+    end
+
       else
-        raise "Invalid version object"
       end
     end
   end
