@@ -15,7 +15,7 @@ module Goban
 
       it "encodes properly" do
         rows = convert_canvas(qr.canvas)
-        rows.should eq(SAMPLE_RESULT_MODS)
+        rows.should eq(SAMPLE_RESULT_MODS_QR)
       end
 
       it "raises if text is too long" do
@@ -30,7 +30,7 @@ module Goban
     end
 
     describe ".encode_segments" do
-      qr = QR.encode_segments(SAMPLE_SEGS, ECC::Level::Medium, QR::Version.new(2))
+      qr = QR.encode_segments(SAMPLE_SEGS, ECC::Level::Medium, 2)
 
       it "reports correct version" do
         qr.version.value.should eq(2)
@@ -42,7 +42,7 @@ module Goban
 
       it "encodes properly" do
         rows = convert_canvas(qr.canvas)
-        rows.should eq(SAMPLE_RESULT_MODS)
+        rows.should eq(SAMPLE_RESULT_MODS_QR)
       end
     end
   end

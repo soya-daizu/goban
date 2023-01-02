@@ -7,6 +7,12 @@ module Goban
     end
   end
 
+  struct MQR::CanvasDrawer
+    def reserve_modules_for_test
+      @canvas.fill_module(3, 3, 3, 3, 0xc0)
+    end
+  end
+
   describe QR::CanvasDrawer do
     describe "#draw_function_patterns" do
       it "draws all function patterns" do
@@ -15,7 +21,7 @@ module Goban
         drawer.canvas.normalize
 
         rows = convert_canvas(drawer.canvas)
-        rows.should eq(FUNCTION_PATTERN_MODS)
+        rows.should eq(FUNCTION_PATTERN_MODS_QR)
       end
     end
 
@@ -24,12 +30,12 @@ module Goban
         drawer = QR::CanvasDrawer.new(QR::Version.new(1), ECC::Level::Low)
         drawer.reserve_modules_for_test
 
-        codewords = Slice(UInt8).new(21 ** 2 - 7 ** 2, 154)
+        codewords = Slice(UInt8).new(21 ** 2 // 8, 154)
         drawer.draw_data_codewords(codewords)
         drawer.canvas.normalize
 
         rows = convert_canvas(drawer.canvas)
-        rows.should eq(CODEWORDS_FILL_MODS)
+        rows.should eq(CODEWORDS_FILL_MODS_QR)
       end
     end
 
@@ -39,6 +45,42 @@ module Goban
         drawer.canvas.modules.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
 
         drawer.apply_best_mask.value.should eq(2)
+      end
+    end
+  end
+
+  describe MQR::CanvasDrawer do
+    describe "#draw_function_patterns" do
+      it "draws all function patterns" do
+        drawer = MQR::CanvasDrawer.new(MQR::Version.new(1), ECC::Level::Low)
+        drawer.draw_function_patterns
+        drawer.canvas.normalize
+
+        rows = convert_canvas(drawer.canvas)
+        rows.should eq(FUNCTION_PATTERN_MODS_MQR)
+      end
+    end
+
+    describe "#draw_data_codewords" do
+      it "fills codewords properly" do
+        drawer = MQR::CanvasDrawer.new(MQR::Version.new(1), ECC::Level::Low)
+        drawer.reserve_modules_for_test
+
+        codewords = Slice(UInt8).new(11 ** 2 // 8, 154)
+        drawer.draw_data_codewords(codewords)
+        drawer.canvas.normalize
+
+        rows = convert_canvas(drawer.canvas)
+        rows.should eq(CODEWORDS_FILL_MODS_MQR)
+      end
+    end
+
+    describe "#apply_best_mask" do
+      it "applies best mask" do
+        drawer = MQR::CanvasDrawer.new(MQR::Version.new(1), ECC::Level::Low)
+        drawer.canvas.modules.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
+
+        drawer.apply_best_mask.value.should eq(3)
       end
     end
   end

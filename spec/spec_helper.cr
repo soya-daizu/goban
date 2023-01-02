@@ -78,7 +78,12 @@ SAMPLE_SEGS = [
   Goban::Segment.alphanumeric(" 123"),
 ]
 
-SAMPLE_RESULT_MODS = <<-STRING
+SAMPLE_SEGS_2 = [
+  Goban::Segment.kanji("こんにち"),
+  Goban::Segment.byte("wa"),
+]
+
+SAMPLE_RESULT_MODS_QR = <<-STRING
 ██████████████        ██  ██  ██    ██████████████
 ██          ██        ████    ██    ██          ██
 ██  ██████  ██  ██████  ██  ████    ██  ██████  ██
@@ -107,7 +112,26 @@ SAMPLE_RESULT_MODS = <<-STRING
 STRING
   .lines
 
-FUNCTION_PATTERN_MODS = <<-STRING
+SAMPLE_RESULT_MODS_MQR = <<-STRING
+██████████████  ██  ██  ██  ██
+██          ██  ████████    ██
+██  ██████  ██      ████  ████
+██  ██████  ██    ██████  ████
+██  ██████  ██        ████████
+██          ██    ██  ██  ████
+██████████████  ████    ██████
+                  ██  ████    
+██████████    ██  ██    ██████
+      ██████  ██████████  ██  
+██  ██  ████  ████████  ██  ██
+  ██  ██  ██████████    ██████
+██  ██    ████  ██████████  ██
+  ██  ████      ██████  ██  ██
+████████████  ██  ██      ████
+STRING
+  .lines
+
+FUNCTION_PATTERN_MODS_QR = <<-STRING
 ██████████████                                                          ██  ██████████████
 ██          ██                                                        ██    ██          ██
 ██  ██████  ██                                                        ██    ██  ██████  ██
@@ -156,7 +180,22 @@ FUNCTION_PATTERN_MODS = <<-STRING
 STRING
   .lines
 
-CODEWORDS_FILL_MODS = <<-STRING
+FUNCTION_PATTERN_MODS_MQR = <<-STRING
+██████████████  ██  ██
+██          ██        
+██  ██████  ██        
+██  ██████  ██        
+██  ██████  ██        
+██          ██        
+██████████████        
+                      
+██                    
+                      
+██                    
+STRING
+  .lines
+
+CODEWORDS_FILL_MODS_QR = <<-STRING
     ██  ██    ████  ██  ██  ██  ████    ██
 ██████  ██          ████    ████    ██  ██
 ██  ████      ██  ██    ████    ██  ██  ██
@@ -178,5 +217,20 @@ CODEWORDS_FILL_MODS = <<-STRING
 ██  ████        ██  ██  ██  ██  ██  ██  ██
 ██      ████    ██  ██  ██  ██  ██  ████  
     ██  ██    ██    ████    ██  ████    ██
+STRING
+  .lines
+
+CODEWORDS_FILL_MODS_MQR = <<-STRING
+  ██  ████    ██    ██
+  ██  ██  ██    ██  ██
+  ██████  ██    ██  ██
+            ██  ██  ██
+  ██        ████    ██
+  ██            ████  
+  ████      ██  ██  ██
+      ████  ██  ██  ██
+  ██  ██    ████    ██
+  ██  ██  ██    ████  
+  ████      ██  ██  ██
 STRING
   .lines
