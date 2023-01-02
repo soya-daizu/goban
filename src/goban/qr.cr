@@ -14,8 +14,8 @@ module Goban
     getter canvas : Canvas
     # Length of a side in the symbol.
     getter size : Int32
-
-    getter mask : UInt8
+    # Mask applied to this QR Code symbol.
+    getter mask : Mask
 
     protected def initialize(@version, @ecl, @canvas, @mask)
       @size = @version.symbol_size
@@ -147,7 +147,7 @@ module Goban
       mask = drawer.apply_best_mask
       drawer.canvas.normalize
 
-      self.new(version, ecl, drawer.canvas, mask.value)
+      self.new(version, ecl, drawer.canvas, mask)
     end
 
     # Prints the QR Code symbol as a text in the console. To generate the actual image file,

@@ -3,6 +3,8 @@ require "../abstract/canvasdrawer"
 struct Goban::QR
   # Handles painting each QR Code modules on a canvas.
   struct CanvasDrawer < AbstractQR::CanvasDrawer
+    @mask : Mask
+
     # Creates a blank canvas with the given version and error correction level.
     def initialize(@version : Version, @ecl : ECC::Level)
       @size = @version.symbol_size

@@ -2,21 +2,20 @@ require "./mqr/*"
 require "./ecc/*"
 
 module Goban
-  # Object that represents an encoded QR Code symbol.
-  # TODO: Finish Micro QR implementation
+  # Object that represents an encoded Micro QR Code symbol.
   struct MQR
-    # Version of the QR Code symbol. Version in QR Code does not refer to its revision,
+    # Version of the Micro QR Code symbol. Version in QR Code does not refer to its revision,
     # but simply indicates the size format of the QR Code symbol.
     getter version : Version
-    # Error correction level of the QR Code symbol.
+    # Error correction level of the Micro QR Code symbol.
     getter ecl : ECC::Level
     # Returns the canvas of the QR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
     getter canvas : Canvas
     # Length of a side in the symbol.
     getter size : Int32
-
-    getter mask : UInt8
+    # Mask applied to this QR Code symbol.
+    getter mask : Mask
 
     def initialize(@version, @ecl, @canvas, @mask)
       @size = @version.symbol_size
@@ -39,7 +38,7 @@ module Goban
       mask = drawer.apply_best_mask
       drawer.canvas.normalize
 
-      self.new(version, ecl, drawer.canvas, 1)#mask.value)
+      self.new(version, ecl, drawer.canvas, mask)
     end
 
     # Prints the QR Code symbol as a text in the console. To generate the actual image file,

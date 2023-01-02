@@ -5,7 +5,7 @@ module Goban::AbstractQR
     # Length of the canvas's side.
     getter size : Int32
     # Returns the mask applied to the canvas.
-    getter mask : Mask
+    getter mask
 
     protected def initialize(@canvas, @size, @mask)
     end
