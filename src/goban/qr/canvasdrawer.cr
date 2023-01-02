@@ -1,7 +1,7 @@
 struct Goban::QR
-  # Holds information about each modules in a QR Code symbol.
+  # Handles painting each QR Code modules on a canvas.
   struct CanvasDrawer
-    # Returns the array of modules drawn on the canvas.
+    # Canvas that holds color of each modules.
     getter canvas : Canvas
     # Length of the canvas's side.
     getter size : Int32
