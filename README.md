@@ -210,8 +210,8 @@ Note that Micro QR Code has strong limitations in the data capacity, supported e
 | --- | --- | --- |
 | M1 | None (Error Detection Only) | Numeric |
 | M2 | Low, Medium | Numeric, Alphanumeric |
-| M3 | Low, Medium | Numeric, Alphanumeric, Binary, Kanji |
-| M4 | Low, Medium, Quartile | Numeric, Alphanumeric, Binary, Kanji |
+| M3 | Low, Medium | Numeric, Alphanumeric, Byte, Kanji |
+| M4 | Low, Medium, Quartile | Numeric, Alphanumeric, Byte, Kanji |
 
 Data capacity for each combination of the symbol version and ECC level can be found [here](https://www.qrcode.com/en/codes/microqr.html).
 
