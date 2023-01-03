@@ -23,8 +23,13 @@ module Goban
     end
 
     protected def append_segment_bits(segment : Segment, version : AbstractQR::Version)
-      append_bits(*segment.mode.indicator(version))
-      append_bits(segment.char_count, segment.mode.cci_bits_count(version))
+      indicator, indicator_length = segment.mode.indicator(version)
+      cci_bits = segment.char_count
+      cci_bits_count = segment.mode.cci_bits_count(version)
+      raise "Text too long" if indicator_length + cci_bits_count + segment.bit_stream.size > size
+
+      append_bits(indicator, indicator_length)
+      append_bits(cci_bits, cci_bits_count)
       append_bit_stream(segment.bit_stream)
     end
 
@@ -53,7 +58,7 @@ module Goban
       # the rest of the data stream, but the data stream is already filled with zeros,
       # so there's nothing more to do here
       short_pad = typeof(version) == MQR::Version && (version == 1 || version == 3)
-      return if short_pad 
+      return if short_pad
 
       while @tail_idx % 8 != 0
         push(false)

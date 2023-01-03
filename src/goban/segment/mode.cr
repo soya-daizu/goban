@@ -20,7 +20,7 @@ struct Goban::Segment
       when Kanji
         {0b1000, 4}
       else
-        raise "Unsupported mode"
+        raise "Unknown encoding mode"
       end
     end
 
@@ -35,10 +35,12 @@ struct Goban::Segment
       when Kanji
         values = {nil, nil, 0b11, 0b011}
       else
-        raise "Unsupported mode"
+        raise "Unknown encoding mode"
       end
 
-      {values[ver.to_i - 1], ver.to_i - 1}
+      indicator = values[ver.to_i - 1]
+      raise "Unsupported encoding mode" unless indicator
+      {indicator, ver.to_i - 1}
     end
 
     # Number of the character count indicator bits for this mode.
@@ -53,7 +55,7 @@ struct Goban::Segment
       when Kanji
         values = {8, 10, 12}
       else
-        raise "Unsupported mode"
+        raise "Unknown encoding mode"
       end
 
       index = {1..9, 10..26, 27..40}.index! { |range| range.includes?(ver) }
@@ -72,10 +74,12 @@ struct Goban::Segment
       when Kanji
         values = {nil, nil, 3, 4}
       else
-        raise "Unsupported mode"
+        raise "Unknown encoding mode"
       end
 
-      values[ver.to_i - 1]
+      count = values[ver.to_i - 1]
+      raise "Unsupported encoding mode" unless count
+      count
     end
   end
 end
