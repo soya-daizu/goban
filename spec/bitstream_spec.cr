@@ -13,8 +13,8 @@ module Goban
       bit_str = convert_bit_stream(bit_stream)
       bit_str.should eq("00010000001010000000110001010110011010100110100100000000111011000001000111101100000100011110110000010001111011000001000111101100000100011110110000010001")
 
-      byte_str = bit_stream.to_bytes.map(&.to_s(16)).join(' ')
-      byte_str.should eq("10 28 c 56 6a 69 0 ec 11 ec 11 ec 11 ec 11 ec 11 ec 11")
+      byte_str = bit_stream.to_bytes.map(&.to_s(16).rjust(2, '0')).join(' ')
+      byte_str.should eq("10 28 0c 56 6a 69 00 ec 11 ec 11 ec 11 ec 11 ec 11 ec 11")
     end
   end
 end
