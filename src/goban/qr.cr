@@ -87,7 +87,7 @@ module Goban
     # it out every single time. See `#encode_segments` for how to create QR Codes by manually creating
     # encoding segments.
     def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
-      segments, version = Segment::Optimizer.make_optimized_segments(text, ecl)
+      segments, version = Segment::Segmenter.segment_text_optimized(text, ecl)
       self.encode_segments(segments, ecl, version)
     end
 

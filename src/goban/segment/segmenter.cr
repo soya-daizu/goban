@@ -1,19 +1,19 @@
 struct Goban::Segment
-  # Module for optimizing segmentations of the different encoding modes
+  # Module for building segmentations of the different encoding modes
   # for the given text string.
-  module Optimizer
+  module Segmenter
     extend self
 
     # Returns a tuple of the optimized segments and QR Code version
     # for the given text and error correction level.
-    def make_optimized_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
+    def segment_text_optimized(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
       chars = text.chars
       segments, version = nil, nil
       used_bits = 0
 
       # The number of the character count indicator bits which affect
       # the result of segmentation changes at the version 1, 10, and 27,
-      # so we first calculate the segments at those boundaries, and adjust
+      # so we first calculate the segments at those boundaries and reduce
       # the version number later
       {(1..9), (10..26), (27..40)}.each do |group|
         v = QR::Version.new(group.end)
