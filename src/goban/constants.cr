@@ -21,11 +21,11 @@ module Goban
 
   EC_CODEWORDS_MQR = {
     # Version: (note that index 0 is for padding, and is set to an illegal value)
-    # 0,  1,  2,  3,   4    Error correction level
-    {-1,  2,  5,  6,   8}, # Low
-    {-1,  2,  6,  8,  10}, # Medium
-    {-1,  2, -1, -1,  14}, # Quartile
-    {-1, -1, -1, -1,  -1}, # High
+    # 0,  1,  2,  3,  4    Error correction level
+    {-1,  2,  5,  6,  8}, # Low
+    {-1,  2,  6,  8, 10}, # Medium
+    {-1,  2, -1, -1, 14}, # Quartile
+    {-1, -1, -1, -1, -1}, # High
     # Note that version M1 only supports error detection
   }
 
