@@ -171,7 +171,7 @@ segments = [
 qr = Goban::QR.encode_segments(segments, Goban::ECC::Level::Low, Goban::QR::Version.new(2))
 ```
 
-The optimal segments and version to hard-code can be figured out by manually executing the `Goban::Segment::Optimizer.make_optimized_segments()` method.
+The optimal segments and version to hard-code can be figured out by manually executing the `Goban::Segment::Segmenter.segment_text_optimized()` method.
 
 ### Generating Micro QR Codes
 
@@ -223,7 +223,7 @@ The API docs for the current master branch are available from the link below:
 
 [API docs](https://soya-daizu.github.io/goban/)
 
-You may want to first look at the `Goban::QR` or one of the exporters (`Goban::PNGExporter` and `Goban::SVGExporters`) to understand how to use this library.
+You might want to first look at the `Goban::QR` or one of the exporters (`Goban::PNGExporter` and `Goban::SVGExporters`) to understand how to use this library.
 
 ## Contributing
 
