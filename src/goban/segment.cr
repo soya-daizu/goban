@@ -110,10 +110,11 @@ module Goban
     end
 
     # Count number of bits in the given list of segments.
-    def self.count_total_bits(segments : Array(Segment), version : QR::Version)
+    def self.count_total_bits(segments : Array(Segment), version : AbstractQR::Version)
       result = 0
       segments.each do |segment|
         cci_bits_count = segment.mode.cci_bits_count(version)
+        raise "Invalid segment" if !cci_bits_count
         raise "Segment too long" if segment.char_count >= (1 << cci_bits_count)
         result += 4 + cci_bits_count + segment.bit_stream.size
       end

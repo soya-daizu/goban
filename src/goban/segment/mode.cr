@@ -12,13 +12,13 @@ struct Goban::Segment
     protected def indicator(ver : QR::Version)
       case self
       when Numeric
-        {0b0001, 4}
+        0b0001
       when Alphanumeric
-        {0b0010, 4}
+        0b0010
       when Byte
-        {0b0100, 4}
+        0b0100
       when Kanji
-        {0b1000, 4}
+        0b1000
       else
         raise "Unknown encoding mode"
       end
@@ -27,7 +27,7 @@ struct Goban::Segment
     protected def indicator(ver : MQR::Version)
       case self
       when Numeric
-        values = {nil, 0b0, 0b00, 0b000}
+        values = {0b0, 0b0, 0b00, 0b000}
       when Alphanumeric
         values = {nil, 0b1, 0b01, 0b001}
       when Byte
@@ -38,21 +38,19 @@ struct Goban::Segment
         raise "Unknown encoding mode"
       end
 
-      indicator = values[ver.to_i - 1]
-      raise "Unsupported encoding mode" unless indicator
-      {indicator, ver.to_i - 1}
+      values[ver.to_i - 1]
     end
 
     protected def indicator(ver : RMQR::Version)
       case self
       when Numeric
-        {0b001, 3}
+        0b001
       when Alphanumeric
-        {0b010, 3}
+        0b010
       when Byte
-        {0b011, 3}
+        0b011
       when Kanji
-        {0b100, 3}
+        0b100
       else
         raise "Unknown encoding mode"
       end
@@ -92,9 +90,7 @@ struct Goban::Segment
         raise "Unknown encoding mode"
       end
 
-      count = counts[ver.to_i - 1]
-      raise "Unsupported encoding mode" unless count
-      count
+      counts[ver.to_i - 1]
     end
 
     # Number of the character count indicator bits for this mode.

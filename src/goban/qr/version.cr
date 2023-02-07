@@ -10,11 +10,13 @@ struct Goban::QR
 
     @value : UInt8
     @symbol_size : Int32
+    @mode_indicator_length : UInt8
 
     def initialize(value)
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
       @value = value.to_u8
       @symbol_size = 4 * @value + 17 # 21 + 4(v - 1)
+      @mode_indicator_length = 4
     end
 
     # Returns a list of the alignment pattern positions for this version.

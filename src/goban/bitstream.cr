@@ -23,9 +23,13 @@ module Goban
     end
 
     protected def append_segment_bits(segment : Segment, version : AbstractQR::Version)
-      indicator, indicator_length = segment.mode.indicator(version)
+      indicator = segment.mode.indicator(version)
+      indicator_length = version.mode_indicator_length
+
       cci_bits = segment.char_count
       cci_bits_count = segment.mode.cci_bits_count(version)
+
+      raise "Invalid segment" if !cci_bits_count
       raise "Text too long" if indicator_length + cci_bits_count + segment.bit_stream.size > size
 
       append_bits(indicator, indicator_length)
@@ -74,6 +78,8 @@ module Goban
 
     protected def append_bits(val : Int?, len : Int?)
       return if !val || !len
+      return if len == 0
+
       raise "Value out of range" unless (0..31).includes?(len) && val >> len == 0
       (0..len - 1).reverse_each do |i|
         push((val >> i).to_u8! & 1 != 0)
