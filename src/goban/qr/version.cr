@@ -8,6 +8,9 @@ struct Goban::QR
     MIN =  1_u8
     MAX = 40_u8
 
+    @value : UInt8
+    @symbol_size : Int32
+
     def initialize(value)
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
       @value = value.to_u8

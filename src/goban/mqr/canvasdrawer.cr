@@ -4,6 +4,7 @@ struct Goban::MQR
   # Handles painting each Micro QR Code modules on a canvas.
   struct CanvasDrawer < AbstractQR::CanvasDrawer
     @mask : Mask
+    @size : Int32
 
     # Creates a blank canvas with the given version and error correction level.
     def initialize(@version : Version, @ecl : ECC::Level)

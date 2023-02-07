@@ -3,7 +3,7 @@ module Goban::AbstractQR
     # Canvas that holds color of each modules.
     getter canvas : Canvas
     # Length of the canvas's side.
-    getter size : Int32
+    getter size
     # Returns the mask applied to the canvas.
     getter mask
 

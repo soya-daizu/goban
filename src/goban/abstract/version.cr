@@ -2,9 +2,9 @@ module Goban::AbstractQR
   abstract struct Version
     include Comparable(Int)
 
-    getter value : UInt8
+    getter value
 
-    getter symbol_size : Int32
+    getter symbol_size
 
     protected def initialize(@value, @symbol_size)
     end
