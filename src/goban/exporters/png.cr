@@ -8,10 +8,20 @@ module Goban
 
     # Generates a PNG image with the given target size and exports to the given path.
     # Note that the size of the resulting image may not be equal to the target size specified.
-    def export(qr : QR, path : String, target_size : Int)
-      size = qr.size + 4 * 2
-      ratio = target_size / size
-      self.export(qr, path, ratio.round.to_i, 4)
+    def export(qr : QR | MQR | RMQR, path : String, target_width : Int)
+      case qr
+      when RMQR
+        size = qr.size.width
+        blank_mods = 3
+      else
+        size = qr.size
+        blank_mods = 4
+      end
+
+      width = size + 4 * 2
+      ratio = target_width / width
+
+      self.export(qr, path, ratio.round.to_i, blank_mods)
     end
 
     # Generates a PNG image with the given module size and blank modules, and exportes to the
@@ -19,13 +29,20 @@ module Goban
     #
     # `mod_size` refers to the number of pixels used for each module in the QR Code symbol,
     # and `blank_mods` is the size of the white border around the symbol.
-    def export(qr : QR, path : String, mod_size : Int, blank_mods : Int)
+    def export(qr : QR | MQR | RMQR, path : String, mod_size : Int, blank_mods : Int)
       blank_size = blank_mods * mod_size
-      size = qr.size * mod_size + blank_size * 2
+      case qr
+      when RMQR
+        width = qr.size.width * mod_size + blank_size * 2
+        height = qr.size.height * mod_size + blank_size * 2
+      else
+        width = qr.size * mod_size + blank_size * 2
+        height = width
+      end
 
       dark_color = RGBA.from_rgb_n(0, 0, 0, 8)
       light_color = RGBA.from_rgb_n(255, 255, 255, 8)
-      canvas = Canvas.new(size, size, light_color)
+      canvas = Canvas.new(width, height, light_color)
 
       qr.canvas.each_row do |row, y|
         row.each_with_index do |mod, x|
@@ -43,7 +60,7 @@ module Goban
       end
 
       StumpyPNG.write(canvas, path)
-      size
+      width
     end
   end
 end
