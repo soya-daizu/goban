@@ -6,10 +6,9 @@ struct Goban::Segment
 
     # Returns a tuple of the optimized segments and QR Code version
     # for the given text and error correction level.
-    def segment_text_optimized(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
+    def segment_text_optimized_qr(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
       chars = text.chars
       segments, version = nil, nil
-      used_bits = 0
 
       # The number of the character count indicator bits which affect
       # the result of segmentation changes at the version 1, 10, and 27,
@@ -29,7 +28,7 @@ struct Goban::Segment
         end
 
         # If it's within the bound, that is the optimal segmentation
-        # Now find the smallest version in that group that can hold its data
+        # Now find the smallest version in that group that can hold the data
         if used_bits <= cap_bits
           group.each do |i|
             sml_v = QR::Version.new(i)
@@ -49,14 +48,82 @@ struct Goban::Segment
       {segments, version}
     end
 
+    def segment_text_optimized_mqr(text : String, ecl : ECC::Level) : Tuple(Array(Segment), MQR::Version)
+      chars = text.chars
+      segments, version = nil, nil
+
+      # The number of the character count indicator bits which affect
+      # the result of segmentation changes every version, so we calculate
+      # the segments in each version and see if they fit in that version
+      (MQR::Version::MIN..MQR::Version::MAX).each do |i|
+        v = MQR::Version.new(i)
+        char_modes = compute_char_modes(chars, v)
+        segments = make_segments(text, char_modes)
+
+        cap_bits = v.max_data_bits(ecl)
+        begin
+          used_bits = Segment.count_total_bits(segments, v)
+        rescue e
+          next if e.message == "Segment too long"
+          raise e
+        end
+
+        # If it's within the bound, that is the optimal segmentation and version
+        if used_bits <= cap_bits
+          version = v
+          break
+        end
+      end
+      raise "Text too long" unless segments && version
+
+      {segments, version}
+    end
+
+    def segment_text_optimized_rmqr(text : String, ecl : ECC::Level, strategy : RMQR::SizingStrategy) : Tuple(Array(Segment), RMQR::Version)
+      chars = text.chars
+      segments, version = nil, nil
+
+      # The number of the character count indicator bits which affect
+      # the result of segmentation changes every version, so we calculate
+      # the segments in each version and see if they fit in that version
+      RMQR::Version::ORDERED[strategy.value].each do |vv|
+        v = RMQR::Version.new(vv)
+        char_modes = compute_char_modes(chars, v)
+        segments = make_segments(text, char_modes)
+
+        cap_bits = v.max_data_bits(ecl)
+        begin
+          used_bits = Segment.count_total_bits(segments, v)
+        rescue e
+          next if e.message == "Segment too long"
+          raise e
+        end
+
+        # If it's within the bound, that is the optimal segmentation and version
+        if used_bits <= cap_bits
+          version = v
+          break
+        end
+      end
+      raise "Text too long" unless segments && version
+
+      {segments, version}
+    end
+
     # Makes a list of the best encoding mode for the each given character
     # by dynamic programming algorithm. The code is based on:
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
-    private def compute_char_modes(chars : Array(Char), version : QR::Version)
+    private def compute_char_modes(chars : Array(Char), version : AbstractQR::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
-      head_costs = modes.map { |m| ((4 + m.cci_bits_count(version)) * 6).to_f32 }
+
+      head_costs = modes.map do |m|
+        mode_indicator_length = version.mode_indicator_length
+        cci_bits_count = m.cci_bits_count(version) || Float32::INFINITY
+        ((mode_indicator_length + cci_bits_count) * 6).to_f32
+      end
+
       char_modes = Array(StaticArray(Segment::Mode, 4)).new(chars.size)
-      prev_costs = head_costs.clone
+      prev_costs = StaticArray(Float32, 4).new { |i| head_costs[i] }
 
       chars.each do |c|
         c_modes = StaticArray(Segment::Mode, 4).new(Segment::Mode::Undefined)

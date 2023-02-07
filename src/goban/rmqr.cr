@@ -15,12 +15,24 @@ module Goban
     # Width and height of the symbol.
     getter size : SymbolDimension
 
+    enum SizingStrategy : UInt8
+      MinimizeArea
+      MinimizeWidth
+      MinimizeHeight
+    end
+
     def initialize(@version, @ecl, @canvas)
       @size = @version.symbol_size
     end
 
-    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : VersionValue | String | Int)
-      version = Version.new(version)
+    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium, strategy : SizingStrategy = SizingStrategy::MinimizeArea)
+      segments, version = Segment::Segmenter.segment_text_optimized_rmqr(text, ecl, strategy)
+      self.encode_segments(segments, ecl, version)
+    end
+
+    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version)
+      raise "Unsupported EC Level" unless ecl.medium? || ecl.high?
+
       bit_stream = BitStream.new(version.max_data_bits(ecl))
       segments.each do |segment|
         bit_stream.append_segment_bits(segment, version)

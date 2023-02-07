@@ -155,5 +155,36 @@ struct Goban::RMQR
     def to_i
       value.to_i
     end
+
+    {% begin %}
+      {% version_values = VersionValue.constants.map { |x| parse_type("VersionValue::#{x}") } %}
+
+      ORDERED_BY_HEIGHT = StaticArray[{{ version_values.splat }}].sort do |a, b|
+        a_size = SymbolDimension.new(a)
+        b_size = SymbolDimension.new(b)
+
+        cmp = a_size.height <=> b_size.height
+        cmp = a_size.width <=> b_size.width if cmp == 0
+        cmp
+      end
+
+      ORDERED_BY_WIDTH = StaticArray[{{ version_values.splat }}].sort do |a, b|
+        a_size = SymbolDimension.new(a)
+        b_size = SymbolDimension.new(b)
+
+        cmp = a_size.width <=> b_size.width
+        cmp = a_size.height <=> b_size.height if cmp == 0
+        cmp
+      end
+
+      ORDERED_BY_AREA = StaticArray[{{ version_values.splat }}].sort do |a, b|
+        a_size = SymbolDimension.new(a)
+        b_size = SymbolDimension.new(b)
+
+        a_size.width * a_size.height <=> b_size.width * b_size.height
+      end
+
+      ORDERED = {ORDERED_BY_AREA, ORDERED_BY_WIDTH, ORDERED_BY_HEIGHT}
+    {% end %}
   end
 end

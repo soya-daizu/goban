@@ -21,6 +21,11 @@ module Goban
       @size = @version.symbol_size
     end
 
+    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
+      segments, version = Segment::Segmenter.segment_text_optimized_mqr(text, ecl)
+      self.encode_segments(segments, ecl, version)
+    end
+
     def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
       bit_stream = BitStream.new(version.max_data_bits(ecl))
@@ -48,4 +53,3 @@ module Goban
     end
   end
 end
-
