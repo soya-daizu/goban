@@ -19,9 +19,9 @@ struct Goban::QR
     # - Alignment patterns depending on the QR Code version
     # - Timing patterns in both directions
     protected def draw_function_patterns
-      draw_finder_pattern(0, 0)
-      draw_finder_pattern(@size - 7, 0)
-      draw_finder_pattern(0, @size - 7)
+      draw_pattern(0, 0, FINDER_PATTERN, 7)
+      draw_pattern(@size - 7, 0, FINDER_PATTERN, 7)
+      draw_pattern(0, @size - 7, FINDER_PATTERN, 7)
 
       # Reserving areas for the finder patterns and format info at once
       # as they belong to the same adjacent square area
@@ -41,11 +41,11 @@ struct Goban::QR
                   i == ali_pat_count - 1 && j == 0
           x, y = positions[i], positions[j]
 
-          draw_alignment_pattern(x - 2, y - 2)
+          draw_pattern(x - 2, y - 2, ALIGNMENT_PATTERN, 5)
         end
       end
 
-      draw_timing_pattern_modules(6, @size - 16)
+      draw_timing_pattern(6, @size - 16)
 
       draw_version_modules
 

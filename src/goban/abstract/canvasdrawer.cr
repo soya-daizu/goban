@@ -20,17 +20,7 @@ module Goban::AbstractQR
       0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
     }
 
-    private def draw_finder_pattern(x : Int, y : Int)
-      7.times do |i|
-        xx = x + i
-        7.times do |j|
-          yy = y + j
-          @canvas.set_module(xx, yy, FINDER_PATTERN[7 * j + i])
-        end
-      end
-    end
-
-    ALIGNMENT_PATTERN = {
+    FINDER_SUB_PATTERN = {
       0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
       0xc1_u8, 0xc0_u8, 0xc0_u8, 0xc0_u8, 0xc1_u8,
       0xc1_u8, 0xc0_u8, 0xc1_u8, 0xc0_u8, 0xc1_u8,
@@ -38,17 +28,25 @@ module Goban::AbstractQR
       0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8, 0xc1_u8,
     }
 
-    private def draw_alignment_pattern(x : Int, y : Int)
-      5.times do |i|
+    ALIGNMENT_PATTERN = FINDER_SUB_PATTERN
+
+    RMQR_ALIGNMENT_PATTERN = {
+      0xc1_u8, 0xc1_u8, 0xc1_u8,
+      0xc1_u8, 0xc0_u8, 0xc1_u8,
+      0xc1_u8, 0xc1_u8, 0xc1_u8,
+    }
+
+    private def draw_pattern(x : Int, y : Int, pattern, pattern_size : Int)
+      pattern_size.times do |i|
         xx = x + i
-        5.times do |j|
+        pattern_size.times do |j|
           yy = y + j
-          @canvas.set_module(xx, yy, ALIGNMENT_PATTERN[5 * j + i])
+          @canvas.set_module(xx, yy, pattern[pattern_size * j + i])
         end
       end
     end
 
-    private def draw_timing_pattern_modules(j : Int, count : Int)
+    private def draw_timing_pattern(j : Int, count : Int)
       count.times do |k|
         i = 8 + k
         mod = i.even? ? 0xc1_u8 : 0xc0_u8

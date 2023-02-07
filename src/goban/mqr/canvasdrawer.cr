@@ -20,9 +20,9 @@ struct Goban::MQR
     protected def draw_function_patterns
       @canvas.fill_module(0, 0, 9, 9, 0xc0)
 
-      draw_finder_pattern(0, 0)
+      draw_pattern(0, 0, FINDER_PATTERN, 7)
 
-      draw_timing_pattern_modules(0, @size - 8)
+      draw_timing_pattern(0, @size - 8)
     end
 
     # Draws data bits from the given data codewords.
