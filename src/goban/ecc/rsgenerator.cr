@@ -3,11 +3,20 @@ module Goban::ECC
   module RSGenerator
     extend self
 
-    def add_ec_codewords(codewords : Slice(UInt8), version : QR::Version, ecl : Level)
+    def add_ec_codewords(codewords : Slice(UInt8), version : QR::Version | RMQR::Version, ecl : Level)
       raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
 
-      ec_blocks_count = EC_BLOCKS_QR[ecl.value][version.value]
-      block_size = EC_CODEWORDS_PER_BLOCK_QR[ecl.value][version.value]
+      case version
+      when QR::Version
+        ec_blocks_count = EC_BLOCKS_QR[ecl.value][version.to_i]
+        block_size = EC_CODEWORDS_PER_BLOCK_QR[ecl.value][version.to_i]
+      when RMQR::Version
+        ec_blocks_count = EC_BLOCKS_RMQR[ecl.value][version.to_i + 1]
+        block_size = EC_CODEWORDS_PER_BLOCK_RMQR[ecl.value][version.to_i + 1]
+      else
+        raise "Unknown QR Type"
+      end
+
       raw_codewords = version.raw_data_mods_count // 8
       short_blocks_count = ec_blocks_count - raw_codewords % ec_blocks_count
       short_block_size = raw_codewords // ec_blocks_count
@@ -49,7 +58,7 @@ module Goban::ECC
     def add_ec_codewords(codewords : Slice(UInt8), version : MQR::Version, ecl : Level)
       raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
 
-      block_size = EC_CODEWORDS_MQR[ecl.value][version.value]
+      block_size = EC_CODEWORDS_MQR[ecl.value][version.to_i]
       raw_codewords = version.raw_max_data_codewords
 
       gen_poly = self.get_generator_polynomial(block_size)

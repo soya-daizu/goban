@@ -46,6 +46,8 @@ module Goban
         base = 4
       when MQR::Version
         base = 3 + (version.to_i - 1) * 2
+      when RMQR::Version
+        base = 3
       else
         raise "Invalid QR version"
       end

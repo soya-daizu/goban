@@ -43,6 +43,21 @@ struct Goban::Segment
       {indicator, ver.to_i - 1}
     end
 
+    protected def indicator(ver : RMQR::Version)
+      case self
+      when Numeric
+        {0b001, 3}
+      when Alphanumeric
+        {0b010, 3}
+      when Byte
+        {0b011, 3}
+      when Kanji
+        {0b100, 3}
+      else
+        raise "Unknown encoding mode"
+      end
+    end
+
     # Number of the character count indicator bits for this mode.
     protected def cci_bits_count(ver : QR::Version)
       case self
@@ -66,20 +81,38 @@ struct Goban::Segment
     protected def cci_bits_count(ver : MQR::Version)
       case self
       when Numeric
-        values = {3, 4, 5, 6}
+        counts = {3, 4, 5, 6}
       when Alphanumeric
-        values = {nil, 3, 4, 5}
+        counts = {nil, 3, 4, 5}
       when Byte
-        values = {nil, nil, 4, 5}
+        counts = {nil, nil, 4, 5}
       when Kanji
-        values = {nil, nil, 3, 4}
+        counts = {nil, nil, 3, 4}
       else
         raise "Unknown encoding mode"
       end
 
-      count = values[ver.to_i - 1]
+      count = counts[ver.to_i - 1]
       raise "Unsupported encoding mode" unless count
       count
+    end
+
+    # Number of the character count indicator bits for this mode.
+    protected def cci_bits_count(ver : RMQR::Version)
+      case self
+      when Numeric
+        counts = {4, 5, 6, 7, 7, 5, 6, 7, 7, 8, 4, 6, 7, 7, 8, 8, 5, 6, 7, 7, 8, 8, 7, 7, 8, 8, 9, 7, 8, 8, 8, 9}
+      when Alphanumeric
+        counts = {3, 5, 5, 6, 6, 5, 5, 6, 6, 7, 4, 5, 6, 6, 7, 7, 5, 6, 6, 7, 7, 8, 6, 7, 7, 7, 8, 6, 7, 7, 8, 8}
+      when Byte
+        counts = {3, 4, 5, 5, 6, 4, 5, 5, 6, 6, 3, 5, 5, 6, 6, 7, 4, 5, 6, 6, 7, 7, 6, 6, 7, 7, 7, 6, 6, 7, 7, 8}
+      when Kanji
+        counts = {2, 3, 4, 5, 5, 3, 4, 5, 5, 6, 2, 4, 5, 5, 6, 6, 3, 5, 5, 6, 6, 7, 5, 5, 6, 6, 7, 5, 6, 6, 6, 7}
+      else
+        raise "Unknown encoding mode"
+      end
+
+      counts[ver.to_i]
     end
   end
 end
