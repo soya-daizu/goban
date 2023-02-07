@@ -12,7 +12,7 @@ module Goban
       case qr
       when RMQR
         size = qr.size.width
-        blank_mods = 3
+        blank_mods = 2
       else
         size = qr.size
         blank_mods = 4
