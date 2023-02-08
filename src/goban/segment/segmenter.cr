@@ -48,6 +48,8 @@ struct Goban::Segment
       {segments, version}
     end
 
+    # Returns a tuple of the optimized segments and Micro QR Code version
+    # for the given text and error correction level.
     def segment_text_optimized_mqr(text : String, ecl : ECC::Level) : Tuple(Array(Segment), MQR::Version)
       chars = text.chars
       segments, version = nil, nil
@@ -79,6 +81,8 @@ struct Goban::Segment
       {segments, version}
     end
 
+    # Returns a tuple of the optimized segments and rMQR Code version
+    # for the given text and error correction level.
     def segment_text_optimized_rmqr(text : String, ecl : ECC::Level, strategy : RMQR::SizingStrategy) : Tuple(Array(Segment), RMQR::Version)
       chars = text.chars
       segments, version = nil, nil
@@ -130,29 +134,34 @@ struct Goban::Segment
         cur_costs = StaticArray(Float32, 4).new(Float32::INFINITY)
 
         # Byte mode is always calculated
+        # bytesize * 8 / 6 bits per char
         cur_costs[0] = prev_costs[0] + c.bytesize * 8 * 6
         c_modes[0] = modes[0]
 
         is_alphanumeric = ALPHANUMERIC_CHARS.includes?(c)
         if is_alphanumeric
+          # 33 / 6 bits per char
           cur_costs[1] = prev_costs[1] + 33
           c_modes[1] = modes[1]
         end
 
         is_numeric = c.ascii_number?
         if is_numeric
+          # 20 / 6 bits per char
           cur_costs[2] = prev_costs[2] + 20
           c_modes[2] = modes[2]
         end
 
         is_kanji = c.bytesize > 1 && !c.to_s.encode("SHIFT_JIS", :skip).empty?
         if is_kanji
+          # 78 / 6 bits per char
           cur_costs[3] = prev_costs[3] + 78
           c_modes[3] = modes[3]
         end
 
         modes.size.times do |j|
           modes.each_with_index do |from_mode, k|
+            # ceil up to next integer
             new_cost = (cur_costs[k] / 6).ceil * 6 + head_costs[j]
 
             if c_modes[k] != Segment::Mode::Undefined && new_cost < cur_costs[j]

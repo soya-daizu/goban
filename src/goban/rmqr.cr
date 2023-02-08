@@ -7,9 +7,9 @@ module Goban
     # Version of the rMQR Code symbol. Version in QR Code does not refer to its revision,
     # but simply indicates the size format of the QR Code symbol.
     getter version : Version
-    # Error correction level of the Micro QR Code symbol.
+    # Error correction level of the rMQR Code symbol.
     getter ecl : ECC::Level
-    # Returns the canvas of the QR Code symbol. Canvas contains information about
+    # Returns the canvas of the rMQR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
     getter canvas : Canvas
     # Width and height of the symbol.
@@ -21,15 +21,28 @@ module Goban
       MinimizeHeight
     end
 
-    def initialize(@version, @ecl, @canvas)
+    protected def initialize(@version, @ecl, @canvas)
       @size = @version.symbol_size
     end
 
+    # Creates a new Micro QR Code object for the given string, error correction level, and sizing strategy.
+    #
+    # Unlike regular QR Codes and Micro QR Codes, rMQR Codes has different sizes in width and height,
+    # which means that there can be multiple versions that are optimal in terms of capacity.
+    # `SizingStrategy` is used to prioritize one version than the other based on whether you want the symbol
+    # to be smaller in total area, width, or height. By default, it tries to balance the width and height,
+    # keeping the total area as small as possible.
+    #
+    # See `QR.encode_string` for more information.
     def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium, strategy : SizingStrategy = SizingStrategy::MinimizeArea)
       segments, version = Segment::Segmenter.segment_text_optimized_rmqr(text, ecl, strategy)
       self.encode_segments(segments, ecl, version)
     end
 
+    # Creates a new rMQR Code object for the given data segments, error correction level, and
+    # rMQR Code version that is large enough to contain all the data in the segments.
+    #
+    # See `QR.encode_segments` for more information.
     def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version)
       raise "Unsupported EC Level" unless ecl.medium? || ecl.high?
 

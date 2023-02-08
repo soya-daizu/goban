@@ -84,8 +84,11 @@ module Goban
     #
     # If the type of characters used in your data strings is always the same, you may want to consider
     # building data segments by yourself so that Goban doesn't have to do extra processing to figure
-    # it out every single time. See `#encode_segments` for how to create QR Codes by manually creating
-    # encoding segments.
+    # it out every single time.
+    #
+    # The optimal segments and version to hard-code can be figured out by manually executing
+    # `Segment::Segmenter.segment_text_optimized_qr`. You can hard-code the segments and version based on
+    # its response, and use `QR.encode_segments` to create QR Codes using that segments and version.
     def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
       segments, version = Segment::Segmenter.segment_text_optimized_qr(text, ecl)
       self.encode_segments(segments, ecl, version)

@@ -86,6 +86,8 @@ struct Goban::RMQR
       self.new("R#{height}x#{width}")
     end
 
+    # Returns a tuple of vertical timing pattern line positions
+    # except the ones on both edges.
     protected def v_timing_lines_pos
       case @symbol_size.w_group
       when 0
