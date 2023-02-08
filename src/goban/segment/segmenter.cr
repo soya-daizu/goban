@@ -66,6 +66,7 @@ struct Goban::Segment
         begin
           used_bits = Segment.count_total_bits(segments, v)
         rescue e
+          next if e.message == "Invalid segment"
           next if e.message == "Segment too long"
           raise e
         end
