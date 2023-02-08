@@ -16,7 +16,7 @@ struct Goban::MQR
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
       @value = value.to_u8
       @symbol_size = 2 * @value + 9 # 11 + 2(v - 1)
-      @mode_indicator_length = @value - 1
+      @mode_indicator_length = value - 1
     end
 
     # Number of the modules that are available for writing the actual
