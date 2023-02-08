@@ -2,7 +2,7 @@
 
 A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (5.33x) and uses fewer heap allocations (-94.63%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.
 
-The implementation is compliant with [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) and [ISO/IEC 23941:2022](https://www.iso.org/standard/77404.html) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
+The implementation is compliant with [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) and [ISO/IEC 23941:2022](https://www.iso.org/standard/77404.html) standards and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
 The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
@@ -239,7 +239,7 @@ rmqr.print_to_console
 #    ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████
 ```
 
-However, unlike regular QR Codes and Micro QR Codes, rMQR Codes has different sizes in width and height, which means that there can be multiple versions that are optimal in terms of capacity. rMQR Code versions are represented in the format of `R{height}x{width}`, with the following available combinations.
+However, unlike regular QR Codes and Micro QR Codes, rMQR Codes has different sizes in width and height, which means that there can be multiple versions that are optimal in terms of capacity. rMQR Code versions are represented in the format of `R{height}x{width}` with the following available combinations.
 
 |     | 27  | 43  | 59  | 77  | 99  | 139 |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: |
