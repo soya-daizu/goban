@@ -67,7 +67,7 @@ struct Goban::RMQR
   struct Version < AbstractQR::Version
     @value : VersionValue
     @symbol_size : SymbolDimension
-    @mode_indicator_length : UInt8
+    @mode_indicator_length : Int32
 
     def initialize(@value : VersionValue)
       @symbol_size = SymbolDimension.new(@value)

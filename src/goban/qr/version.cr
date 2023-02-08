@@ -10,7 +10,7 @@ struct Goban::QR
 
     @value : UInt8
     @symbol_size : Int32
-    @mode_indicator_length : UInt8
+    @mode_indicator_length : Int32
 
     def initialize(value)
       raise "Invalid version number" unless (MIN..MAX).includes?(value)
