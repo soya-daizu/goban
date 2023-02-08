@@ -1,12 +1,12 @@
 # Goban
 
-A fast and efficient QR Code/Micro QR Code encoder library written purely in Crystal. It is significantly faster (5.33x) and uses fewer heap allocations (-94.63%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding.
+A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (5.33x) and uses fewer heap allocations (-94.63%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.
 
-The implementation is compliant with [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
+The implementation is compliant with [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) and [ISO/IEC 23941:2022](https://www.iso.org/standard/77404.html) standard and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
 
 The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
-*"QR Code" is a registered trademark of Denso Wave Incorporated.*
+_"QR Code" is a registered trademark of Denso Wave Incorporated._
 https://www.qrcode.com/en/patent.html
 
 ## Benchmark
@@ -43,7 +43,7 @@ qr-code   3.49k (286.18µs) (± 1.51%)   149kB/op   5.33× slower
 - [x] Support for all QR Code versions from 1 to 40
 - [ ] Structured append of symbols
 - [x] Micro QR Code
-- [ ] rMQR Code (Not a part of ISO/IEC 18004:2015 standard but planned)
+- [x] rMQR Code
 
 Goban will not support the generation of QR Code Model 1 symbols as it is considered obsolete.
 
@@ -93,12 +93,12 @@ qr.print_to_console
 
 `Goban::ECC::Level` represents the ECC (Error Correction Coding) level to use when encoding the data. The available options are:
 
-| Level | Error Correction Capability |
-| --- | --- |
-| Low | Approx 7% |
-| Medium | Approx 15% |
-| Quartile | Approx 25% |
-| High | Approx 30% |
+| Level    | Error Correction Capability |
+| -------- | --------------------------- |
+| Low      | Approx 7%                   |
+| Medium   | Approx 15%                  |
+| Quartile | Approx 25%                  |
+| High     | Approx 30%                  |
 
 The default ECC level is `Medium`. Use `Low` if you want your QR Code to be as compact as possible, or increase the level to `Quartile` or `High` if you want it to be more resistant to damage.
 
@@ -145,12 +145,12 @@ end
 
 The `Goban::QR.encode_string()` method under the hood encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:
 
-| Mode | Supported Characters |
-| --- | --- |
-| Numeric | 0-9 |
+| Mode         | Supported Characters        |
+| ------------ | --------------------------- |
+| Numeric      | 0-9                         |
 | Alphanumeric | 0-9 A-Z \s $ % \* + - . / : |
-| Byte | Any UTF-8 characters |
-| Kanji | Any Shift-JIS characters |
+| Byte         | Any UTF-8 characters        |
+| Kanji        | Any Shift-JIS characters    |
 
 The `Byte` mode supports the widest range of characters but it is inefficient and produces longer data bits, meaning that when comparing the two QR Code symbols, one encoded entirely in the `Byte` mode and the other encoded in the appropriate mode for each character\*, the former one can be more challenging to scan and decode than the other given that both symbols are printed in the same size.
 
@@ -168,54 +168,105 @@ segments = [
   Goban::Segment.alphanumeric(" 123"),
 ]
 # Note that when using this method, you have to manually assign the version (= size) of the QR Code.
-qr = Goban::QR.encode_segments(segments, Goban::ECC::Level::Low, Goban::QR::Version.new(2))
+qr = Goban::QR.encode_segments(segments, Goban::ECC::Level::Low, 2)
 ```
 
-The optimal segments and version to hard-code can be figured out by manually executing the `Goban::Segment::Segmenter.segment_text_optimized()` method.
+The optimal segments and version to hard-code can be figured out by manually executing the `Goban::Segment::Segmenter.segment_text_optimized_qr()` method.
 
 ### Generating Micro QR Codes
 
-Micro QR Codes can be generated using the `Goban::MQR.encode_segments()` method. Unlike the normal QR Code, Goban is currently unable to create a Micro QR Code from a string. Instead, you have to manually assemble the text segments with the appropriate encoding modes and specify the version number of the symbol.
+Micro QR Codes can be generated just like regular QR Codes using the `Goban::MQR.encode_string()` or `Goban::MQR.encode_segments()` methods.
 
 ```crystal
-segments = [
-  Goban::Segment.kanji("こんにち"),
-  Goban::Segment.byte("wa"),
-]
-# 3 is the version number (= size) of the symbol
-mqr = Goban::MQR.encode_segments(segments, Goban::ECC::Level::Low, 3)
+mqr = Goban::MQR.encode_string("Hello World!", Goban::ECC::Level::Low)
 mqr.print_to_console
-# => ██████████████  ██  ██  ██  ██
-#    ██          ██  ████████    ██
-#    ██  ██████  ██      ████  ████
-#    ██  ██████  ██    ██████  ████
-#    ██  ██████  ██        ████████
-#    ██          ██    ██  ██  ████
-#    ██████████████  ████    ██████
-#                      ██  ████    
-#    ██████████    ██  ██    ██████
-#          ██████  ██████████  ██  
-#    ██  ██  ████  ████████  ██  ██
-#      ██  ██  ██████████    ██████
-#    ██  ██    ████  ██████████  ██
-#      ██  ████      ██████  ██  ██
-#    ████████████  ██  ██      ████
+# => ██████████████  ██  ██  ██  ██  ██
+#    ██          ██  ██        ██
+#    ██  ██████  ██    ██    ████
+#    ██  ██████  ██  ██      ██████  ██
+#    ██  ██████  ██      ██  ██████  ██
+#    ██          ██  ██        ██  ██
+#    ██████████████  ██████    ██    ██
+#                            ██████  ██
+#    ██    ██  ██████  ████  ██      ██
+#      ██████████            ██
+#    ████    ████████  ██████████  ██
+#      ██      ██  ████    ████
+#    ████████  ██  ██  ████  ██████  ██
+#              ██████████████████
+#    ██████      ████████        ██
+#        ██      ██  ██████  ████
+#    ██████  ██    ██  ████  ██      ██
 ```
 
 You can learn more about the text segments and encoding modes [above](#about-the-encoding-modes-and-the-text-segmentation).
 
 Note that Micro QR Code has strong limitations in the data capacity, supported encoding modes, and error correction capabilities.
 
-| Version | Supported ECC Level | Supported Modes |
-| --- | --- | --- |
-| M1 | None (Error Detection Only) | Numeric |
-| M2 | Low, Medium | Numeric, Alphanumeric |
-| M3 | Low, Medium | Numeric, Alphanumeric, Byte, Kanji |
-| M4 | Low, Medium, Quartile | Numeric, Alphanumeric, Byte, Kanji |
+| Version | Supported ECC Level         | Supported Modes                    |
+| ------- | --------------------------- | ---------------------------------- |
+| M1      | None (Error Detection Only) | Numeric                            |
+| M2      | Low, Medium                 | Numeric, Alphanumeric              |
+| M3      | Low, Medium                 | Numeric, Alphanumeric, Byte, Kanji |
+| M4      | Low, Medium, Quartile       | Numeric, Alphanumeric, Byte, Kanji |
 
 Data capacity for each combination of the symbol version and ECC level can be found [here](https://www.qrcode.com/en/codes/microqr.html).
 
 Since the version M1 doesn't support error correction at all, the value passed as the ECC level will be ignored.
+
+## Generating rMQR Codes
+
+Just like regular QR Codes and Micro QR Codes, rMQR Codes can also be generated using the `Goban::RMQR.encode_string()` and `Goban::RMQR::encode_segments()` methods.
+
+```crystal
+# Note that rMQR Code only supports Medium and High ECC Level
+rmqr = Goban::RMQR.encode_string("Hello World!", Goban::ECC::Level::Medium)
+puts rmqr.version.value
+# => R13x27
+rmqr.print_to_console
+# => ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████
+#    ██          ██        ████████  ██████              ██
+#    ██  ██████  ██  ████    ██        ██    ██  ████    ██
+#    ██  ██████  ██    ████      ████    ████  ██    ██
+#    ██  ██████  ██  ██████  ████████████  ██████    ██████
+#    ██          ██      ████████  ██  ██          ██
+#    ██████████████  ██████        ██  ██  ████  ██  ██████
+#                    ██  ████    ████      ██      ████
+#    ████  ██  ██            ██████████    ██    ██████████
+#      ████  ██████████  ██    ██    ██  ██      ██      ██
+#    ██  ████            ████      ██  ██    ██  ██  ██  ██
+#    ██        ██████  ██████  ██  ██████        ██      ██
+#    ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████
+```
+
+However, unlike regular QR Codes and Micro QR Codes, rMQR Codes has different sizes in width and height, which means that there can be multiple versions that are optimal in terms of capacity. rMQR Code versions are represented in the format of `R{height}x{width}`, with the following available combinations.
+
+|     | 27  | 43  | 59  | 77  | 99  | 139 |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: |
+| R7  | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| R9  | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| R11 | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| R13 | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| R15 | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| R17 | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
+
+`SizingStrategy` is used to prioritize one version than the other based on whether you want the symbol to be smaller in total area, width, or height. By default, it tries to balance the width and height, keeping the total area as small as possible.
+
+For example, if you want to encode the same text but prioritizing smaller height rather than area:
+
+```crystal
+rmqr = Goban::RMQR.encode_string("Hello World!", Goban::ECC::Level::Medium, Goban::RMQR::SizingStrategy::MinimizeHeight)
+puts rmqr.version.value
+# => R7x77
+rmqr.print_to_console
+# => ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████
+#    ██          ██  ██    ████████    ██████        ██  ██          ██  ████  ████  ██  ████        ██  ██  ████    ██        ██  ██    ██████          ██  ██
+#    ██  ██████  ██    ██████████      ██████    ██  ██████      ██████    ██████████████      ████  ████████████  ██    ████  ██  ██    ██  ██    ████████████
+#    ██  ██████  ██  ██████  ██  ██    ████        ████  ██  ██████████  ████  ██  ██  ██████  ██████    ██    ██████      ██        ████  ██████    ██      ██
+#    ██  ██████  ██  ████    ██          ████    ██████████          ██  ██      ██  ██████  ██        ████████    ██  ██  ██          ████████  ██████  ██  ██
+#    ██          ██  ██████  ██████  ██████    ████████  ██    ██  ██        ████  ██  ██    ██  ██  ██  ██  ██      ████████  ██  ██  ████    ████  ██      ██
+#    ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████
+```
 
 ## API Documentations
 
