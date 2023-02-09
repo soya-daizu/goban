@@ -3,7 +3,7 @@ require "./ecc/*"
 
 module Goban
   # Object that represents an encoded rMQR Code symbol.
-  struct RMQR
+  struct RMQR < AbstractQR
     # Version of the rMQR Code symbol. Version in QR Code does not refer to its revision,
     # but simply indicates the size format of the QR Code symbol.
     getter version : Version
@@ -62,12 +62,6 @@ module Goban
       drawer.canvas.normalize
 
       self.new(version, ecl, drawer.canvas)
-    end
-
-    # Prints the QR Code symbol as a text in the console. To generate the actual image file,
-    # use `PNGExporter` or write your own exporter by reading each modules in `#canvas`.
-    def print_to_console
-      @canvas.print_to_console
     end
   end
 end

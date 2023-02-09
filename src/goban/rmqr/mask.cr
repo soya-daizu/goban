@@ -1,6 +1,6 @@
 require "../abstract/mask"
 
-struct Goban::RMQR
+struct Goban::RMQR < Goban::AbstractQR
   # Represents a mask pattern that can be applied to a canvas.
   struct Mask < AbstractQR::Mask
     MASK_PATTERN = ->(x : Int32, y : Int32) { (x // 3 + y // 2) & 1 == 0 }

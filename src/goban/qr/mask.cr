@@ -1,6 +1,6 @@
 require "../abstract/mask"
 
-struct Goban::QR
+struct Goban::QR < Goban::AbstractQR
   # Represents a mask pattern that can be applied to a canvas.
   struct Mask < AbstractQR::Mask
     MASK_PATTERNS = {
@@ -97,7 +97,7 @@ struct Goban::QR
                                   value == canvas.get_module(j, i + 1) & 1
               end
             {% end %}
-              
+
             next unless j == canvas.size - 1
           end
           last_value = value

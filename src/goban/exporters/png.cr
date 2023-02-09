@@ -8,7 +8,7 @@ module Goban
 
     # Generates a PNG image with the given target size and exports to the given path.
     # Note that the size of the resulting image may not be equal to the target size specified.
-    def export(qr : QR | MQR | RMQR, path : String, target_width : Int)
+    def export(qr : AbstractQR, path : String, target_width : Int)
       case qr
       when RMQR
         size = qr.size.width
@@ -29,7 +29,7 @@ module Goban
     #
     # `mod_size` refers to the number of pixels used for each module in the QR Code symbol,
     # and `blank_mods` is the size of the white border around the symbol.
-    def export(qr : QR | MQR | RMQR, path : String, mod_size : Int, blank_mods : Int)
+    def export(qr : AbstractQR, path : String, mod_size : Int, blank_mods : Int)
       blank_size = blank_mods * mod_size
       case qr
       when RMQR

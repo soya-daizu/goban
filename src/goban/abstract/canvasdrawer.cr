@@ -1,4 +1,4 @@
-module Goban::AbstractQR
+abstract struct Goban::AbstractQR
   abstract struct CanvasDrawer
     # Canvas that holds color of each modules.
     getter canvas : Canvas

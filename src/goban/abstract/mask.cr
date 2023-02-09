@@ -1,4 +1,4 @@
-module Goban::AbstractQR
+abstract struct Goban::AbstractQR
   abstract struct Mask
     getter value : UInt8
 

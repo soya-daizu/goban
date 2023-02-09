@@ -1,6 +1,6 @@
 require "../abstract/canvasdrawer"
 
-struct Goban::QR
+struct Goban::QR < Goban::AbstractQR
   # Handles painting each QR Code modules on a canvas.
   struct CanvasDrawer < AbstractQR::CanvasDrawer
     @mask : Mask

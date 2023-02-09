@@ -2,12 +2,12 @@ module Goban
   module SVGExporter
     extend self
 
-    def export(qr : QR | MQR | RMQR, path : String)
+    def export(qr : AbstractQR, path : String)
       string = svg_string(qr, 4)
       File.write(path, string)
     end
 
-    def svg_string(qr : QR | MQR | RMQR, blank_mods : Int)
+    def svg_string(qr : AbstractQR, blank_mods : Int)
       parts = [] of String
 
       qr.canvas.each_row do |row, y|

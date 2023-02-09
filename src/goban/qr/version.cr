@@ -1,6 +1,6 @@
 require "../abstract/version"
 
-struct Goban::QR
+struct Goban::QR < Goban::AbstractQR
   # Represents a version number of the QR Code symbol.
   # Possible versions range from 1 to 40, and the higher the number,
   # the large the size of the final QR Code symbol.

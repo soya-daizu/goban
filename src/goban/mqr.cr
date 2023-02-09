@@ -3,7 +3,7 @@ require "./ecc/*"
 
 module Goban
   # Object that represents an encoded Micro QR Code symbol.
-  struct MQR
+  struct MQR < AbstractQR
     # Version of the Micro QR Code symbol. Version in QR Code does not refer to its revision,
     # but simply indicates the size format of the QR Code symbol.
     getter version : Version
@@ -54,12 +54,6 @@ module Goban
       drawer.canvas.normalize
 
       self.new(version, ecl, drawer.canvas, mask)
-    end
-
-    # Prints the Micro QR Code symbol as a text in the console. To generate the actual image file,
-    # use `PNGExporter` or write your own exporter by reading each modules in `#canvas`.
-    def print_to_console
-      @canvas.print_to_console
     end
   end
 end

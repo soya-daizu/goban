@@ -1,6 +1,6 @@
 require "../abstract/version"
 
-struct Goban::MQR
+struct Goban::MQR < Goban::AbstractQR
   # Represents a version number of the Micro QR Code symbol.
   # Possible versions range from 1 to 4, and the higher the number,
   # the large the size of the final Micro QR Code symbol.
