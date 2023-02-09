@@ -43,9 +43,10 @@ module Goban
     # rMQR Code version that is large enough to contain all the data in the segments.
     #
     # See `QR.encode_segments` for more information.
-    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version)
+    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | VersionValue)
       raise "Unsupported EC Level" unless ecl.medium? || ecl.high?
 
+      version = Version.new(version.value)
       bit_stream = BitStream.new(version.max_data_bits(ecl))
       segments.each do |segment|
         bit_stream.append_segment_bits(segment, version)
