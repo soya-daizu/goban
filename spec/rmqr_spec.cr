@@ -1,49 +1,50 @@
 require "./spec_helper"
 
 module Goban
-  describe MQR do
+  describe RMQR do
     describe ".encode_string" do
-      qr = MQR.encode_string(SAMPLE_STR_2, ECC::Level::Low)
+      qr = RMQR.encode_string(SAMPLE_STR_2, ECC::Level::Medium)
 
       it "reports correct version" do
-        qr.version.value.should eq(3)
+        qr.version.value.should eq(RMQR::VersionValue::R13x27)
       end
 
       it "reports correct ec level" do
-        qr.ecl.should eq(ECC::Level::Low)
+        qr.ecl.should eq(ECC::Level::Medium)
       end
 
       it "encodes properly" do
         rows = convert_canvas(qr.canvas)
-        rows.should eq(SAMPLE_RESULT_MODS_MQR)
+        rows.should eq(SAMPLE_RESULT_MODS_RMQR)
       end
 
       it "raises if text is too long" do
         long_str = String.build do |io|
-          36.times { io << '0' } # Numeric mode can contain upto 35 characters
+          362.times { io << '0' } # Numeric mode can contain upto 361 characters
         end
 
         expect_raises(Exception, "Text too long") do
-          MQR.encode_string(long_str, ECC::Level::Low)
+          RMQR.encode_string(long_str, ECC::Level::Medium)
         end
       end
     end
 
     describe ".encode_segments" do
-      qr = MQR.encode_segments(SAMPLE_SEGS_2, ECC::Level::Low, 3)
+      qr = RMQR.encode_segments(SAMPLE_SEGS_2, ECC::Level::Medium, RMQR::VersionValue::R13x27)
 
       it "reports correct version" do
-        qr.version.value.should eq(3)
+        qr.version.value.should eq(RMQR::VersionValue::R13x27)
       end
 
       it "reports correct ec level" do
-        qr.ecl.should eq(ECC::Level::Low)
+        qr.ecl.should eq(ECC::Level::Medium)
       end
 
       it "encodes properly" do
         rows = convert_canvas(qr.canvas)
-        rows.should eq(SAMPLE_RESULT_MODS_MQR)
+        rows.should eq(SAMPLE_RESULT_MODS_RMQR)
       end
     end
   end
 end
+
