@@ -7,6 +7,8 @@ module Goban
     getter char_count : Int32
     getter bit_stream : BitStream
 
+    ALPHANUMERIC_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
+
     private def initialize(@mode, @char_count, @bit_stream)
     end
 

@@ -1,6 +1,4 @@
 module Goban
-  ALPHANUMERIC_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
-
   EC_CODEWORDS_PER_BLOCK_QR = {
     # Version: (note that index 0 is for padding, and is set to an illegal value)
     # 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40    Error correction level
@@ -46,21 +44,4 @@ module Goban
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}, # Quartile
     {-1,  1,  1,  1,  1,  2,  1,  1,  2,  2,  3,  1,  1,  2,  2,  2,  3,  1,  1,  2,  2,  3,  4,  2,  2,  3,  4,  5,  2,  2,  3,  4,  6}, # High
   }
-
-  # Tables of galois field values
-  GF256_MAP = begin a = uninitialized UInt8[256]; a[0] = 1; a end
-  GF256_INVMAP = begin a = uninitialized UInt8[256] end
-
-  (1...255).each do |i|
-    v = GF256_MAP[i - 1].to_i * 2
-    if v >= 256
-      GF256_MAP[i] = (v ^ 0x11d).to_u8
-    else
-      GF256_MAP[i] = v.to_u8
-    end
-  end
-
-  (0...255).each do |i|
-    GF256_INVMAP[GF256_MAP[i]] = i.to_u8
-  end
 end

@@ -117,5 +117,29 @@ module Goban::ECC
       return 0_u8 if x == 0 || y == 0
       GF256_MAP[(GF256_INVMAP[x].to_i + GF256_INVMAP[y]) % 255]
     end
+
+    # Tables of galois field values
+
+    GF256_MAP = begin
+      a = uninitialized UInt8[256]
+      a[0] = 1
+
+      (1...255).each do |i|
+        v = a[i - 1].to_i * 2
+        a[i] = (v >= 256 ? (v ^ 0x11d) : v).to_u8
+      end
+
+      a
+    end
+
+    GF256_INVMAP = begin
+      a = uninitialized UInt8[256]
+
+      (0...255).each do |i|
+        a[GF256_MAP[i]] = i.to_u8
+      end
+
+      a
+    end
   end
 end
