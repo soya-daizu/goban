@@ -13,6 +13,9 @@ module Goban
       when RMQR
         size = qr.size.width
         blank_mods = 2
+      when MQR
+        size = qr.size
+        blank_mods = 2
       else
         size = qr.size
         blank_mods = 4

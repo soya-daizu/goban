@@ -3,7 +3,14 @@ module Goban
     extend self
 
     def export(qr : AbstractQR, path : String)
-      string = svg_string(qr, 4)
+      case qr
+      when MQR, RMQR
+        blank_mods = 2
+      else
+        blank_mods = 4
+      end
+
+      string = svg_string(qr, blank_mods)
       File.write(path, string)
     end
 
