@@ -2,7 +2,7 @@ name: goban
 version: 1.4.0
 
 authors:
-  - soya_daizu <soya_daizu@protonmail.com>
+  - soya_daizu <soya_daizu@proton.me>
 
 targets:
   sample_console:
