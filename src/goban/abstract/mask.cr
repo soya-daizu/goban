@@ -12,11 +12,11 @@ abstract struct Goban::AbstractQR
     protected def apply_to(canvas : Canvas)
       canvas.size_y.times do |y|
         canvas.size_x.times do |x|
-          value = canvas.get_module(x, y)
+          value = canvas[x, y]
           next if value & 0x80 > 0
 
           invert = @mask_pattern.call(x, y) ? 1 : 0
-          canvas.set_module(x, y, value ^ invert)
+          canvas[x, y] = value ^ invert
         end
       end
     end

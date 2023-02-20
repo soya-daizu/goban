@@ -29,12 +29,12 @@ module Goban
 
     # Returns a module at the given coordinate.
     @[AlwaysInline]
-    def get_module(x : Int, y : Int)
+    def [](x : Int, y : Int)
       @modules[y * @size_x + x]
     end
 
     @[AlwaysInline]
-    protected def set_module(x : Int, y : Int, value : UInt8)
+    protected def []=(x : Int, y : Int, value : UInt8)
       # We are absolutely sure that the index is within the bounds,
       # as the arrays are pre-allocated based on the given version
       # and all the set/get methods are called based on that size
@@ -42,10 +42,10 @@ module Goban
     end
 
     @[AlwaysInline]
-    protected def fill_module(x : Int, y : Int, w : Int, h : Int, value : UInt8)
+    protected def []=(x : Int, y : Int, w : Int, h : Int, value : UInt8)
       (x...x + w).each do |xx|
         (y...y + h).each do |yy|
-          set_module(xx, yy, value)
+          self[xx, yy] = value
         end
       end
     end

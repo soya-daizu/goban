@@ -34,17 +34,17 @@ struct Goban::QR < Goban::AbstractQR
       (0...8).each do |i|
         bit = (bits >> i & 1).to_u8 | 0xc0
         pos = i >= 6 ? i + 1 : i
-        canvas.set_module(8, pos, bit)
+        canvas[8, pos] = bit
         pos = canvas.size - 1 - i
-        canvas.set_module(pos, 8, bit)
+        canvas[pos, 8] = bit
       end
 
       (0...7).each do |i|
         bit = (bits >> 14 - i & 1).to_u8 | 0xc0
         pos = i >= 6 ? i + 1 : i
-        canvas.set_module(pos, 8, bit)
+        canvas[pos, 8] = bit
         pos = canvas.size - 1 - i
-        canvas.set_module(8, pos, bit)
+        canvas[8, pos] = bit
       end
     end
 
@@ -74,10 +74,10 @@ struct Goban::QR < Goban::AbstractQR
 
         canvas.size.times do |j|
           {% if is_horizontal %}
-            value = canvas.get_module(j, i) & 1
+            value = canvas[j, i] & 1
             dark_count += value
           {% else %}
-            value = canvas.get_module(i, j) & 1
+            value = canvas[i, j] & 1
           {% end %}
 
           buffer = ((buffer << 1) | value) & 0b111_1111_1111
@@ -93,8 +93,8 @@ struct Goban::QR < Goban::AbstractQR
             {% if is_horizontal %}
               # Block score
               if same_count >= 2 && i != canvas.size - 1
-                blk_score += 3 if value == canvas.get_module(j - 1, i + 1) & 1 &&
-                                  value == canvas.get_module(j, i + 1) & 1
+                blk_score += 3 if value == canvas[j - 1, i + 1] & 1 &&
+                                  value == canvas[j, i + 1] & 1
               end
             {% end %}
 

@@ -41,7 +41,7 @@ abstract struct Goban::AbstractQR
         xx = x + i
         pattern_size.times do |j|
           yy = y + j
-          @canvas.set_module(xx, yy, pattern[pattern_size * j + i])
+          @canvas[xx, yy] = pattern[pattern_size * j + i]
         end
       end
     end
@@ -50,8 +50,8 @@ abstract struct Goban::AbstractQR
       count.times do |k|
         i = 8 + k
         mod = i.even? ? 0xc1_u8 : 0xc0_u8
-        @canvas.set_module(i, j, mod)
-        @canvas.set_module(j, i, mod)
+        @canvas[i, j] = mod
+        @canvas[j, i] = mod
       end
     end
   end

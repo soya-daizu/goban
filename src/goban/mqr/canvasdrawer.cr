@@ -19,7 +19,7 @@ struct Goban::MQR < Goban::AbstractQR
     # - Finder patterns on the top left corner
     # - Timing patterns in both directions
     protected def draw_function_patterns
-      @canvas.fill_module(0, 0, 9, 9, 0xc0)
+      @canvas[0, 0, 9, 9] = 0xc0
 
       draw_pattern(0, 0, FINDER_PATTERN, 7)
 
@@ -38,7 +38,7 @@ struct Goban::MQR < Goban::AbstractQR
           (0..1).each do |alt|
             x = base_x - alt
             y = upward ? base_y : @size - 1 - base_y
-            next if @canvas.get_module(x, y) & 0x80 > 0
+            next if @canvas[x, y] & 0x80 > 0
             return if i >= data_length
 
             data_i = i >> 3
@@ -53,7 +53,7 @@ struct Goban::MQR < Goban::AbstractQR
               i += 1
             end
 
-            @canvas.set_module(x, y, bit)
+            @canvas[x, y] = bit
           end
         end
 

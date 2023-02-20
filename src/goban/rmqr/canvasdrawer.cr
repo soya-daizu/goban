@@ -23,8 +23,8 @@ struct Goban::RMQR < Goban::AbstractQR
       draw_pattern(0, 0, FINDER_PATTERN, 7)
       draw_pattern(@size.width - 5, @size.height - 5, FINDER_SUB_PATTERN, 5)
 
-      @canvas.fill_module(7, 0, 1, 7, 0xc0)
-      @canvas.fill_module(0, 7, 8, 1, 0xc0) if @size.height > 7
+      @canvas[7, 0, 1, 7] = 0xc0
+      @canvas[0, 7, 8, 1] = 0xc0 if @size.height > 7
 
       draw_timing_line(8, 0, @size.width - 11, true)
       if @size.height == 7
@@ -44,13 +44,13 @@ struct Goban::RMQR < Goban::AbstractQR
       end
 
       # Corner finder patterns
-      canvas.fill_module(@size.width - 1, 0, 1, 3, 0xc1)
-      canvas.fill_module(@size.width - 3, 0, 2, 1, 0xc1)
-      canvas.fill_module(0, @size.height - 3, 1, 3, 0xc1) if @size.height > 9
-      canvas.fill_module(1, @size.height - 1, 2, 1, 0xc1) if @size.height > 7
+      canvas[@size.width - 1, 0, 1, 3] = 0xc1
+      canvas[@size.width - 3, 0, 2, 1] = 0xc1
+      canvas[0, @size.height - 3, 1, 3] = 0xc1 if @size.height > 9
+      canvas[1, @size.height - 1, 2, 1] = 0xc1 if @size.height > 7
 
-      canvas.set_module(@size.width - 2, 1, 0xc0)
-      canvas.set_module(1, @size.height - 2, 0xc0) if @size.height > 9
+      canvas[@size.width - 2, 1] = 0xc0
+      canvas[1, @size.height - 2] = 0xc0 if @size.height > 9
 
       draw_version_modules
     end
@@ -67,11 +67,11 @@ struct Goban::RMQR < Goban::AbstractQR
           (0..1).each do |alt|
             x = base_x - alt
             y = upward ? base_y : @size.height - 1 - base_y
-            next if @canvas.get_module(x, y) & 0x80 > 0
+            next if @canvas[x, y] & 0x80 > 0
             return if i >= data_length
 
             bit = data_codewords[i >> 3].bit(7 - i & 7)
-            @canvas.set_module(x, y, bit)
+            @canvas[x, y] = bit
             i += 1
           end
         end
@@ -92,7 +92,7 @@ struct Goban::RMQR < Goban::AbstractQR
         i = horizontal ? x + k : x
         j = horizontal ? y : y + k
         mod = (horizontal ? i : j).even? ? 0xc1_u8 : 0xc0_u8
-        @canvas.set_module(i, j, mod)
+        @canvas[i, j] = mod
       end
     end
 
@@ -110,7 +110,7 @@ struct Goban::RMQR < Goban::AbstractQR
         bit = (bits_left >> i & 1).to_u8 | 0xc0
         x = 8 + i // 5
         y = 1 + i % 5
-        @canvas.set_module(x, y, bit)
+        @canvas[x, y] = bit
 
         bit = (bits_right >> i & 1).to_u8 | 0xc0
         if i < 15
@@ -120,7 +120,7 @@ struct Goban::RMQR < Goban::AbstractQR
           x = @size.width + i - 20
           y = @size.height - 6
         end
-        @canvas.set_module(x, y, bit)
+        @canvas[x, y] = bit
       end
     end
   end

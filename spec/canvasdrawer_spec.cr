@@ -3,13 +3,13 @@ require "./spec_helper"
 module Goban
   struct QR::CanvasDrawer
     def reserve_modules_for_test
-      @canvas.fill_module(8, 8, 7, 7, 0xc0)
+      @canvas[8, 8, 7, 7] = 0xc0
     end
   end
 
   struct MQR::CanvasDrawer
     def reserve_modules_for_test
-      @canvas.fill_module(3, 3, 3, 3, 0xc0)
+      @canvas[3, 3, 3, 3] = 0xc0
     end
   end
 

@@ -49,13 +49,13 @@ struct Goban::MQR < Goban::AbstractQR
       (0...8).each do |i|
         bit = (bits >> i & 1).to_u8 | 0xc0
         pos = i + 1
-        canvas.set_module(8, pos, bit)
+        canvas[8, pos] = bit
       end
 
       (0...7).each do |i|
         bit = (bits >> 14 - i & 1).to_u8 | 0xc0
         pos = i + 1
-        canvas.set_module(pos, 8, bit)
+        canvas[pos, 8] = bit
       end
     end
 
@@ -64,8 +64,8 @@ struct Goban::MQR < Goban::AbstractQR
     protected def self.evaluate_score(canvas : Canvas)
       s1, s2 = 0, 0
       canvas.size.times do |i|
-        s1 += canvas.get_module(canvas.size - 1, i) & 1
-        s2 += canvas.get_module(i, canvas.size - 1) & 1
+        s1 += canvas[canvas.size - 1, i] & 1
+        s2 += canvas[i, canvas.size - 1] & 1
       end
 
       if s1 <= s2

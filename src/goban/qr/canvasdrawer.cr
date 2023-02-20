@@ -26,12 +26,12 @@ struct Goban::QR < Goban::AbstractQR
 
       # Reserving areas for the finder patterns and format info at once
       # as they belong to the same adjacent square area
-      @canvas.fill_module(0, 7, 9, 2, 0xc0)
-      @canvas.fill_module(7, 0, 2, 7, 0xc0)
-      @canvas.fill_module(@size - 8, 0, 1, 7, 0xc0)
-      @canvas.fill_module(@size - 8, 7, 8, 2, 0xc0)
-      @canvas.fill_module(0, @size - 8, 8, 1, 0xc0)
-      @canvas.fill_module(7, @size - 7, 2, 7, 0xc0)
+      @canvas[0, 7, 9, 2] = 0xc0
+      @canvas[7, 0, 2, 7] = 0xc0
+      @canvas[@size - 8, 0, 1, 7] = 0xc0
+      @canvas[@size - 8, 7, 8, 2] = 0xc0
+      @canvas[0, @size - 8, 8, 1] = 0xc0
+      @canvas[7, @size - 7, 2, 7] = 0xc0
 
       positions = @version.alignment_pattern_positions
       ali_pat_count = positions.size
@@ -50,7 +50,7 @@ struct Goban::QR < Goban::AbstractQR
 
       draw_version_modules
 
-      canvas.set_module(8, canvas.size - 8, 0xc1)
+      canvas[8, canvas.size - 8] = 0xc1
     end
 
     # Draws data bits from the given data codewords.
@@ -67,11 +67,11 @@ struct Goban::QR < Goban::AbstractQR
           (0..1).each do |alt|
             x = base_x - alt
             y = upward ? base_y : @size - 1 - base_y
-            next if @canvas.get_module(x, y) & 0x80 > 0
+            next if @canvas[x, y] & 0x80 > 0
             return if i >= data_length
 
             bit = data_codewords[i >> 3].bit(7 - i & 7)
-            @canvas.set_module(x, y, bit)
+            @canvas[x, y] = bit
             i += 1
           end
         end
@@ -123,8 +123,8 @@ struct Goban::QR < Goban::AbstractQR
         bit = (bits >> i & 1).to_u8 | 0xc0
         x = i // 3
         y = @size - 11 + i % 3
-        @canvas.set_module(x, y, bit)
-        @canvas.set_module(y, x, bit)
+        @canvas[x, y] = bit
+        @canvas[y, x] = bit
       end
     end
   end

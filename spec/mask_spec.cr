@@ -3,8 +3,8 @@ require "./spec_helper"
 module Goban
   struct MQR::CanvasDrawer
     def fill_border_for_test
-      @canvas.fill_module(10, 0, 1, 6, 1)
-      @canvas.fill_module(0, 10, 5, 1, 1)
+      @canvas[10, 0, 1, 6] = 1
+      @canvas[0, 10, 5, 1] = 1
     end
   end
 
