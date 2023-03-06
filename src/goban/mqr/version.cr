@@ -42,7 +42,7 @@ struct Goban::MQR < Goban::AbstractQR
     # symbol of this version. This does not include the number of error correction
     # codewords.
     def max_data_codewords(ecl : ECC::Level)
-      ecc_codewords = EC_CODEWORDS_MQR[ecl.value][@value]
+      ecc_codewords = EC_CODEWORDS_MQR[ecl.to_s][@value]
       raise "Invalid EC level or version" if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
     end
@@ -51,7 +51,7 @@ struct Goban::MQR < Goban::AbstractQR
     # symbol of this version. This does not include the number of error correction
     # codewords.
     def max_data_bits(ecl : ECC::Level)
-      ecc_codewords = EC_CODEWORDS_MQR[ecl.value][@value]
+      ecc_codewords = EC_CODEWORDS_MQR[ecl.to_s][@value]
       raise "Invalid EC level or version" if ecc_codewords < 0
       raw_data_mods_count - ecc_codewords * 8
     end
