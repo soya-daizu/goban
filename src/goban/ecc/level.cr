@@ -12,25 +12,9 @@ module Goban::ECC
   # Note that choosing a higher error correction level requires more redundant
   # bits, meaning that the resulting QR Code symbol can get larger.
   enum Level : UInt8
-    Low
-    Medium
-    Quartile
-    High
-
-    # Returns data bits that represent its error correction level.
-    protected def format_bits
-      case self
-      when Low
-        0b01_u8
-      when Medium
-        0b00_u8
-      when Quartile
-        0b11_u8
-      when High
-        0b10_u8
-      else
-        raise "Invalid EC level"
-      end
-    end
+    Low      = 0b01
+    Medium   = 0b00
+    Quartile = 0b11
+    High     = 0b10
   end
 end
