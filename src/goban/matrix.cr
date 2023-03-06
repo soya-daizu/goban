@@ -11,25 +11,26 @@ module Goban
     delegate unsafe_fetch, to: @data
     delegate unsafe_put, to: @data
 
+    def initialize(@size_x, @size_y, @data)
+    end
+
     def initialize(@size_x, @size_y, value : T)
       @data = Slice.new(@size_x * @size_y, value)
     end
 
-    def initialize(@size_x, @size_y, data : Slice(T)? = nil)
-      @data = data || Slice(T).new(@size_x * @size_y)
-    end
-
-    def initialize(@size_x, @size_y, & : Int32, Int32, Int32 -> T)
+    def self.new_with_values(size_x, size_y, & : Int32, Int32, Int32 -> T)
       x, y = 0, 0
-      @data = Slice.new(@size_x * @size_y) do |i|
+      data = Slice.new(size_x * size_y) do |i|
         v = yield i, x, y
         x += 1
-        if x == @size_x
+        if x == size_x
           x = 0
           y += 1
         end
         v
       end
+
+      self.new(size_x, size_y, data)
     end
 
     def clone
@@ -54,20 +55,6 @@ module Goban
       end
     end
 
-    def each_row_in_region(from : Point, to : Point, & : Iterator(Tuple(UInt8, Int32)), Int32 ->)
-      (from.y.to_i..to.y.to_i).each do |y|
-        row = (from.x.to_i..to.x.to_i).each.map { |x| {self[x, y], x} }
-        yield row, y
-      end
-    end
-
-    def each_column_in_region(from : Point, to : Point, & : Iterator(Tuple(UInt8, Int32)), Int32 ->)
-      (from.x.to_i..to.x.to_i).each do |x|
-        column = (from.y.to_i..to.y.to_i).each.map { |y| {self[x, y], y} }
-        yield column, x
-      end
-    end
-
     @[AlwaysInline]
     def [](x : Int, y : Int)
       @data[y * @size_x + x]
@@ -76,16 +63,6 @@ module Goban
     @[AlwaysInline]
     def []?(x : Int, y : Int)
       @data[y * @size_x + x]?
-    end
-
-    @[AlwaysInline]
-    def [](point : Point)
-      self[point.x.to_i, point.y.to_i]
-    end
-
-    @[AlwaysInline]
-    def [](point : Point)
-      self[point.x.to_i, point.y.to_i]?
     end
 
     @[AlwaysInline]
