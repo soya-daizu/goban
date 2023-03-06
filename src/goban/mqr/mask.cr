@@ -38,7 +38,7 @@ struct Goban::MQR < Goban::AbstractQR
       raise "Invalid EC level or version"
     end
 
-    protected def draw_format_modules(canvas : Canvas, ver : Version, ecl : ECC::Level)
+    protected def draw_format_modules(canvas : Matrix(UInt8), ver : Version, ecl : ECC::Level)
       data = (get_symbol_num(ver, ecl) << 2 | @value).to_u32
       rem = data
       10.times do
@@ -61,7 +61,7 @@ struct Goban::MQR < Goban::AbstractQR
 
     # Evaluate penalty score for the given canvas.
     # It assumes that one of the masks is applied to the canvas.
-    protected def self.evaluate_score(canvas : Canvas)
+    protected def self.evaluate_score(canvas : Matrix(UInt8))
       s1, s2 = 0, 0
       canvas.size.times do |i|
         s1 += canvas[canvas.size - 1, i] & 1

@@ -9,7 +9,7 @@ struct Goban::RMQR < Goban::AbstractQR
     # Creates a blank canvas with the given version and error correction level.
     def initialize(@version : Version, @ecl : ECC::Level)
       @size = @version.symbol_size
-      @canvas = Canvas.new(@size.width, @size.height)
+      @canvas = Matrix(UInt8).new(@size.width, @size.height)
       @mask = Mask.new
     end
 

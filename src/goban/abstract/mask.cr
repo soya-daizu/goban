@@ -9,7 +9,7 @@ abstract struct Goban::AbstractQR
 
     # Apply mask to the given canvas.
     # Call this method again to reverse the applied mask.
-    protected def apply_to(canvas : Canvas)
+    protected def apply_to(canvas : Matrix(UInt8))
       canvas.size_y.times do |y|
         canvas.size_x.times do |x|
           value = canvas[x, y]
