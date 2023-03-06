@@ -23,8 +23,8 @@ struct Goban::QR < Goban::AbstractQR
       @mask_pattern = MASK_PATTERNS[@value]
     end
 
-    protected def draw_format_modules(canvas : Canvas, ecl : ECC::Level)
-      data = (ecl.format_bits << 3 | @value).to_u32
+    protected def draw_format_modules(canvas : Matrix(UInt8), ecl : ECC::Level)
+      data = (ecl.format_bits.to_i << 3 | @value).to_i32
       rem = data
       10.times do
         rem = (rem << 1) ^ ((rem >> 9) * 0x537)
@@ -50,7 +50,7 @@ struct Goban::QR < Goban::AbstractQR
 
     # Evaluate penalty score for the given canvas.
     # It assumes that one of the masks is applied to the canvas.
-    protected def self.evaluate_score(canvas : Canvas)
+    protected def self.evaluate_score(canvas : Matrix(UInt8))
       s1_a, s3_a, s2, dark_count = self.compute_score_h(canvas)
       s1_b, s3_b = self.compute_score_v(canvas)
       s4 = self.compute_balance_score(dark_count, canvas.size)
@@ -118,11 +118,11 @@ struct Goban::QR < Goban::AbstractQR
       }
     end
 
-    private def self.compute_score_h(canvas : Canvas)
+    private def self.compute_score_h(canvas : Matrix(UInt8))
       compute_score(true)
     end
 
-    private def self.compute_score_v(canvas : Canvas)
+    private def self.compute_score_v(canvas : Matrix(UInt8))
       compute_score(false)
     end
 

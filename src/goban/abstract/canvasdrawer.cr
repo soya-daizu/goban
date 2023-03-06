@@ -1,7 +1,7 @@
 abstract struct Goban::AbstractQR
   abstract struct CanvasDrawer
     # Canvas that holds color of each modules.
-    getter canvas : Canvas
+    getter canvas : Matrix(UInt8)
     # Length of the canvas's side.
     getter size
     # Returns the mask applied to the canvas.
