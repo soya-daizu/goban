@@ -42,7 +42,7 @@ module Goban
     describe "#apply_best_mask" do
       it "applies best mask" do
         drawer = QR::CanvasDrawer.new(QR::Version.new(1), ECC::Level::Low)
-        drawer.canvas.modules.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
+        drawer.canvas.data.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
 
         drawer.apply_best_mask.value.should eq(2)
       end
@@ -78,7 +78,7 @@ module Goban
     describe "#apply_best_mask" do
       it "applies best mask" do
         drawer = MQR::CanvasDrawer.new(MQR::Version.new(1), ECC::Level::Low)
-        drawer.canvas.modules.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
+        drawer.canvas.data.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
 
         drawer.apply_best_mask.value.should eq(3)
       end
