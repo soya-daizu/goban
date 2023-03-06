@@ -89,7 +89,7 @@ struct Goban::QR < Goban::AbstractQR
       8_u8.times do |i|
         canvas = @canvas.clone
         msk = Mask.new(i)
-        msk.draw_format_modules(canvas, @ecl)
+        CanvasDrawer.draw_format_modules(canvas, msk, @ecl)
         msk.apply_to(canvas)
 
         score = Mask.evaluate_score(canvas)
@@ -125,6 +125,26 @@ struct Goban::QR < Goban::AbstractQR
         y = @size - 11 + i % 3
         @canvas[x, y] = bit
         @canvas[y, x] = bit
+      end
+    end
+
+    protected def self.draw_format_modules(canvas : Matrix(UInt8), mask : Mask, ecl : ECC::Level)
+      bits = mask.get_format_bits(ecl)
+
+      (0...8).each do |i|
+        bit = (bits >> i & 1).to_u8 | 0xc0
+        pos = i >= 6 ? i + 1 : i
+        canvas[8, pos] = bit
+        pos = canvas.size - 1 - i
+        canvas[pos, 8] = bit
+      end
+
+      (0...7).each do |i|
+        bit = (bits >> 14 - i & 1).to_u8 | 0xc0
+        pos = i >= 6 ? i + 1 : i
+        canvas[pos, 8] = bit
+        pos = canvas.size - 1 - i
+        canvas[8, pos] = bit
       end
     end
   end

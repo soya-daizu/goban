@@ -23,29 +23,13 @@ struct Goban::QR < Goban::AbstractQR
       @mask_pattern = MASK_PATTERNS[@value]
     end
 
-    protected def draw_format_modules(canvas : Matrix(UInt8), ecl : ECC::Level)
-      data = (ecl.format_bits.to_i << 3 | @value).to_i32
+    protected def get_format_bits(ecl : ECC::Level)
+      data = (ecl.to_i << 3 | @value).to_i32
       rem = data
       10.times do
         rem = (rem << 1) ^ ((rem >> 9) * 0x537)
       end
-      bits = (data << 10 | rem) ^ 0x5412
-
-      (0...8).each do |i|
-        bit = (bits >> i & 1).to_u8 | 0xc0
-        pos = i >= 6 ? i + 1 : i
-        canvas[8, pos] = bit
-        pos = canvas.size - 1 - i
-        canvas[pos, 8] = bit
-      end
-
-      (0...7).each do |i|
-        bit = (bits >> 14 - i & 1).to_u8 | 0xc0
-        pos = i >= 6 ? i + 1 : i
-        canvas[pos, 8] = bit
-        pos = canvas.size - 1 - i
-        canvas[8, pos] = bit
-      end
+      (data << 10 | rem) ^ 0x5412
     end
 
     # Evaluate penalty score for the given canvas.

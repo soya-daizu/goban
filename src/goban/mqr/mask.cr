@@ -19,6 +19,15 @@ struct Goban::MQR < Goban::AbstractQR
       @mask_pattern = MASK_PATTERNS[@value]
     end
 
+    protected def get_format_bits(ver : Version, ecl : ECC::Level)
+      data = (get_symbol_num(ver, ecl) << 2 | @value).to_u32
+      rem = data
+      10.times do
+        rem = (rem << 1) ^ ((rem >> 9) * 0x537)
+      end
+      (data << 10 | rem) ^ 0x4445
+    end
+
     private def get_symbol_num(ver : Version, ecl : ECC::Level)
       case ver.to_i
       when 1
@@ -36,27 +45,6 @@ struct Goban::MQR < Goban::AbstractQR
       end
 
       raise "Invalid EC level or version"
-    end
-
-    protected def draw_format_modules(canvas : Matrix(UInt8), ver : Version, ecl : ECC::Level)
-      data = (get_symbol_num(ver, ecl) << 2 | @value).to_u32
-      rem = data
-      10.times do
-        rem = (rem << 1) ^ ((rem >> 9) * 0x537)
-      end
-      bits = (data << 10 | rem) ^ 0x4445
-
-      (0...8).each do |i|
-        bit = (bits >> i & 1).to_u8 | 0xc0
-        pos = i + 1
-        canvas[8, pos] = bit
-      end
-
-      (0...7).each do |i|
-        bit = (bits >> 14 - i & 1).to_u8 | 0xc0
-        pos = i + 1
-        canvas[pos, 8] = bit
-      end
     end
 
     # Evaluate penalty score for the given canvas.
