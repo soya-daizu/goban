@@ -3,6 +3,9 @@ require "../abstract/mask"
 struct Goban::QR < Goban::AbstractQR
   # Represents a mask pattern that can be applied to a canvas.
   struct Mask < AbstractQR::Mask
+    MIN = 0_u8
+    MAX = 7_u8
+
     MASK_PATTERNS = {
       ->(x : Int32, y : Int32) { (x + y) & 1 == 0 },
       ->(x : Int32, y : Int32) { y & 1 == 0 },
@@ -14,8 +17,25 @@ struct Goban::QR < Goban::AbstractQR
       ->(x : Int32, y : Int32) { (((x + y) & 1) + (x * y) % 3) & 1 == 0 },
     }
 
-    MIN = 0_u8
-    MAX = 7_u8
+    {% begin %}
+      FORMAT_BITS = {
+        {% for mask in (MIN..MAX) %}
+          {
+            {% for ecl in ECC::Level.constants %}
+              {% ecl_value = ECC::Level.constant(ecl) %}
+              {% data = 0_i32 + ecl_value << 3 | mask %}
+              {% rem = data %}
+              {% for _ in (0..9) %}
+                {% rem = (rem << 1) ^ ((rem >> 9) * 0x537) %}
+              {% end %}
+              {% bits = (data << 10 | rem) ^ 0x5412 %}
+
+              {{ecl.id}}: {{bits}},
+            {% end %}
+          },
+        {% end %}
+      }
+    {% end %}
 
     def initialize(value)
       raise "Invalid mask number" unless (MIN..MAX).includes?(value)
@@ -24,12 +44,7 @@ struct Goban::QR < Goban::AbstractQR
     end
 
     protected def get_format_bits(ecl : ECC::Level)
-      data = (ecl.to_i << 3 | @value).to_i32
-      rem = data
-      10.times do
-        rem = (rem << 1) ^ ((rem >> 9) * 0x537)
-      end
-      (data << 10 | rem) ^ 0x5412
+      FORMAT_BITS[@value][ecl.to_s]
     end
 
     # Evaluate penalty score for the given canvas.

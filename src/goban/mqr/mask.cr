@@ -3,6 +3,9 @@ require "../abstract/mask"
 struct Goban::MQR < Goban::AbstractQR
   # Represents a mask pattern that can be applied to a canvas.
   struct Mask < AbstractQR::Mask
+    MIN = 0_u8
+    MAX = 3_u8
+
     MASK_PATTERNS = {
       ->(x : Int32, y : Int32) { y & 1 == 0 },
       ->(x : Int32, y : Int32) { (x // 3 + y // 2) & 1 == 0 },
@@ -10,8 +13,24 @@ struct Goban::MQR < Goban::AbstractQR
       ->(x : Int32, y : Int32) { (((x + y) & 1) + (x * y) % 3) & 1 == 0 },
     }
 
-    MIN = 0_u8
-    MAX = 3_u8
+    {% begin %}
+      FORMAT_BITS = {
+        {% for mask in (MIN..MAX) %}
+          {
+            {% for symbol_num in (0..7) %}
+              {% data = symbol_num << 2 | mask %}
+              {% rem = data %}
+              {% for _ in (0..9) %}
+                {% rem = (rem << 1) ^ ((rem >> 9) * 0x537) %}
+              {% end %}
+              {% bits = (data << 10 | rem) ^ 0x4445 %}
+
+              {{bits}},
+            {% end %}
+          },
+        {% end %}
+      }
+    {% end %}
 
     def initialize(value)
       raise "Invalid mask number" unless (MIN..MAX).includes?(value)
@@ -20,31 +39,7 @@ struct Goban::MQR < Goban::AbstractQR
     end
 
     protected def get_format_bits(ver : Version, ecl : ECC::Level)
-      data = (get_symbol_num(ver, ecl) << 2 | @value).to_u32
-      rem = data
-      10.times do
-        rem = (rem << 1) ^ ((rem >> 9) * 0x537)
-      end
-      (data << 10 | rem) ^ 0x4445
-    end
-
-    private def get_symbol_num(ver : Version, ecl : ECC::Level)
-      case ver.to_i
-      when 1
-        return 0b000
-      when 2
-        return 0b001 if ecl.low?
-        return 0b010 if ecl.medium?
-      when 3
-        return 0b011 if ecl.low?
-        return 0b100 if ecl.medium?
-      when 4
-        return 0b101 if ecl.low?
-        return 0b110 if ecl.medium?
-        return 0b111 if ecl.quartile?
-      end
-
-      raise "Invalid EC level or version"
+      FORMAT_BITS[@value][ver.get_symbol_num(ecl)]
     end
 
     # Evaluate penalty score for the given canvas.

@@ -112,12 +112,7 @@ struct Goban::QR < Goban::AbstractQR
     private def draw_version_modules
       return if @version < 7
 
-      data = @version.value.to_u32
-      rem = data
-      12.times do
-        rem = (rem << 1) ^ ((rem >> 11) * 0x1F25)
-      end
-      bits = data << 12 | rem
+      bits = @version.get_version_bits
 
       (0...18).each do |i|
         bit = (bits >> i & 1).to_u8 | 0xc0

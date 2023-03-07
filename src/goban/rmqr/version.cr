@@ -65,6 +65,56 @@ struct Goban::RMQR < Goban::AbstractQR
   end
 
   struct Version < AbstractQR::Version
+    {% begin %}
+      VERSION_BITS = {
+        {% for ver in (VersionValue::R7x43..VersionValue::R17x139) %}
+          {
+            {% for ecl in {:Medium, :High} %}
+              {% data = ver %}
+              {% data |= 1 << 6 if ecl == :High %}
+              {% rem = ver %}
+              {% for _ in (0..11) %}
+                {% rem = (rem << 1) ^ ((rem >> 11) * 0x1F25) %}
+              {% end %}
+              {% bits_left = (data << 12 | rem) ^ 0b011111101010110010 %}
+              {% bits_right = (data << 12 | rem) ^ 0b100000101001111011 %}
+
+              {{ecl.id}}: { {{bits_left}}, {{bits_right}} },
+            {% end %}
+          },
+        {% end %}
+      }
+
+      {% version_values = VersionValue.constants.map { |x| parse_type("VersionValue::#{x}") } %}
+
+      ORDERED_BY_HEIGHT = StaticArray[{{ version_values.splat }}].sort do |a, b|
+        a_size = SymbolDimension.new(a)
+        b_size = SymbolDimension.new(b)
+
+        cmp = a_size.height <=> b_size.height
+        cmp = a_size.width <=> b_size.width if cmp == 0
+        cmp
+      end
+
+      ORDERED_BY_WIDTH = StaticArray[{{ version_values.splat }}].sort do |a, b|
+        a_size = SymbolDimension.new(a)
+        b_size = SymbolDimension.new(b)
+
+        cmp = a_size.width <=> b_size.width
+        cmp = a_size.height <=> b_size.height if cmp == 0
+        cmp
+      end
+
+      ORDERED_BY_AREA = StaticArray[{{ version_values.splat }}].sort do |a, b|
+        a_size = SymbolDimension.new(a)
+        b_size = SymbolDimension.new(b)
+
+        a_size.width * a_size.height <=> b_size.width * b_size.height
+      end
+    {% end %}
+
+    ORDERED = {ORDERED_BY_AREA, ORDERED_BY_WIDTH, ORDERED_BY_HEIGHT}
+
     @value : VersionValue
     @symbol_size : SymbolDimension
     @mode_indicator_length : Int32
@@ -84,6 +134,10 @@ struct Goban::RMQR < Goban::AbstractQR
 
     def self.new(width : Int, height : Int)
       self.new("R#{height}x#{width}")
+    end
+
+    protected def get_version_bits(ecl : ECC::Level)
+      VERSION_BITS[@value.to_i][ecl.to_s]
     end
 
     # Returns a tuple of vertical timing pattern line positions
@@ -157,36 +211,5 @@ struct Goban::RMQR < Goban::AbstractQR
     def to_i
       value.to_i
     end
-
-    {% begin %}
-      {% version_values = VersionValue.constants.map { |x| parse_type("VersionValue::#{x}") } %}
-
-      ORDERED_BY_HEIGHT = StaticArray[{{ version_values.splat }}].sort do |a, b|
-        a_size = SymbolDimension.new(a)
-        b_size = SymbolDimension.new(b)
-
-        cmp = a_size.height <=> b_size.height
-        cmp = a_size.width <=> b_size.width if cmp == 0
-        cmp
-      end
-
-      ORDERED_BY_WIDTH = StaticArray[{{ version_values.splat }}].sort do |a, b|
-        a_size = SymbolDimension.new(a)
-        b_size = SymbolDimension.new(b)
-
-        cmp = a_size.width <=> b_size.width
-        cmp = a_size.height <=> b_size.height if cmp == 0
-        cmp
-      end
-
-      ORDERED_BY_AREA = StaticArray[{{ version_values.splat }}].sort do |a, b|
-        a_size = SymbolDimension.new(a)
-        b_size = SymbolDimension.new(b)
-
-        a_size.width * a_size.height <=> b_size.width * b_size.height
-      end
-
-      ORDERED = {ORDERED_BY_AREA, ORDERED_BY_WIDTH, ORDERED_BY_HEIGHT}
-    {% end %}
   end
 end
