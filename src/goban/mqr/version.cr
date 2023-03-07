@@ -8,6 +8,14 @@ struct Goban::MQR < Goban::AbstractQR
     MIN = 1_u8
     MAX = 4_u8
 
+    SYMBOL_NUMS = {
+      NamedTuple(),
+      {Low: 0b000, Medium: 0b000, Quartile: 0b000},
+      {Low: 0b001, Medium: 0b010, Quartile: -1},
+      {Low: 0b011, Medium: 0b100, Quartile: -1},
+      {Low: 0b101, Medium: 0b110, Quartile: 0b111},
+    }
+
     @value : UInt8
     @symbol_size : Int32
     @mode_indicator_length : Int32
@@ -17,6 +25,10 @@ struct Goban::MQR < Goban::AbstractQR
       @value = value.to_u8
       @symbol_size = 2 * @value + 9 # 11 + 2(v - 1)
       @mode_indicator_length = value.to_i - 1
+    end
+
+    protected def get_symbol_num(ecl : ECC::Level)
+      SYMBOL_NUMS[@value][ecl.to_s]
     end
 
     # Number of the modules that are available for writing the actual

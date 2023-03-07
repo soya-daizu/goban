@@ -97,14 +97,7 @@ struct Goban::RMQR < Goban::AbstractQR
     end
 
     private def draw_version_modules
-      data = @version.value.to_u32
-      data |= 1 << 6 if @ecl.high?
-      rem = data
-      12.times do
-        rem = (rem << 1) ^ ((rem >> 11) * 0x1F25)
-      end
-      bits_left = (data << 12 | rem) ^ 0b011111101010110010
-      bits_right = (data << 12 | rem) ^ 0b100000101001111011
+      bits_left, bits_right = @version.get_version_bits(@ecl)
 
       (0...18).each do |i|
         bit = (bits_left >> i & 1).to_u8 | 0xc0

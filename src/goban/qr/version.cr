@@ -8,6 +8,20 @@ struct Goban::QR < Goban::AbstractQR
     MIN =  1_u8
     MAX = 40_u8
 
+    {% begin %}
+      VERSION_BITS = {
+        -1, -1, -1, -1, -1, -1, -1,
+        {% for ver in (7..MAX) %}
+          {% rem = ver %}
+          {% for _ in (0..11) %}
+            {% rem = (rem << 1) ^ ((rem >> 11) * 0x1F25) %}
+          {% end %}
+
+          {{ver << 12 | rem}},
+        {% end %}
+      }
+    {% end %}
+
     @value : UInt8
     @symbol_size : Int32
     @mode_indicator_length : Int32
@@ -17,6 +31,11 @@ struct Goban::QR < Goban::AbstractQR
       @value = value.to_u8
       @symbol_size = 4 * @value + 17 # 21 + 4(v - 1)
       @mode_indicator_length = 4
+    end
+
+    protected def get_version_bits
+      raise "Invalid access to version bits with version number below 7" if @value < 7
+      VERSION_BITS[@value]
     end
 
     # Returns a list of the alignment pattern positions for this version.
