@@ -34,7 +34,7 @@ module Goban
     end
 
     def clone
-      Matrix(UInt8).new(@size_x, @size_y, @data.dup)
+      Matrix(T).new(@size_x, @size_y, @data.dup)
     end
 
     def size
