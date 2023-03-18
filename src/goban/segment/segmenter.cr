@@ -2,123 +2,10 @@ struct Goban::Segment
   # Module for building segmentations of the different encoding modes
   # for the given text string.
   module Segmenter
-    extend self
-
-    # Returns a tuple of the optimized segments and QR Code version
-    # for the given text and error correction level.
-    def segment_text_optimized_qr(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
-      chars = text.chars
-      segments, version = nil, nil
-
-      # The number of the character count indicator bits which affect
-      # the result of segmentation changes at the version 1, 10, and 27,
-      # so we first calculate the segments at those boundaries and reduce
-      # the version number later
-      {(1..9), (10..26), (27..40)}.each do |group|
-        v = QR::Version.new(group.end)
-        char_modes = compute_char_modes(chars, v)
-        segments = make_segments(text, char_modes)
-
-        cap_bits = v.max_data_bits(ecl)
-        begin
-          used_bits = Segment.count_total_bits(segments, v)
-        rescue e
-          next if e.message == "Segment too long"
-          raise e
-        end
-
-        # If it's within the bound, that is the optimal segmentation
-        # Now find the smallest version in that group that can hold the data
-        if used_bits <= cap_bits
-          group.each do |i|
-            sml_v = QR::Version.new(i)
-            sml_cap_bits = sml_v.max_data_bits(ecl)
-
-            if used_bits <= sml_cap_bits
-              version = sml_v
-              break
-            end
-          end
-
-          break
-        end
-      end
-      raise "Text too long" unless segments && version
-
-      {segments, version}
-    end
-
-    # Returns a tuple of the optimized segments and Micro QR Code version
-    # for the given text and error correction level.
-    def segment_text_optimized_mqr(text : String, ecl : ECC::Level) : Tuple(Array(Segment), MQR::Version)
-      chars = text.chars
-      segments, version = nil, nil
-
-      # The number of the character count indicator bits which affect
-      # the result of segmentation changes every version, so we calculate
-      # the segments in each version and see if they fit in that version
-      (MQR::Version::MIN..MQR::Version::MAX).each do |i|
-        v = MQR::Version.new(i)
-        char_modes = compute_char_modes(chars, v)
-        segments = make_segments(text, char_modes)
-
-        cap_bits = v.max_data_bits(ecl)
-        begin
-          used_bits = Segment.count_total_bits(segments, v)
-        rescue e
-          next if e.message == "Invalid segment"
-          next if e.message == "Segment too long"
-          raise e
-        end
-
-        # If it's within the bound, that is the optimal segmentation and version
-        if used_bits <= cap_bits
-          version = v
-          break
-        end
-      end
-      raise "Text too long" unless segments && version
-
-      {segments, version}
-    end
-
-    # Returns a tuple of the optimized segments and rMQR Code version
-    # for the given text and error correction level.
-    def segment_text_optimized_rmqr(text : String, ecl : ECC::Level, strategy : RMQR::SizingStrategy) : Tuple(Array(Segment), RMQR::Version)
-      chars = text.chars
-      segments, version = nil, nil
-
-      # The number of the character count indicator bits which affect
-      # the result of segmentation changes every version, so we calculate
-      # the segments in each version and see if they fit in that version
-      RMQR::Version::ORDERED[strategy.value].each do |vv|
-        v = RMQR::Version.new(vv)
-        char_modes = compute_char_modes(chars, v)
-        segments = make_segments(text, char_modes)
-
-        cap_bits = v.max_data_bits(ecl)
-        begin
-          used_bits = Segment.count_total_bits(segments, v)
-        rescue e
-          next if e.message == "Segment too long"
-          raise e
-        end
-
-        # If it's within the bound, that is the optimal segmentation and version
-        if used_bits <= cap_bits
-          version = v
-          break
-        end
-      end
-      raise "Text too long" unless segments && version
-
-      {segments, version}
-    end
-
     # Makes a list of the best encoding mode for the each given character
     # by dynamic programming algorithm. The code is based on:
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
-    private def compute_char_modes(chars : Array(Char), version : AbstractQR::Version)
+    protected def self.compute_char_modes(chars : Array(Char), version : AbstractQR::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
 
       head_costs = modes.map do |m|
@@ -192,7 +79,7 @@ struct Goban::Segment
     end
 
     # Converts a list of encoding modes for each character to an actual segment objects.
-    private def make_segments(text : String, char_modes : Array(Segment::Mode))
+    protected def self.make_segments(text : String, char_modes : Array(Segment::Mode))
       raise "Text size does not match the char modes" if text.size != char_modes.size
 
       result = [] of Segment
