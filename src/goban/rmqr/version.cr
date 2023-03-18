@@ -1,5 +1,3 @@
-require "../abstract/version"
-
 struct Goban::RMQR < Goban::AbstractQR
   enum VersionValue : UInt8
     R7x43   = 0b00000
