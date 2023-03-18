@@ -1,3 +1,4 @@
+require "./abstract/*"
 require "./qr/*"
 require "./ecc/*"
 
