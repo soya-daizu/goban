@@ -121,8 +121,7 @@ struct Goban::QR < Goban::AbstractQR
       bit_stream.append_terminator_bits(version, ecl)
       bit_stream.append_padding_bits(version)
 
-      data_codewords = ECC::RSGenerator.add_ec_codewords(bit_stream.to_bytes, version, ecl)
-      puts data_codewords
+      data_codewords = ECC::RSInflator.inflate_codewords(bit_stream.to_bytes, version, ecl)
 
       size = version.symbol_size
       canvas = Matrix(UInt8).new(size, size, 0)
