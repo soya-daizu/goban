@@ -35,7 +35,7 @@ module Goban::ECC
 
         ecc = self.poly_div(data, gen_poly)
         ec_block_size.times do |j|
-          result[i + data_size + ec_blocks_count*j] = ecc[j]
+          result[i + codewords.size + ec_blocks_count*j] = ecc[j]
         end
       end
 
