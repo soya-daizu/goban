@@ -14,7 +14,6 @@ jobs:
       image: crystallang/crystal
     steps:
     - uses: actions/checkout@v3
-    - uses: crystal-lang/install-crystal@v1
     - name: Install dependencies
       run: shards install
     - name: Build documentation
