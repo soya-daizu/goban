@@ -67,7 +67,7 @@ module Goban
       return if short_pad
 
       while @tail_idx % 8 != 0
-        push(false)
+        self.push(false)
       end
 
       while @tail_idx < @size
