@@ -1,21 +1,23 @@
 struct Goban::MQR < Goban::AbstractQR
   module Encoder
+    extend self
+
     # Creates a new Micro QR Code object for the given string and error correction level.
     #
     # Note that Micro QR Codes have limited EC levels you can select depending on the length
     # of the text. In version M1, the EC level passed will just be ignored.
     #
     # See `QR.encode_string` for more information.
-    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
-      segments, version = self.determine_version_and_segments(text, ecl)
-      self.encode_segments(segments, ecl, version)
+    def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
+      segments, version = determine_version_and_segments(text, ecl)
+      encode_segments(segments, ecl, version)
     end
 
     # Creates a new Micro QR Code object for the given data segments, error correction level, and
     # Micro QR Code version that is large enough to contain all the data in the segments.
     #
     # See `QR.encode_segments` for more information.
-    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
+    def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
       bit_stream = BitStream.new(version.max_data_bits(ecl))
       segments.each do |segment|
@@ -38,7 +40,7 @@ struct Goban::MQR < Goban::AbstractQR
 
     # Returns a tuple of the optimized segments and Micro QR Code version
     # for the given text and error correction level.
-    def self.determine_version_and_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), Version)
+    def determine_version_and_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), Version)
       chars = text.chars
       segments, version = nil, nil
 

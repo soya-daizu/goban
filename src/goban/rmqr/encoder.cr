@@ -1,5 +1,7 @@
 struct Goban::RMQR < Goban::AbstractQR
   module Encoder
+    extend self
+
     enum SizingStrategy : UInt8
       MinimizeArea
       MinimizeWidth
@@ -15,16 +17,16 @@ struct Goban::RMQR < Goban::AbstractQR
     # keeping the total area as small as possible.
     #
     # See `QR.encode_string` for more information.
-    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium, strategy : SizingStrategy = SizingStrategy::MinimizeArea)
-      segments, version = self.determine_version_and_segments(text, ecl, strategy)
-      self.encode_segments(segments, ecl, version)
+    def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium, strategy : SizingStrategy = SizingStrategy::MinimizeArea)
+      segments, version = determine_version_and_segments(text, ecl, strategy)
+      encode_segments(segments, ecl, version)
     end
 
     # Creates a new rMQR Code object for the given data segments, error correction level, and
     # rMQR Code version that is large enough to contain all the data in the segments.
     #
     # See `QR.encode_segments` for more information.
-    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | VersionValue)
+    def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | VersionValue)
       raise "Unsupported EC Level" unless ecl.medium? || ecl.high?
 
       version = Version.new(version.value)
@@ -49,7 +51,7 @@ struct Goban::RMQR < Goban::AbstractQR
 
     # Returns a tuple of the optimized segments and rMQR Code version
     # for the given text and error correction level.
-    def self.determine_version_and_segments(text : String, ecl : ECC::Level, strategy : SizingStrategy) : Tuple(Array(Segment), RMQR::Version)
+    def determine_version_and_segments(text : String, ecl : ECC::Level, strategy : SizingStrategy) : Tuple(Array(Segment), RMQR::Version)
       chars = text.chars
       segments, version = nil, nil
 
