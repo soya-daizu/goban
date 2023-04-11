@@ -1,5 +1,7 @@
 struct Goban::QR < Goban::AbstractQR
   module Encoder
+    extend self
+
     # Creates a new QR Code object for the given string and error correction level.
     # Setting a higher error correction level makes the QR Code symbol mode resistant
     # to loss of pixels, but it requires more redundant bits, resulting in a larger
@@ -68,9 +70,9 @@ struct Goban::QR < Goban::AbstractQR
     # The optimal segments and version to hard-code can be figured out by manually executing
     # `Segment::Segmenter.segment_text_optimized_qr`. You can hard-code the segments and version based on
     # its response, and use `QR.encode_segments` to create QR Codes using that segments and version.
-    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
-      segments, version = self.determine_version_and_segments(text, ecl)
-      self.encode_segments(segments, ecl, version)
+    def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
+      segments, version = determine_version_and_segments(text, ecl)
+      encode_segments(segments, ecl, version)
     end
 
     # Creates a new QR Code object for the given data segments, error correction level, and QR Code
@@ -112,7 +114,7 @@ struct Goban::QR < Goban::AbstractQR
     # When constructing your own segments, note that it may not result in the segments that has the
     # shortest data length even if for each character in the source string you choose an encoding type
     # with the smallest character set that supports that supports it.
-    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
+    def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
       bit_stream = BitStream.new(version.max_data_bits(ecl))
       segments.each do |segment|
@@ -135,7 +137,7 @@ struct Goban::QR < Goban::AbstractQR
 
     # Returns a tuple of the optimized segments and QR Code version
     # for the given text and error correction level.
-    def self.determine_version_and_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
+    def determine_version_and_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
       chars = text.chars
       segments, version = nil, nil
 

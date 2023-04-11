@@ -1,5 +1,7 @@
 struct Goban::QR < Goban::AbstractQR
   module Decoder
+    extend self
+
     class VersionMismatchError < Exception
       getter actual_version : Int32
 
@@ -7,19 +9,20 @@ struct Goban::QR < Goban::AbstractQR
       end
     end
 
-    def self.decode(matrix : Matrix(UInt8))
-      version = self.read_version(matrix)
+    def decode(matrix : Matrix(UInt8))
+      version = read_version(matrix)
       raise "Invalid version" unless (Version::MIN..Version::MAX).includes?(version)
-      mask, ecl = self.read_format(matrix)
+      mask, ecl = read_format(matrix)
 
       CanvasDrawer.draw_function_patterns(matrix, version)
       mask.apply_to(matrix)
 
-      data_codewords = self.read_data_codewords(matrix, version)
-      puts data_codewords
+      data_codewords = read_data_codewords(matrix, version)
+
+      blocks = ECC::RSDeflator.deflate_codewords(data_codewords, version, ecl)
     end
 
-    private def self.read_version(matrix : Matrix(UInt8))
+    private def read_version(matrix : Matrix(UInt8))
       size = matrix.size_x
       v = (size - 17) // 4 # Version estimated from the matrix size
       return Version.new(v) if v < 7
@@ -32,7 +35,6 @@ struct Goban::QR < Goban::AbstractQR
         v1_bits = (v1_bits << 1) | matrix[x, y]
         v2_bits = (v2_bits << 1) | matrix[y, x]
       end
-      puts v1_bits.to_s(2).rjust(18, '0'), v2_bits.to_s(2).rjust(18, '0')
 
       v1_best, v1_best_diff = 0, 18
       v2_best, v2_best_diff = 0, 18
@@ -51,8 +53,6 @@ struct Goban::QR < Goban::AbstractQR
           v2_best_diff = v2_diff
         end
       end
-      puts({v1_best, v1_best_diff})
-      puts({v2_best, v2_best_diff})
 
       raise "Unable to read version" if v1_best_diff > 3 && v2_best_diff > 3
 
@@ -62,7 +62,7 @@ struct Goban::QR < Goban::AbstractQR
       Version.new(actual_version)
     end
 
-    private def self.read_format(matrix : Matrix(UInt8))
+    private def read_format(matrix : Matrix(UInt8))
       size = matrix.size_x
 
       f1_bits, f2_bits = 0, 0
@@ -78,7 +78,6 @@ struct Goban::QR < Goban::AbstractQR
         pos = size - 1 - i
         f2_bits = (f2_bits << 1) | matrix[pos, 8]
       end
-      puts f1_bits.to_s(2).rjust(15, '0'), f2_bits.to_s(2).rjust(15, '0')
 
       f1_best, f1_best_diff = nil, 15
       f2_best, f2_best_diff = nil, 15
@@ -101,8 +100,6 @@ struct Goban::QR < Goban::AbstractQR
           end
         end
       end
-      puts({f1_best, f1_best_diff})
-      puts({f2_best, f2_best_diff})
 
       raise "Unable to read format information" if (f1_best_diff > 3 && f2_best_diff > 3) ||
                                                    !f1_best || !f2_best
@@ -110,7 +107,7 @@ struct Goban::QR < Goban::AbstractQR
       f1_best_diff <= f2_best_diff ? f1_best : f2_best
     end
 
-    private def self.read_data_codewords(matrix : Matrix(UInt8), version : Version)
+    private def read_data_codewords(matrix : Matrix(UInt8), version : Version)
       size = matrix.size
       data_codewords = Slice(UInt8).new(version.raw_max_data_codewords, 0)
       data_length = data_codewords.size * 8
@@ -141,7 +138,7 @@ struct Goban::QR < Goban::AbstractQR
       data_codewords
     end
 
-    private def self.count_diff(x : Int, y : Int)
+    private def count_diff(x : Int, y : Int)
       z, count = (x ^ y), 0
       while z > 0
         z &= z - 1
