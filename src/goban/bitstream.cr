@@ -39,7 +39,7 @@ module Goban
 
     private def append_bit_stream(bs : BitStream)
       bs.each do |bit|
-        push(bit)
+        self.push(bit)
       end
     end
 
@@ -82,17 +82,19 @@ module Goban
 
       raise "Value out of range" unless (0..31).includes?(len) && val >> len == 0
       (0..len - 1).reverse_each do |i|
-        push((val >> i).to_u8! & 1 != 0)
+        self.push((val >> i).to_u8! & 1 != 0)
       end
     end
 
     protected def unsafe_fetch(index : Int) : Bool
       bit_idx, sub_idx = index.divmod(8)
+      sub_idx = 7 - sub_idx
       (@bits[bit_idx] & (1 << sub_idx)) > 0
     end
 
     protected def unsafe_put(index : Int, value : Bool)
       bit_idx, sub_idx = index.divmod(8)
+      sub_idx = 7 - sub_idx
       if value
         @bits[bit_idx] |= 1 << sub_idx
       else
@@ -114,23 +116,14 @@ module Goban
     end
 
     protected def to_bytes
-      results = Slice(UInt8).new(malloc_size)
-      byte_value = 0_u8
-      each_with_index do |bit, idx|
-        bit = bit ? 1 : 0
-        byte_value = (byte_value << 1) | bit
-        results[idx // 8] = byte_value if idx % 8 == 7
-      end
-      results[@size // 8] = byte_value << (8 - (@size % 8)) if @size % 8 != 0
-
-      results
+      @bits.to_slice(malloc_size)
     end
 
-    def to_s(io : IO)
+    def inspect(io : IO)
       io << "Goban::BitStream(@tail_idx=" << @tail_idx
       io << ", @bits=["
       idx = 0
-      each_slice(4) do |bits|
+      self.each_slice(4) do |bits|
         io << ' ' unless idx == 0
         bits.each do |bit|
           io << '\'' if idx == @tail_idx
@@ -143,7 +136,7 @@ module Goban
 
     def <=>(other : BitStream)
       min_size = Math.min(size, other.size)
-      0.upto(min_size - 1) do |i|
+      (0...min_size).each do |i|
         return nil if self[i] != other[i]
       end
       size <=> other.size
@@ -157,7 +150,8 @@ module Goban
       idx = check_index_out_of_bounds(idx) do
         return yield
       end
-      idx.divmod(8)
+      bit_idx, sub_idx = idx.divmod(8)
+      {bit_idx, 7 - sub_idx}
     end
 
     private def malloc_size
