@@ -63,9 +63,6 @@ module Goban::ECC
       result = Slice(UInt8).new(raw_codewords_count)
 
       data = codewords
-      # Version M1 and M3 have a shorter last codeword of 4 bits,
-      # so we are shifting it by four here
-      data[data.size - 1] >>= 4 if version == 1 || version == 3
       data.copy_to(result)
 
       data_poly = GFPoly.new(data)

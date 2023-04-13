@@ -64,11 +64,16 @@ module Goban
     end
 
     protected def append_padding_bits(version : AbstractQR::Version)
-      # In the version M1 and M3, we need to use the shorter padding bits 0000 to fill
-      # the rest of the data stream, but the data stream is already filled with zeros,
-      # so there's nothing more to do here
+      # In version M1 and M3, we need to use shorter padding bits 0000,
+      # but since the data stream is already filled with zeros, there's nothing more to append
       short_pad = typeof(version) == MQR::Version && (version == 1 || version == 3)
-      return if short_pad
+      if short_pad
+        # Version M1 and M3 have a shorter last codeword of 4 bits
+        # (for a total of 8 bits including the padding bits 0000),
+        # so we are shifting them to the right by four here
+        @bits[@write_pos - 1] >>= 4
+        return
+      end
 
       while @write_pos % 8 != 0
         self.push(false)
@@ -122,7 +127,7 @@ module Goban
     end
 
     protected def to_bytes
-      @bits.to_slice(malloc_size)
+      Slice(UInt8).new(@bits, malloc_size, read_only: true)
     end
 
     def inspect(io : IO)
