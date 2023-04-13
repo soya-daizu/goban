@@ -12,7 +12,7 @@ module Goban::ECC
       first_non_zero = @data.index { |v| v != 0 }
       if !first_non_zero
         @data = Slice[0_u8]
-      elsif first_non_zero.not_nil! > 0
+      elsif first_non_zero > 0
         @data = @data[first_non_zero..]
       end
     end
