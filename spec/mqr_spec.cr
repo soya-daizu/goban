@@ -45,5 +45,30 @@ module Goban
         rows.should eq(SAMPLE_RESULT_MODS_MQR)
       end
     end
+
+    describe ".draw_data_codewords" do
+      it "fills codewords properly" do
+        version = MQR::Version.new(1)
+        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas[3, 3, 3, 3] = 0xc0
+
+        codewords = Slice(UInt8).new(11 ** 2 // 8, 154)
+        MQR::Encoder.draw_codewords(canvas, codewords, version, ECC::Level::Low)
+        canvas.normalize
+
+        rows = convert_canvas(canvas)
+        rows.should eq(CODEWORDS_FILL_MODS_MQR)
+      end
+    end
+
+    describe ".apply_best_mask" do
+      it "applies best mask" do
+        version = MQR::Version.new(1)
+        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas.data.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
+
+        MQR::Encoder.apply_best_mask(canvas, version, ECC::Level::Low)[0].value.should eq(3)
+      end
+    end
   end
 end

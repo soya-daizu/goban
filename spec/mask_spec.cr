@@ -6,7 +6,7 @@ module Goban
       it "reports correct score" do
         version = QR::Version.new(1)
         canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
-        QR::CanvasDrawer.draw_function_patterns(canvas, version)
+        QR::Template.draw_function_patterns(canvas, version)
 
         expected = 283 + 283 + 711 + 360 + 360 + 50 # = 2047
         QR::Mask.evaluate_score(canvas).should eq(expected)
