@@ -114,13 +114,7 @@ module Goban
     # Adds a value to the current tail of the array.
     private def push(value : Bool)
       raise "Can't write to a read-only bit stream" if read_only
-      bit_idx, sub_idx = bit_idx_and_sub_idx(@write_pos)
-      sub_idx = 7 - sub_idx
-      if value
-        @bits[bit_idx] |= 1 << sub_idx
-      else
-        @bits[bit_idx] &= ~(1 << sub_idx)
-      end
+      self[@write_pos] = value
       @write_pos += 1
 
       value
@@ -151,17 +145,6 @@ module Goban
         return nil if self[i] != other[i]
       end
       size <=> other.size
-    end
-
-    private def bit_idx_and_sub_idx(idx)
-      bit_idx_and_sub_idx(idx) { raise IndexError.new }
-    end
-
-    private def bit_idx_and_sub_idx(idx)
-      idx = check_index_out_of_bounds(idx) do
-        return yield
-      end
-      idx.divmod(8)
     end
 
     private def malloc_size
