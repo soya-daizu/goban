@@ -37,13 +37,11 @@ struct Goban::RMQR < Goban::AbstractQR
       bit_stream.append_terminator_bits(version, ecl)
       bit_stream.append_padding_bits(version)
 
-      data_codewords = ECC::RSInflator.inflate_codewords(bit_stream.to_bytes, version, ecl)
+      codewords = ECC::RSInflator.inflate_codewords(bit_stream.to_bytes, version, ecl)
 
-      size = version.symbol_size
-      canvas = Matrix(UInt8).new(size.width, size.height, 0)
-      CanvasDrawer.draw_function_patterns(canvas, version, ecl)
-      CanvasDrawer.draw_data_codewords(canvas, data_codewords)
-      mask, canvas = CanvasDrawer.apply_mask(canvas)
+      canvas = Template.make_canvas(version, ecl)
+      self.draw_codewords(canvas, codewords)
+      mask, canvas = self.apply_mask(canvas)
       canvas.normalize
 
       RMQR.new(version, ecl, canvas)
@@ -80,6 +78,39 @@ struct Goban::RMQR < Goban::AbstractQR
       raise "Text too long" unless segments && version
 
       {segments, version}
+    end
+
+    protected def draw_codewords(canvas : Matrix(UInt8), codewords : Slice(UInt8))
+      width, height = canvas.size_x, canvas.size_y
+      data_length = codewords.size * 8
+
+      i = 0
+      upward = true            # Current filling direction
+      base_x = width - 2 # Zig zag filling starts from bottom right
+      while base_x > 1
+        (0...height).reverse_each do |base_y|
+          (0..1).each do |alt|
+            x = base_x - alt
+            y = upward ? base_y : height - 1 - base_y
+            next if canvas[x, y] & 0x80 > 0
+            return if i >= data_length
+
+            bit = codewords[i >> 3].bit(7 - i & 7)
+            canvas[x, y] = bit
+            i += 1
+          end
+        end
+
+        upward = !upward
+        base_x -= 2
+      end
+    end
+
+    protected def apply_mask(canvas : Matrix(UInt8))
+      mask = Mask.new
+      mask.apply_to(canvas)
+
+      {mask, canvas}
     end
   end
 end
