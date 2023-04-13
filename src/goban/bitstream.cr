@@ -26,6 +26,12 @@ module Goban
       @read_only = false
     end
 
+    def initialize(bytes : Slice(UInt8))
+      @size = bytes.size * 8
+      @bits = bytes.to_unsafe
+      @read_only = true
+    end
+
     protected def append_segment_bits(segment : Segment, version : AbstractQR::Version)
       indicator = segment.mode.indicator(version)
       indicator_length = version.mode_indicator_length
@@ -91,11 +97,24 @@ module Goban
 
       raise "Too many bits to append" unless (0..31).includes?(len) && val >> len == 0
       (0...len).reverse_each do |i|
-        self.push((val >> i).to_u8! & 1 != 0)
+        self.push((val >> i) & 1 != 0)
       end
     end
 
-    protected def unsafe_fetch(index : Int) : Bool
+    protected def read_bits(len : Int)
+      raise "Too many bits to read" unless (0..31).includes?(len) && @read_pos + len < @size
+
+      result = 0_u32
+      len.times do |i|
+        bit = self[@read_pos] ? 1 : 0
+        result = (result << 1) | bit
+        @read_pos += 1
+      end
+
+      result
+    end
+
+    protected def unsafe_fetch(index : Int)
       bit_idx, sub_idx = index.divmod(8)
       sub_idx = 7 - sub_idx
       (@bits[bit_idx] & (1 << sub_idx)) > 0
