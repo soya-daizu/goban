@@ -27,9 +27,11 @@ module Goban::ECC
         end
 
         corrected = self.decode_block(unweaved, data_size, ec_block_size)
-        result[k, data_size].copy_from(corrected) if corrected
+        result[k, data_size].copy_from(corrected)
         k += data_size
       end
+
+      result
     end
 
     private def decode_block(data : Slice(UInt8), data_size : Int, ec_block_size : Int)
@@ -40,7 +42,7 @@ module Goban::ECC
         data_poly.eval(GF.pow(2_u8, (ec_block_size - 1 - i).to_u8))
       end
       has_no_err = syndromes.all?(0)
-      return if has_no_err
+      return data if has_no_err
 
       syndromes = GFPoly.new(syndromes)
       err_locator, err_evaluator = euclidean(syndromes, ec_block_size)
