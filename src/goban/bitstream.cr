@@ -9,9 +9,12 @@ module Goban
     getter bits : Pointer(UInt8)
     # Size of the array.
     getter size : Int32
-    # Current tail index of the array. This increases as
-    # more bits are added to itself.
-    getter tail_idx = 0
+    # Current tail index of the writer. This increases as more bits are written.
+    getter write_pos = 0
+    # Current tail index of the reader. This increases as more bits are read.
+    getter read_pos = 0
+    # Whether this bit stream is read-only.
+    getter read_only : Bool
 
     PAD0 = 0b1110_1100
     PAD1 = 0b0001_0001
@@ -20,6 +23,7 @@ module Goban
       raise "Negative bit stream size: #{size}" if size < 0
       @size = size.to_i
       @bits = Pointer(UInt8).malloc(malloc_size, 0)
+      @read_only = false
     end
 
     protected def append_segment_bits(segment : Segment, version : AbstractQR::Version)
@@ -55,7 +59,7 @@ module Goban
       else
         raise "Invalid QR version"
       end
-      terminator_bits_size = Math.min(base, cap_bits - @tail_idx)
+      terminator_bits_size = Math.min(base, cap_bits - @write_pos)
       push_bits(0, terminator_bits_size)
     end
 
@@ -66,11 +70,11 @@ module Goban
       short_pad = typeof(version) == MQR::Version && (version == 1 || version == 3)
       return if short_pad
 
-      while @tail_idx % 8 != 0
+      while @write_pos % 8 != 0
         self.push(false)
       end
 
-      while @tail_idx < @size
+      while @write_pos < @size
         push_bits(PAD0, 8)
         push_bits(PAD1, 8) if @write_pos < @size
       end
@@ -80,8 +84,8 @@ module Goban
       return if !val || !len
       return if len == 0
 
-      raise "Value out of range" unless (0..31).includes?(len) && val >> len == 0
-      (0..len - 1).reverse_each do |i|
+      raise "Too many bits to append" unless (0..31).includes?(len) && val >> len == 0
+      (0...len).reverse_each do |i|
         self.push((val >> i).to_u8! & 1 != 0)
       end
     end
@@ -104,13 +108,15 @@ module Goban
 
     # Adds a value to the current tail of the array.
     private def push(value : Bool)
-      bit_idx, sub_idx = bit_idx_and_sub_idx(@tail_idx)
+      raise "Can't write to a read-only bit stream" if read_only
+      bit_idx, sub_idx = bit_idx_and_sub_idx(@write_pos)
+      sub_idx = 7 - sub_idx
       if value
         @bits[bit_idx] |= 1 << sub_idx
       else
         @bits[bit_idx] &= ~(1 << sub_idx)
       end
-      @tail_idx += 1
+      @write_pos += 1
 
       value
     end
@@ -120,13 +126,13 @@ module Goban
     end
 
     def inspect(io : IO)
-      io << "Goban::BitStream(@tail_idx=" << @tail_idx
+      io << "Goban::BitStream(@write_pos=" << @write_pos
       io << ", @bits=["
       idx = 0
       self.each_slice(4) do |bits|
         io << ' ' unless idx == 0
         bits.each do |bit|
-          io << '\'' if idx == @tail_idx
+          io << '\'' if idx == @write_pos
           io << (bit ? '1' : '0')
           idx += 1
         end
@@ -150,8 +156,7 @@ module Goban
       idx = check_index_out_of_bounds(idx) do
         return yield
       end
-      bit_idx, sub_idx = idx.divmod(8)
-      {bit_idx, 7 - sub_idx}
+      idx.divmod(8)
     end
 
     private def malloc_size
