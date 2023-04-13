@@ -32,8 +32,8 @@ module Goban
       raise "Invalid segment" if !cci_bits_count
       raise "Text too long" if indicator_length + cci_bits_count + segment.bit_stream.size > size
 
-      append_bits(indicator, indicator_length)
-      append_bits(cci_bits, cci_bits_count)
+      push_bits(indicator, indicator_length)
+      push_bits(cci_bits, cci_bits_count)
       append_bit_stream(segment.bit_stream)
     end
 
@@ -56,7 +56,7 @@ module Goban
         raise "Invalid QR version"
       end
       terminator_bits_size = Math.min(base, cap_bits - @tail_idx)
-      append_bits(0, terminator_bits_size)
+      push_bits(0, terminator_bits_size)
     end
 
     protected def append_padding_bits(version : AbstractQR::Version)
@@ -71,12 +71,12 @@ module Goban
       end
 
       while @tail_idx < @size
-        append_bits(PAD0, 8)
-        append_bits(PAD1, 8) if @tail_idx < @size
+        push_bits(PAD0, 8)
+        push_bits(PAD1, 8) if @write_pos < @size
       end
     end
 
-    protected def append_bits(val : Int?, len : Int?)
+    protected def push_bits(val : Int?, len : Int?)
       return if !val || !len
       return if len == 0
 

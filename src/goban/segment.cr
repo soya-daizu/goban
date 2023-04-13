@@ -36,7 +36,7 @@ module Goban
       segment = self.new(Segment::Mode::Numeric, digits.size, bit_stream)
       digits.each_slice(3) do |slice|
         val = slice.join.to_u32
-        bit_stream.append_bits(val, slice.size * 3 + 1)
+        bit_stream.push_bits(val, slice.size * 3 + 1)
       end
 
       segment
@@ -59,7 +59,7 @@ module Goban
           size = 11
         end
 
-        bit_stream.append_bits(val, size)
+        bit_stream.push_bits(val, size)
       end
 
       segment
@@ -71,7 +71,7 @@ module Goban
       bit_stream = BitStream.new(bytes.size * 8)
       segment = self.new(Segment::Mode::Byte, bytes.size, bit_stream)
       bytes.each do |byte|
-        bit_stream.append_bits(byte, 8)
+        bit_stream.push_bits(byte, 8)
       end
 
       segment
@@ -105,7 +105,7 @@ module Goban
         end
         val = (val >> 8) * 0xc0 + (val & 0xff)
 
-        bit_stream.append_bits(val, 13)
+        bit_stream.push_bits(val, 13)
       end
 
       segment
