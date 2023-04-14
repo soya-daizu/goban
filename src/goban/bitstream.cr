@@ -40,16 +40,13 @@ module Goban
       cci_bits_count = segment.mode.cci_bits_count(version)
 
       raise "Invalid segment" if !cci_bits_count
-      raise "Text too long" if indicator_length + cci_bits_count + segment.bit_stream.size > size
+      raise "Text too long" if indicator_length + cci_bits_count + segment.bit_size > size
 
       push_bits(indicator, indicator_length)
       push_bits(cci_bits, cci_bits_count)
-      append_bit_stream(segment.bit_stream)
-    end
 
-    private def append_bit_stream(bs : BitStream)
-      bs.each do |bit|
-        self.push(bit)
+      segment.produce_bits do |val, len|
+        push_bits(val, len)
       end
     end
 

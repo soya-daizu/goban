@@ -5,11 +5,12 @@ module Goban
   struct Segment
     getter mode : Mode
     getter char_count : Int32
-    getter bit_stream : BitStream
+    getter text : String
+    getter bit_size : Int32
 
     ALPHANUMERIC_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
 
-    private def initialize(@mode, @char_count, @bit_stream)
+    private def initialize(@mode, @char_count, @text, @bit_size)
     end
 
     def self.new(mode : Mode, text : String)
@@ -29,27 +30,65 @@ module Goban
 
     # Shorthand method for creating a Numeric mode segment.
     def self.numeric(text : String)
-      digits = text.chars
-      raise "Numeric data contains non-numeric characters" unless digits.all?(&.ascii_number?)
+      raise "Numeric data contains non-numeric characters" unless text.each_char.all?(&.ascii_number?)
 
-      bit_stream = BitStream.new(digits.size * 3 + (digits.size + 2) // 3)
-      segment = self.new(Segment::Mode::Numeric, digits.size, bit_stream)
-      digits.each_slice(3) do |slice|
-        val = slice.join.to_u32
-        bit_stream.push_bits(val, slice.size * 3 + 1)
-      end
-
-      segment
+      bit_size = text.size * 3 + (text.size + 2) // 3
+      self.new(Segment::Mode::Numeric, text.size, text, bit_size)
     end
 
     # Shorthand method for creating a Alphanumeric mode segment.
     def self.alphanumeric(text : String)
-      chars = text.chars.map do |c|
-        ALPHANUMERIC_CHARS.index(c) || raise "Alphanumeric data contains unencodable characters"
+      is_all_alphanumeric = text.each_char.all? do |c|
+        ALPHANUMERIC_CHARS.index(c)
+      end
+      raise "Alphanumeric data contains unencodable characters" unless is_all_alphanumeric
+
+      bit_size = text.size * 5 + (text.size + 1) // 2
+      self.new(Segment::Mode::Alphanumeric, text.size, text, bit_size)
+    end
+
+    # Shorthand method for creating a Byte mode segment.
+    def self.byte(text : String)
+      self.new(Segment::Mode::Byte, text.bytesize, text, text.bytesize * 8)
+    end
+
+    # Shorthand method for creating a Kanji mode segment.
+    def self.kanji(text : String)
+      bytes = text.encode("SHIFT_JIS")
+      raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
+
+      bit_size = bytes.size // 2 * 13
+      segment = self.new(Segment::Mode::Kanji, text.size, text, bit_size)
+    end
+
+    protected def produce_bits(&block : (Int32 | UInt8 | UInt16), Int32 ->)
+      case @mode
+      when .numeric?
+        produce_bits_numeric
+      when .alphanumeric?
+        produce_bits_alphanumeric
+      when .byte?
+        produce_bits_byte
+      when .kanji?
+        produce_bits_kanji
+      else
+        raise "Unsupported mode"
+      end
+    end
+
+    private macro produce_bits_numeric
+      text.each_char.each_slice(3, reuse: true) do |slice|
+        val = slice.join.to_i
+        size = slice.size * 3 + 1
+        yield val, size
+      end
+    end
+
+    private macro produce_bits_alphanumeric
+      chars = text.each_char.map do |c|
+        ALPHANUMERIC_CHARS.index!(c)
       end
 
-      bit_stream = BitStream.new(chars.size * 5 + (chars.size + 1) // 2)
-      segment = self.new(Segment::Mode::Alphanumeric, chars.size, bit_stream)
       chars.each_slice(2) do |slice|
         if slice.size == 1
           val = slice[0]
@@ -59,33 +98,20 @@ module Goban
           size = 11
         end
 
-        bit_stream.push_bits(val, size)
+        yield val, size
       end
-
-      segment
     end
 
-    # Shorthand method for creating a Byte mode segment.
-    def self.byte(text : String)
-      bytes = text.bytes
-      bit_stream = BitStream.new(bytes.size * 8)
-      segment = self.new(Segment::Mode::Byte, bytes.size, bit_stream)
-      bytes.each do |byte|
-        bit_stream.push_bits(byte, 8)
+    private macro produce_bits_byte
+      text.each_byte do |byte|
+        yield byte, 8
       end
-
-      segment
     end
 
-    # Shorthand method for creating a Kanji mode segment.
-    def self.kanji(text : String)
+    private macro produce_bits_kanji
       # In accordance to JIS X 0208, this doesn't include
       # extended characters as in CP932 or other variants
       bytes = text.encode("SHIFT_JIS")
-      raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
-      bit_stream = BitStream.new(bytes.size // 2 * 13)
-      segment = self.new(Segment::Mode::Kanji, text.size, bit_stream)
-
       bytes.each_slice(2).each do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
@@ -105,10 +131,8 @@ module Goban
         end
         val = (val >> 8) * 0xc0 + (val & 0xff)
 
-        bit_stream.push_bits(val, 13)
+        yield val, 13
       end
-
-      segment
     end
 
     # Count number of bits in the given list of segments.
@@ -118,7 +142,7 @@ module Goban
         cci_bits_count = segment.mode.cci_bits_count(version)
         raise "Invalid segment" if !cci_bits_count
         raise "Segment too long" if segment.char_count >= (1 << cci_bits_count)
-        result += 4 + cci_bits_count + segment.bit_stream.size
+        result += 4 + cci_bits_count + segment.bit_size
       end
       result
     end
