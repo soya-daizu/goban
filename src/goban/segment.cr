@@ -77,7 +77,7 @@ module Goban
     end
 
     private macro produce_bits_numeric
-      text.each_char.each_slice(3, reuse: true) do |slice|
+      @text.each_char.each_slice(3, reuse: true) do |slice|
         val = slice.join.to_i
         size = slice.size * 3 + 1
         yield val, size
@@ -85,7 +85,7 @@ module Goban
     end
 
     private macro produce_bits_alphanumeric
-      chars = text.each_char.map do |c|
+      chars = @text.each_char.map do |c|
         ALPHANUMERIC_CHARS.index!(c)
       end
 
@@ -103,7 +103,7 @@ module Goban
     end
 
     private macro produce_bits_byte
-      text.each_byte do |byte|
+      @text.each_byte do |byte|
         yield byte, 8
       end
     end
@@ -111,7 +111,7 @@ module Goban
     private macro produce_bits_kanji
       # In accordance to JIS X 0208, this doesn't include
       # extended characters as in CP932 or other variants
-      bytes = text.encode("SHIFT_JIS")
+      bytes = @text.encode("SHIFT_JIS")
       bytes.each_slice(2, reuse: true) do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
