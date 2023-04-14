@@ -10,7 +10,11 @@ module Goban
       end
 
       it "encodes properly" do
-        bit_str = convert_bit_stream(segment.bit_stream)
+        bit_stream = BitStream.new(segment.bit_size)
+        segment.produce_bits do |val, len|
+          bit_stream.push_bits(val, len)
+        end
+        bit_str = convert_bit_stream(bit_stream)
         bit_str.should eq("0000001100010101100110101001101001")
       end
     end
@@ -23,7 +27,11 @@ module Goban
       end
 
       it "encodes properly" do
-        bit_str = convert_bit_stream(segment.bit_stream)
+        bit_stream = BitStream.new(segment.bit_size)
+        segment.produce_bits do |val, len|
+          bit_stream.push_bits(val, len)
+        end
+        bit_str = convert_bit_stream(bit_stream)
         bit_str.should eq("001110011010100010100101010000101")
       end
     end
@@ -36,7 +44,11 @@ module Goban
       end
 
       it "encodes properly" do
-        bit_str = convert_bit_stream(segment.bit_stream)
+        bit_stream = BitStream.new(segment.bit_size)
+        segment.produce_bits do |val, len|
+          bit_stream.push_bits(val, len)
+        end
+        bit_str = convert_bit_stream(bit_stream)
         bit_str.should eq("01100001110100001000100111101100100111001000011111110000100111111001100010110001")
       end
     end
@@ -49,7 +61,11 @@ module Goban
       end
 
       it "encodes properly" do
-        bit_str = convert_bit_stream(segment.bit_stream)
+        bit_stream = BitStream.new(segment.bit_size)
+        segment.produce_bits do |val, len|
+          bit_stream.push_bits(val, len)
+        end
+        bit_str = convert_bit_stream(bit_stream)
         bit_str.should eq("01011100001010101110101111000010100110010000000000100101011010111")
       end
     end
