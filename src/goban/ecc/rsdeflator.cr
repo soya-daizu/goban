@@ -8,15 +8,16 @@ module Goban::ECC
       ec_blocks_count = EC_BLOCKS_QR[ecl.to_s][version.to_i]
       ec_block_size = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i]
 
-      raw_codewords_count = version.raw_data_mods_count // 8
+      raw_codewords_count = version.raw_max_data_codewords
       short_blocks_count = ec_blocks_count - raw_codewords_count % ec_blocks_count
       short_block_size = raw_codewords_count // ec_blocks_count
 
       result = Slice(UInt8).new(raw_codewords_count)
       k = 0
       ec_blocks_count.times do |i|
-        data_size = short_block_size + (i >= short_blocks_count ? 1 : 0)
-        unweaved = Slice(UInt8).new(data_size + ec_block_size)
+        block_size = short_block_size + (i >= short_blocks_count ? 1 : 0)
+        data_size = block_size - ec_block_size
+        unweaved = Slice(UInt8).new(block_size)
 
         data_size.times do |j|
           unweaved[j] = codewords[i + ec_blocks_count*j]
@@ -34,13 +35,15 @@ module Goban::ECC
       result
     end
 
-    private def decode_block(data : Slice(UInt8), data_size : Int, ec_block_size : Int)
-      data = data[0, data_size]
-      data_poly = GFPoly.new(data)
+    private def decode_block(block : Slice(UInt8), data_size : Int, ec_block_size : Int)
+      data = block[0, data_size]
 
-      syndromes = Slice(UInt8).new(ec_block_size) do |i|
-        data_poly.eval(GF.pow(2_u8, (ec_block_size - 1 - i).to_u8))
+      block_poly = GFPoly.new(block)
+      syndromes = Slice(UInt8).new(ec_block_size)
+      syndromes.size.times do |i|
+        syndromes[syndromes.size - 1 - i] = block_poly.eval(GF.exp(i.to_u8))
       end
+
       has_no_err = syndromes.all?(0)
       return data if has_no_err
 
