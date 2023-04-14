@@ -89,7 +89,7 @@ module Goban
         ALPHANUMERIC_CHARS.index!(c)
       end
 
-      chars.each_slice(2) do |slice|
+      chars.each_slice(2, reuse: true) do |slice|
         if slice.size == 1
           val = slice[0]
           size = 6
@@ -112,7 +112,7 @@ module Goban
       # In accordance to JIS X 0208, this doesn't include
       # extended characters as in CP932 or other variants
       bytes = text.encode("SHIFT_JIS")
-      bytes.each_slice(2).each do |byte_pair|
+      bytes.each_slice(2, reuse: true) do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
           # significant byte is within the range of SHIFT_JIS
