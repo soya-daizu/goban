@@ -4,10 +4,10 @@ module Goban::ECC
     extend self
 
     GEN_POLYS = begin
-      a = uninitialized GFPoly[30]
+      a = uninitialized GFPoly[31]
 
       a[0] = GFPoly.new(Slice[1_u8])
-      (1_u8..29_u8).each do |d|
+      (1_u8..30_u8).each do |d|
         last_gen = a[d - 1]
         a[d] = last_gen.mul(Slice[1_u8, GF.exp(d - 1)])
       end
@@ -29,7 +29,7 @@ module Goban::ECC
         raise "Unknown QR Type"
       end
 
-      raw_codewords_count = version.raw_data_mods_count // 8
+      raw_codewords_count = version.raw_max_data_codewords
       short_blocks_count = ec_blocks_count - raw_codewords_count % ec_blocks_count
       short_block_size = raw_codewords_count // ec_blocks_count - ec_block_size
 
