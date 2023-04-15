@@ -10,9 +10,9 @@ module Goban
     # Size of the array.
     getter size : Int32
     # Current tail index of the writer. This increases as more bits are written.
-    getter write_pos = 0
+    property write_pos = 0
     # Current tail index of the reader. This increases as more bits are read.
-    getter read_pos = 0
+    property read_pos = 0
     # Whether this bit stream is read-only.
     getter read_only : Bool
 
