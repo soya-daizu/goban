@@ -9,6 +9,21 @@ struct Goban::Segment
     StructuredAppend
     Undefined        = UInt8::MAX
 
+    def self.from_bits(bits : Int, ver : QR::Version)
+      case bits
+      when 0b0001
+        Numeric
+      when 0b0010
+        Alphanumeric
+      when 0b0100
+        Byte
+      when 0b1000
+        Kanji
+      else
+        raise "Unknown encoding mode"
+      end
+    end
+
     protected def indicator(ver : QR::Version)
       case self
       when Numeric
