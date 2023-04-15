@@ -15,12 +15,18 @@ module Goban::ECC
       result = Slice(UInt8).new(raw_codewords_count)
       k = 0
       ec_blocks_count.times do |i|
-        block_size = short_block_size + (i >= short_blocks_count ? 1 : 0)
+        is_short_block = i < short_blocks_count
+        block_size = short_block_size + (is_short_block ? 0 : 1)
         data_size = block_size - ec_block_size
         unweaved = Slice(UInt8).new(block_size)
 
-        data_size.times do |j|
+        short_data_size = short_block_size - ec_block_size
+        short_data_size.times do |j|
           unweaved[j] = codewords[i + ec_blocks_count*j]
+        end
+        if !is_short_block
+          j = data_size - 1
+          unweaved[j] = codewords[i + ec_blocks_count*j - short_blocks_count]
         end
 
         ec_block_size.times do |j|
