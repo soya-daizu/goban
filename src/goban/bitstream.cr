@@ -142,12 +142,13 @@ module Goban
 
     def inspect(io : IO)
       io << "Goban::BitStream(@write_pos=" << @write_pos
+      io << ", @read_pos=" << @read_pos
       io << ", @bits=["
       idx = 0
       self.each_slice(4) do |bits|
         io << ' ' unless idx == 0
         bits.each do |bit|
-          io << '\'' if idx == @write_pos
+          io << '\'' if idx == @write_pos || idx == @read_pos
           io << (bit ? '1' : '0')
           idx += 1
         end
