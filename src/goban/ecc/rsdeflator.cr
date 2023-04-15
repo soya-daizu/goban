@@ -33,7 +33,7 @@ module Goban::ECC
           unweaved[data_size + j] = codewords[i + data_codewords_count + ec_blocks_count*j]
         end
 
-        corrected = self.decode_block(unweaved, data_size, ec_block_size)
+        corrected = self.decode_block(unweaved, ec_block_size)[0, data_size]
         result[k, data_size].copy_from(corrected)
         k += data_size
       end
@@ -41,23 +41,22 @@ module Goban::ECC
       result
     end
 
-    private def decode_block(block : Slice(UInt8), data_size : Int, ec_block_size : Int)
-      data = block[0, data_size]
-
+    private def decode_block(block : Slice(UInt8), ec_block_size : Int)
+      has_no_err = true
       block_poly = GFPoly.new(block)
       syndromes = Slice(UInt8).new(ec_block_size)
       syndromes.size.times do |i|
-        syndromes[syndromes.size - 1 - i] = block_poly.eval(GF.exp(i.to_u8))
+        eval = block_poly.eval(GF.exp(i.to_u8))
+        syndromes[syndromes.size - 1 - i] = eval
+        has_no_err = false unless eval == 0
       end
-
-      has_no_err = syndromes.all?(0)
-      return data if has_no_err
+      return block if has_no_err
 
       syndromes = GFPoly.new(syndromes)
       err_locator, err_evaluator = euclidean(syndromes, ec_block_size)
       err_loc = find_err_loc(err_locator)
 
-      correct_err(data, err_evaluator, err_loc)
+      correct_err(block, err_evaluator, err_loc)
     end
 
     private def euclidean(syndromes : GFPoly, ec_block_size : Int)
@@ -101,10 +100,10 @@ module Goban::ECC
       result
     end
 
-    private def correct_err(data : Slice(UInt8), evaluator : GFPoly, loc : Slice(UInt8))
-      magnitudes = Slice(UInt8).new(loc.size)
-
+    private def correct_err(block : Slice(UInt8), evaluator : GFPoly, loc : Slice(UInt8))
       loc.each_with_index do |l, i|
+        pos = block.size - 1 - GF.log(l)
+        raise "Unable to correct error" if pos < 0
         l_inv = GF.inv(l)
 
         denominator = 1_u8
@@ -112,17 +111,11 @@ module Goban::ECC
           next if i == j
           denominator = GF.mul(denominator, GF.add_or_sub(1, GF.mul(ll, l_inv)))
         end
-        magnitudes[i] = GF.mul(evaluator.eval(l_inv), GF.inv(denominator))
-      end
-      p! magnitudes
-
-      loc.each_with_index do |l, i|
-        pos = data.size - 1 - GF.log(l)
-        raise "Unable to correct error" if pos < 0
-        data[pos] = GF.add_or_sub(data[pos], magnitudes[i])
+        magnitude = GF.mul(evaluator.eval(l_inv), GF.inv(denominator))
+        block[pos] = GF.add_or_sub(block[pos], magnitude)
       end
 
-      data
+      block
     end
   end
 end
