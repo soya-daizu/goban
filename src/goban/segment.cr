@@ -135,6 +135,87 @@ module Goban
       end
     end
 
+    # For decoding
+    protected def self.new(mode : Mode, char_count : Int, bit_stream : BitStream)
+      text, bit_size = nil, 0
+      case mode
+      when .numeric?
+        consume_bits_numeric
+      when .alphanumeric?
+        consume_bits_alphanumeric
+      when .byte?
+        consume_bits_byte
+      when .kanji?
+        consume_bits_kanji
+      else
+        raise "Unsupported mode"
+      end
+
+      self.new(mode, char_count, text, bit_size)
+    end
+
+    private macro consume_bits_numeric
+      text = String.build(capacity: char_count) do |str|
+        remaining_char_count = char_count
+        while remaining_char_count > 0
+          slice_size = Math.min(remaining_char_count, 3)
+
+          size = slice_size * 3 + 1
+          val = bit_stream.read_bits(size)
+          str << val.to_s(precision: slice_size)
+
+          remaining_char_count -= slice_size
+          bit_size += size
+        end
+      end
+    end
+
+    private macro consume_bits_alphanumeric
+      text = String.build(capacity: char_count) do |str|
+        remaining_char_count = char_count
+        while remaining_char_count > 0
+          slice_size = Math.min(remaining_char_count, 2)
+
+          size = slice_size == 1 ? 6 : 11
+          val = bit_stream.read_bits(size)
+          if slice_size == 1
+            str << ALPHANUMERIC_CHARS[val]
+          else
+            val1 = val // 45
+            val2 = val - val1 * 45
+            str << ALPHANUMERIC_CHARS[val1]
+            str << ALPHANUMERIC_CHARS[val2]
+          end
+
+          remaining_char_count -= slice_size
+          bit_size += size
+        end
+      end
+    end
+
+    private macro consume_bits_byte
+      bit_size = char_count * 8
+      bytes = Slice(UInt8).new(char_count) do
+        bit_stream.read_bits(8).to_u8
+      end
+      text = String.new(bytes)
+    end
+
+    private macro consume_bits_kanji
+      bit_size = char_count * 13
+      bytes = Slice(UInt8).new(char_count * 2)
+      (0...char_count * 2).step(2) do |i|
+        bits = bit_stream.read_bits(13)
+
+        val = ((bits // 0xc0) << 8) | (bits % 0xc0)
+        val += val < 0x1f00 ? 0x8140 : 0xc140
+
+        bytes[i] = (val >> 8).to_u8
+        bytes[i + 1] = (val & 0xff).to_u8
+      end
+      text = String.new(bytes, "SHIFT_JIS", :skip)
+    end
+
     # Count number of bits in the given list of segments.
     def self.count_total_bits(segments : Array(Segment), version : AbstractQR::Version)
       result = 0
