@@ -54,10 +54,7 @@ module Goban
 
     # Shorthand method for creating a Kanji mode segment.
     def self.kanji(text : String)
-      bytes = text.encode("SHIFT_JIS")
-      raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
-
-      bit_size = bytes.size // 2 * 13
+      bit_size = text.size * 13
       segment = self.new(Segment::Mode::Kanji, text.size, text, bit_size)
     end
 
@@ -112,6 +109,8 @@ module Goban
       # In accordance to JIS X 0208, this doesn't include
       # extended characters as in CP932 or other variants
       bytes = @text.encode("SHIFT_JIS")
+      raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
+
       bytes.each_slice(2, reuse: true) do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
