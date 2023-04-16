@@ -2,10 +2,12 @@ struct Goban::Segment
   # Module for building segmentations of the different encoding modes
   # for the given text string.
   module Segmenter
+    extend self
+
     # Makes a list of the best encoding mode for the each given character
     # by dynamic programming algorithm. The code is based on:
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
-    protected def self.compute_char_modes(chars : Array(Char), version : AbstractQR::Version)
+    protected def compute_char_modes(chars : Array(Char), version : AbstractQR::Version)
       modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
 
       head_costs = modes.map do |m|
@@ -79,7 +81,7 @@ struct Goban::Segment
     end
 
     # Converts a list of encoding modes for each character to an actual segment objects.
-    protected def self.make_segments(text : String, char_modes : Array(Segment::Mode))
+    protected def make_segments(text : String, char_modes : Array(Segment::Mode))
       raise "Text size does not match the char modes" if text.size != char_modes.size
 
       result = [] of Segment
