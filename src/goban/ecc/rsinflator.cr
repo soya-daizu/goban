@@ -37,14 +37,20 @@ module Goban::ECC
       gen_poly = GEN_POLYS[ec_block_size]
       k = 0
       ec_blocks_count.times do |i|
-        data_size = short_block_size + (i >= short_blocks_count ? 1 : 0)
-        data_poly = GFPoly.new(codewords[k, data_size])
+        is_short_block = i < short_blocks_count
+        data_size = short_block_size + (is_short_block ? 0 : 1)
+        data = codewords[k, data_size]
         k += data_size
 
-        data_size.times do |j|
-          result[i + ec_blocks_count*j] = data_poly[j]
+        short_block_size.times do |j|
+          result[i + ec_blocks_count*j] = data[j]
+        end
+        if !is_short_block
+          j = data_size - 1
+          result[i + ec_blocks_count*j - short_blocks_count] = data[j]
         end
 
+        data_poly = GFPoly.new(data, truncate: false)
         _, ecc = data_poly.div(gen_poly)
         ec_block_size.times do |j|
           result[i + codewords.size + ec_blocks_count*j] = ecc[j]

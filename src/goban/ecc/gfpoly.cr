@@ -8,7 +8,8 @@ module Goban::ECC
     delegate unsafe_fetch, to: @data
     delegate unsafe_put, to: @data
 
-    def initialize(@data)
+    def initialize(@data, truncate = true)
+      return unless truncate
       first_non_zero = @data.index { |v| v != 0 }
       if !first_non_zero
         @data = Slice[0_u8]
