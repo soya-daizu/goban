@@ -8,7 +8,11 @@ module Goban
     getter text : String
     getter bit_size : Int32
 
-    ALPHANUMERIC_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:"
+    ALPHANUMERIC_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                          'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                          'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '$', '%', '*',
+                          '+', '-', '.', '/', ':'}
 
     private def initialize(@mode, @char_count, @text, @bit_size)
     end
@@ -58,7 +62,7 @@ module Goban
       segment = self.new(Segment::Mode::Kanji, text.size, text, bit_size)
     end
 
-    protected def produce_bits : Iterator(Tuple(Int32, Int32))
+    protected def produce_bits
       case @mode
       when .numeric?
         produce_bits_numeric
@@ -75,7 +79,7 @@ module Goban
 
     private macro produce_bits_numeric
       @text.each_char.each_slice(3, reuse: true).map do |slice|
-        val = slice.join.to_i
+        val = slice.join.to_u16
         size = slice.size * 3 + 1
 
         next val, size
@@ -83,16 +87,12 @@ module Goban
     end
 
     private macro produce_bits_alphanumeric
-      chars = @text.each_char.map do |c|
-        ALPHANUMERIC_CHARS.index!(c)
-      end
-
-      chars.each_slice(2, reuse: true).map do |slice|
+      @text.each_char.each_slice(2, reuse: true).map do |slice|
         if slice.size == 1
-          val = slice[0]
+          val = ALPHANUMERIC_CHARS.index!(slice[0])
           size = 6
         else
-          val = slice[0] * 45 + slice[1]
+          val = ALPHANUMERIC_CHARS.index!(slice[0]) * 45 + ALPHANUMERIC_CHARS.index!(slice[1])
           size = 11
         end
 
@@ -102,7 +102,7 @@ module Goban
 
     private macro produce_bits_byte
       @text.each_byte.map do |byte|
-        next byte.to_i, 8
+        next byte, 8
       end
     end
 
@@ -131,7 +131,7 @@ module Goban
         end
         val = (val >> 8) * 0xc0 + (val & 0xff)
 
-        next val.to_i, 13
+        next val, 13
       end
     end
 
