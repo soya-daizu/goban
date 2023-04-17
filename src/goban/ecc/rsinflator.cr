@@ -74,7 +74,7 @@ module Goban::ECC
       data_poly = GFPoly.new(data)
       gen_poly = GEN_POLYS[ec_block_size]
       _, ecc = data_poly.div(gen_poly)
-      ecc.data.copy_to(result[data.size..])
+      ecc.data.copy_to(result[data.size, ecc.data.size])
 
       result
     end

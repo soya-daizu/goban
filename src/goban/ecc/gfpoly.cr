@@ -14,7 +14,7 @@ module Goban::ECC
       if !first_non_zero
         @data = Slice[0_u8]
       elsif first_non_zero > 0
-        @data = @data[first_non_zero..]
+        @data = @data[first_non_zero, @data.size - first_non_zero]
       end
     end
 
@@ -106,7 +106,7 @@ module Goban::ECC
         end
       end
 
-      {GFPoly.new(result[..self.size - 1]), GFPoly.new(result[self.size..])}
+      {GFPoly.new(result[0, self.size]), GFPoly.new(result[self.size, result.size - self.size])}
     end
 
     def div2(other : Indexable(UInt8))
