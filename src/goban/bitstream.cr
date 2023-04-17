@@ -99,7 +99,7 @@ module Goban
     end
 
     protected def read_bits(len : Int)
-      raise "Too many bits to read" unless (0..31).includes?(len) && @read_pos + len < @size
+      raise "Too many bits to read" unless (0..31).includes?(len) && @read_pos + len <= @size
 
       result = 0_u32
       len.times do |i|
