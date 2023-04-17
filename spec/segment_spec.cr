@@ -4,69 +4,116 @@ module Goban
   describe Segment do
     describe ".numeric" do
       segment = Segment.numeric(ALL_NUMERIC_STR)
+      result = segment.produce_bits.to_a
 
       it "reports correct character count" do
         segment.char_count.should eq(ALL_NUMERIC_STR.bytesize)
       end
 
-      it "encodes properly" do
-        bit_stream = BitStream.new(segment.bit_size)
-        segment.produce_bits do |val, len|
+      it "produces bits properly" do
+        result.should eq([
+          {12, 10},
+          {345, 10},
+          {678, 10},
+          {9, 4},
+        ])
+      end
+
+      it "can reproduce segment from produced bits" do
+        bit_stream = BitStream.new(result.sum(&.[1]))
+        result.each do |val, len|
           bit_stream.push_bits(val, len)
         end
-        bit_str = convert_bit_stream(bit_stream)
-        bit_str.should eq("0000001100010101100110101001101001")
+        reproduced = Segment.new(Segment::Mode::Numeric, segment.text.size, bit_stream)
+        reproduced.should eq(segment)
       end
     end
 
     describe ".alphanumeric" do
       segment = Segment.alphanumeric(ALL_ALPHANUMERIC_STR)
+      result = segment.produce_bits.to_a
 
       it "reports correct character count" do
         segment.char_count.should eq(ALL_ALPHANUMERIC_STR.bytesize)
       end
 
-      it "encodes properly" do
-        bit_stream = BitStream.new(segment.bit_size)
-        segment.produce_bits do |val, len|
+      it "produces bits properly" do
+        result.should eq([
+          {461, 11},
+          {553, 11},
+          {645, 11},
+          {16, 6},
+        ])
+      end
+
+      it "can reproduce segment from produced bits" do
+        bit_stream = BitStream.new(result.sum(&.[1]))
+        result.each do |val, len|
           bit_stream.push_bits(val, len)
         end
-        bit_str = convert_bit_stream(bit_stream)
-        bit_str.should eq("001110011010100010100101010000101")
+        reproduced = Segment.new(Segment::Mode::Alphanumeric, segment.text.size, bit_stream)
+        reproduced.should eq(segment)
       end
     end
 
     describe ".byte" do
       segment = Segment.byte(ALL_BYTE_STR)
+      result = segment.produce_bits.to_a
 
       it "reports correct character count" do
         segment.char_count.should eq(ALL_BYTE_STR.bytesize)
       end
 
-      it "encodes properly" do
-        bit_stream = BitStream.new(segment.bit_size)
-        segment.produce_bits do |val, len|
+      it "produces bits properly" do
+        result.should eq([
+          {97, 8},
+          {208, 8},
+          {137, 8},
+          {236, 8},
+          {156, 8},
+          {135, 8},
+          {240, 8},
+          {159, 8},
+          {152, 8},
+          {177, 8},
+        ])
+      end
+
+      it "can reproduce segment from produced bits" do
+        bit_stream = BitStream.new(result.sum(&.[1]))
+        result.each do |val, len|
           bit_stream.push_bits(val, len)
         end
-        bit_str = convert_bit_stream(bit_stream)
-        bit_str.should eq("01100001110100001000100111101100100111001000011111110000100111111001100010110001")
+        reproduced = Segment.new(Segment::Mode::Byte, segment.text.bytesize, bit_stream)
+        reproduced.should eq(segment)
       end
     end
 
     describe ".kanji" do
       segment = Segment.kanji(ALL_KANJI_STR)
+      result = segment.produce_bits.to_a
 
       it "reports correct character count" do
         segment.char_count.should eq(ALL_KANJI_STR.size)
       end
 
-      it "encodes properly" do
-        bit_stream = BitStream.new(segment.bit_size)
-        segment.produce_bits do |val, len|
+      it "produces bits properly" do
+        result.should eq([
+          {2949, 13},
+          {2991, 13},
+          {332, 13},
+          {4098, 13},
+          {2775, 13},
+        ])
+      end
+
+      it "can reproduce segment from produced bits" do
+        bit_stream = BitStream.new(result.sum(&.[1]))
+        result.each do |val, len|
           bit_stream.push_bits(val, len)
         end
-        bit_str = convert_bit_stream(bit_stream)
-        bit_str.should eq("01011100001010101110101111000010100110010000000000100101011010111")
+        reproduced = Segment.new(Segment::Mode::Kanji, segment.text.size, bit_stream)
+        reproduced.should eq(segment)
       end
     end
 

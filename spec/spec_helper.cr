@@ -25,9 +25,9 @@ ALL_NUMERIC_SEGS = [
   Goban::Segment.numeric("0123456789"),
 ]
 
-ALL_ALPHANUMERIC_STR  = "ABCDEF"
+ALL_ALPHANUMERIC_STR  = "ABCDEFG"
 ALL_ALPHANUMERIC_SEGS = [
-  Goban::Segment.alphanumeric("ABCDEF"),
+  Goban::Segment.alphanumeric("ABCDEFG"),
 ]
 
 ALL_BYTE_STR  = "aЉ윇😱"
