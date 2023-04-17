@@ -45,7 +45,7 @@ module Goban
       push_bits(indicator, indicator_length)
       push_bits(cci_bits, cci_bits_count)
 
-      segment.produce_bits do |val, len|
+      segment.produce_bits.each do |val, len|
         push_bits(val, len)
       end
     end

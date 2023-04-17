@@ -58,7 +58,7 @@ module Goban
       segment = self.new(Segment::Mode::Kanji, text.size, text, bit_size)
     end
 
-    protected def produce_bits(&block : (Int32 | UInt8 | UInt16), Int32 ->)
+    protected def produce_bits : Iterator(Tuple(Int32, Int32))
       case @mode
       when .numeric?
         produce_bits_numeric
@@ -74,10 +74,11 @@ module Goban
     end
 
     private macro produce_bits_numeric
-      @text.each_char.each_slice(3, reuse: true) do |slice|
+      @text.each_char.each_slice(3, reuse: true).map do |slice|
         val = slice.join.to_i
         size = slice.size * 3 + 1
-        yield val, size
+
+        next val, size
       end
     end
 
@@ -86,7 +87,7 @@ module Goban
         ALPHANUMERIC_CHARS.index!(c)
       end
 
-      chars.each_slice(2, reuse: true) do |slice|
+      chars.each_slice(2, reuse: true).map do |slice|
         if slice.size == 1
           val = slice[0]
           size = 6
@@ -95,13 +96,13 @@ module Goban
           size = 11
         end
 
-        yield val, size
+        next val, size
       end
     end
 
     private macro produce_bits_byte
-      @text.each_byte do |byte|
-        yield byte, 8
+      @text.each_byte.map do |byte|
+        next byte.to_i, 8
       end
     end
 
@@ -111,7 +112,7 @@ module Goban
       bytes = @text.encode("SHIFT_JIS")
       raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
 
-      bytes.each_slice(2, reuse: true) do |byte_pair|
+      bytes.each_slice(2, reuse: true).map do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
           # significant byte is within the range of SHIFT_JIS
@@ -130,7 +131,7 @@ module Goban
         end
         val = (val >> 8) * 0xc0 + (val & 0xff)
 
-        yield val, 13
+        next val.to_i, 13
       end
     end
 
