@@ -1,8 +1,11 @@
 # Goban
 
-A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (5.33x) and uses fewer heap allocations (-94.63%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.
+A fast and efficient QR Code encoder library written purely in Crystal. It is significantly faster (4-5x) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.
 
-The implementation is compliant with [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018) and [ISO/IEC 23941:2022](https://www.iso.org/standard/77404.html) standards and is independent of other implementations for the most part. However, the optimal text segmentation algorithm is made possible thanks to the following article: [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes).
+The implementation aims compliance with following standards:
+
+- [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018)
+- [ISO/IEC 23941:2022](https://www.iso.org/standard/77404.html)
 
 The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
@@ -11,7 +14,7 @@ https://www.qrcode.com/en/patent.html
 
 ## Benchmark
 
-Comparing it/s and heap allocations between Goban and [spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code):
+Comparing it/s and heap allocations between Goban and spider-gazelle/qr-code:
 
 ```crystal
 require "benchmark"
@@ -31,21 +34,22 @@ qr-code   3.49k (286.18µs) (± 1.51%)   149kB/op   5.33× slower
 
 ## Features
 
-- [x] Encoding a sequence of text segments
-  - [x] Numeric mode
-  - [x] Alphanumeric mode
-  - [x] Byte mode
-  - [x] Kanji mode
-  - [ ] ECI mode
-- [x] Building optimized text segments from a string
-- [x] Error correction coding using Reed-Solomon Codes
-- [x] Data masking with all 8 mask patterns
-- [x] Support for all QR Code versions from 1 to 40
-- [ ] Structured append of symbols
-- [x] Micro QR Code
-- [x] rMQR Code
+| QR Code Type      | Encoding | Decoding |
+| ----------------- | :------: | :------: |
+| QR Code Model 1\* |    -     |    -     |
+| QR Code Model 2   |    ✓     |    ✓     |
+| Micro QR Code     |    ✓     |    -     |
+| rMQR Code         |    ✓     |    -     |
 
-Goban will not support the generation of QR Code Model 1 symbols as it is considered obsolete.
+\* QR Code Model 1 will not be supported as it is considered obsolete.
+
+## Roadmap
+
+- Encoding
+  - Add ECI mode encoding
+  - Support structured append of symbols
+- Decoding
+  - Support decoding Micro QR Code and rMQR code symbols
 
 ## Installation
 
@@ -143,7 +147,7 @@ end
 
 ### About the encoding modes and the text segmentation
 
-The `Goban::QR.encode_string()` method under the hood encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:
+The `Goban::QR.encode_string` method under the hood encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:
 
 | Mode         | Supported Characters        |
 | ------------ | --------------------------- |
@@ -158,7 +162,7 @@ The `Byte` mode supports the widest range of characters but it is inefficient an
 
 Finding out the optimal segmentation requires some processing, so if you are generating thousands of QR Codes with all the same limited sets of characters, you may want to hard-code the text segments and apply the characters to those to generate the QR Codes.
 
-This can be done by using the `Goban::QR.encode_segments()` method, which is the lower-level method used by the `Goban::QR.encode_string()` method.
+This can be done by using the `Goban::QR.encode_segments` method, which is the lower-level method used by the `Goban::QR.encode_string` method.
 
 ```crystal
 segments = [
@@ -171,11 +175,11 @@ segments = [
 qr = Goban::QR.encode_segments(segments, Goban::ECC::Level::Low, 2)
 ```
 
-The optimal segments and version to hard-code can be figured out by manually executing the `Goban::Segment::Segmenter.segment_text_optimized_qr()` method.
+The optimal segments and version to hard-code can be figured out by manually executing the `Goban::QR.determine_version_and_segments` method.
 
 ### Generating Micro QR Codes
 
-Micro QR Codes can be generated just like regular QR Codes using the `Goban::MQR.encode_string()` or `Goban::MQR.encode_segments()` methods.
+Micro QR Codes can be generated just like regular QR Codes using the `Goban::MQR.encode_string` or `Goban::MQR.encode_segments` methods.
 
 ```crystal
 mqr = Goban::MQR.encode_string("Hello World!", Goban::ECC::Level::Low)
@@ -216,7 +220,7 @@ Since the version M1 doesn't support error correction at all, the value passed a
 
 ## Generating rMQR Codes
 
-Just like regular QR Codes and Micro QR Codes, rMQR Codes can also be generated using the `Goban::RMQR.encode_string()` and `Goban::RMQR::encode_segments()` methods.
+Just like regular QR Codes and Micro QR Codes, rMQR Codes can also be generated using the `Goban::RMQR.encode_string` and `Goban::RMQR::encode_segments` methods.
 
 ```crystal
 # Note that rMQR Code only supports Medium and High ECC Level
@@ -243,12 +247,12 @@ However, unlike regular QR Codes and Micro QR Codes, rMQR Codes has different si
 
 |     | 27  | 43  | 59  | 77  | 99  | 139 |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: |
-| R7  | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
-| R9  | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
-| R11 | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
-| R13 | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
-| R15 | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
-| R17 | ❌  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| R7  |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R9  |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R11 |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R13 |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R15 |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R17 |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
 
 `SizingStrategy` is used to prioritize one version than the other based on whether you want the symbol to be smaller in total area, width, or height. By default, it tries to balance the width and height, keeping the total area as small as possible.
 
@@ -287,3 +291,9 @@ You might want to first look at the `Goban::QR` or one of the exporters (`Goban:
 ## Contributors
 
 - [soya_daizu](https://github.com/soya-daizu) - creator and maintainer
+
+## Credits
+
+- [Optimal text segmentation for QR Codes](https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes)
+- [zxing/zxing](https://github.com/zxing/zxing)
+- [OUDON/rmqrcode-python](https://github.com/OUDON/rmqrcode-python)
