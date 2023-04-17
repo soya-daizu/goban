@@ -19,7 +19,7 @@ development_dependencies:
     github: stumpycr/stumpy_png
 
 crystalline:
-  main: examples/console.cr
+  main: .crystalline_main.cr
 
 crystal: 1.8.0
 
