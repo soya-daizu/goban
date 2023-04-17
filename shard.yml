@@ -11,6 +11,8 @@ targets:
     main: examples/png.cr
   sample_svg:
     main: examples/svg.cr
+  sample_decode:
+    main: examples/decode.cr
 
 development_dependencies:
   stumpy_png:
