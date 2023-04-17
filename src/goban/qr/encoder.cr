@@ -142,7 +142,7 @@ struct Goban::QR < Goban::AbstractQR
       # the result of segmentation changes at the version 1, 10, and 27,
       # so we first calculate the segments at those boundaries and reduce
       # the version number later
-      {(1..9), (10..26), (27..40)}.each do |group|
+      {1..9, 10..26, 27..40}.each do |group|
         v = QR::Version.new(group.end)
         char_modes = Segment::Segmenter.compute_char_modes(chars, v)
         segments = Segment::Segmenter.make_segments(text, char_modes)
