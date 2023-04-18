@@ -78,13 +78,13 @@ SAMPLE_SEGS = [
   Goban::Segment.alphanumeric(" 123"),
 ]
 
-SAMPLE_STR_2 = "こんにちwa"
+SAMPLE_STR_2  = "こんにちwa"
 SAMPLE_SEGS_2 = [
   Goban::Segment.kanji("こんにち"),
   Goban::Segment.byte("wa"),
 ]
 
-SAMPLE_RESULT_MODS_QR = <<-STRING
+SAMPLE_RESULT_MODS_QR = <<-STRING.lines
 ██████████████        ██  ██  ██    ██████████████
 ██          ██        ████    ██    ██          ██
 ██  ██████  ██  ██████  ██  ████    ██  ██████  ██
@@ -111,9 +111,8 @@ SAMPLE_RESULT_MODS_QR = <<-STRING
 ██          ██      ████      ██    ██      ██  ██
 ██████████████  ██    ████    ██    ████    ██    
 STRING
-  .lines
 
-SAMPLE_RESULT_MODS_MQR = <<-STRING
+SAMPLE_RESULT_MODS_MQR = <<-STRING.lines
 ██████████████  ██  ██  ██  ██
 ██          ██  ████████    ██
 ██  ██████  ██      ████  ████
@@ -130,9 +129,8 @@ SAMPLE_RESULT_MODS_MQR = <<-STRING
   ██  ████      ██████  ██  ██
 ████████████  ██  ██      ████
 STRING
-  .lines
 
-SAMPLE_RESULT_MODS_RMQR = <<-STRING
+SAMPLE_RESULT_MODS_RMQR = <<-STRING.lines
 ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████
 ██          ██        ████  ██████  ██  ██  ██  ██  ██
 ██  ██████  ██  ████          ██      ██  ████  ██  ██
@@ -147,9 +145,8 @@ SAMPLE_RESULT_MODS_RMQR = <<-STRING
 ██      ██    ██    ████      ██    ██      ██      ██
 ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████
 STRING
-  .lines
 
-FUNCTION_PATTERN_MODS_QR = <<-STRING
+FUNCTION_PATTERN_MODS_QR = <<-STRING.lines
 ██████████████                                                          ██  ██████████████
 ██          ██                                                        ██    ██          ██
 ██  ██████  ██                                                        ██    ██  ██████  ██
@@ -196,9 +193,8 @@ FUNCTION_PATTERN_MODS_QR = <<-STRING
 ██          ██                                                                            
 ██████████████                                                                            
 STRING
-  .lines
 
-FUNCTION_PATTERN_MODS_MQR = <<-STRING
+FUNCTION_PATTERN_MODS_MQR = <<-STRING.lines
 ██████████████  ██  ██
 ██          ██        
 ██  ██████  ██        
@@ -211,9 +207,18 @@ FUNCTION_PATTERN_MODS_MQR = <<-STRING
                       
 ██                    
 STRING
-  .lines
 
-CODEWORDS_FILL_MODS_QR = <<-STRING
+FUNCTION_PATTERN_MODS_RMQR = <<-STRING.lines
+██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████
+██          ██  ██    ██                        ██  ██                                              ██  ██                                          ██  ██
+██  ██████  ██    ██████                        ██████                                              ██████                                    ████████████
+██  ██████  ██  ██████                                                                                                                    ██    ██      ██
+██  ██████  ██  ████                            ██████                                              ██████                                  ██████  ██  ██
+██          ██  ██████                          ██  ██                                              ██  ██                                ████  ██      ██
+██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████
+STRING
+
+CODEWORDS_FILL_MODS_QR = <<-STRING.lines
     ██  ██    ████  ██  ██  ██  ████    ██
 ██████  ██          ████    ████    ██  ██
 ██  ████      ██  ██    ████    ██  ██  ██
@@ -236,9 +241,8 @@ CODEWORDS_FILL_MODS_QR = <<-STRING
 ██      ████    ██  ██  ██  ██  ██  ████  
     ██  ██    ██    ████    ██  ████    ██
 STRING
-  .lines
 
-CODEWORDS_FILL_MODS_MQR = <<-STRING
+CODEWORDS_FILL_MODS_MQR = <<-STRING.lines
   ██  ████    ██    ██
   ██  ██  ██    ██  ██
   ██████  ██    ██  ██
@@ -251,4 +255,3 @@ CODEWORDS_FILL_MODS_MQR = <<-STRING
   ██  ██  ██    ████  
   ████      ██  ██  ██
 STRING
-  .lines

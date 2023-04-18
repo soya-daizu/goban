@@ -28,4 +28,18 @@ module Goban
       end
     end
   end
+
+  describe RMQR::Template do
+    describe ".draw_function_patterns" do
+      it "draws all function patterns" do
+        version = RMQR::Version.new(RMQR::VersionValue::R7x77)
+        canvas = Matrix(UInt8).new(version.symbol_size.width, version.symbol_size.height, 0)
+        RMQR::Template.draw_function_patterns(canvas, version, ECC::Level::Medium)
+        canvas.normalize
+
+        rows = convert_canvas(canvas)
+        rows.should eq(FUNCTION_PATTERN_MODS_RMQR)
+      end
+    end
+  end
 end
