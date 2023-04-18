@@ -218,7 +218,7 @@ Data capacity for each combination of the symbol version and ECC level can be fo
 
 Since the version M1 doesn't support error correction at all, the value passed as the ECC level will be ignored.
 
-## Generating rMQR Codes
+### Generating rMQR Codes
 
 Just like regular QR Codes and Micro QR Codes, rMQR Codes can also be generated using the `Goban::RMQR.encode_string` and `Goban::RMQR::encode_segments` methods.
 
