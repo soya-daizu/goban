@@ -7,7 +7,7 @@ struct Goban::MQR < Goban::AbstractQR
     # Note that Micro QR Codes have limited EC levels you can select depending on the length
     # of the text. In version M1, the EC level passed will just be ignored.
     #
-    # See `QR.encode_string` for more information.
+    # See `QR::Encoder.encode_string` for more information.
     def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
       segments, version = determine_version_and_segments(text, ecl)
       encode_segments(segments, ecl, version)
@@ -16,7 +16,7 @@ struct Goban::MQR < Goban::AbstractQR
     # Creates a new Micro QR Code object for the given data segments, error correction level, and
     # Micro QR Code version that is large enough to contain all the data in the segments.
     #
-    # See `QR.encode_segments` for more information.
+    # See `QR::Encoder.encode_segments` for more information.
     def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
       bit_stream = BitStream.new(version.max_data_bits(ecl))

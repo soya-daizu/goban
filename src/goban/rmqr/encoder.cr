@@ -16,7 +16,7 @@ struct Goban::RMQR < Goban::AbstractQR
     # to be smaller in total area, width, or height. By default, it tries to balance the width and height,
     # keeping the total area as small as possible.
     #
-    # See `QR.encode_string` for more information.
+    # See `QR::Encoder.encode_string` for more information.
     def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium, strategy : SizingStrategy = SizingStrategy::MinimizeArea)
       segments, version = determine_version_and_segments(text, ecl, strategy)
       encode_segments(segments, ecl, version)
@@ -25,7 +25,7 @@ struct Goban::RMQR < Goban::AbstractQR
     # Creates a new rMQR Code object for the given data segments, error correction level, and
     # rMQR Code version that is large enough to contain all the data in the segments.
     #
-    # See `QR.encode_segments` for more information.
+    # See `QR::Encoder.encode_segments` for more information.
     def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | VersionValue)
       raise "Unsupported EC Level" unless ecl.medium? || ecl.high?
 
@@ -85,7 +85,7 @@ struct Goban::RMQR < Goban::AbstractQR
       data_length = codewords.size * 8
 
       i = 0
-      upward = true            # Current filling direction
+      upward = true      # Current filling direction
       base_x = width - 2 # Zig zag filling starts from bottom right
       while base_x > 1
         (0...height).reverse_each do |base_y|
