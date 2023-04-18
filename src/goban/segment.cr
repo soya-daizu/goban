@@ -8,11 +8,13 @@ module Goban
     getter text : String
     getter bit_size : Int32
 
-    ALPHANUMERIC_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                          'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                          'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '$', '%', '*',
-                          '+', '-', '.', '/', ':'}
+    ALPHANUMERIC_CHARS = {
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+      'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '$', '%', '*',
+      '+', '-', '.', '/', ':',
+    }
 
     private def initialize(@mode, @char_count, @text, @bit_size)
     end
