@@ -54,7 +54,6 @@ module Goban
 
         codewords = Slice(UInt8).new(11 ** 2 // 8, 154)
         MQR::Encoder.draw_codewords(canvas, codewords, version, ECC::Level::Low)
-        canvas.normalize
 
         rows = convert_canvas(canvas)
         rows.should eq(CODEWORDS_FILL_MODS_MQR)
