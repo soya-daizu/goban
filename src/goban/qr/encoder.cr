@@ -1,5 +1,7 @@
 struct Goban::QR < Goban::AbstractQR
   module Encoder
+    extend self
+
     # Creates a new QR Code object for the given string and error correction level.
     # Setting a higher error correction level makes the QR Code symbol mode resistant
     # to loss of pixels, but it requires more redundant bits, resulting in a larger
@@ -68,8 +70,8 @@ struct Goban::QR < Goban::AbstractQR
     # The optimal segments and version to hard-code can be figured out by manually executing
     # `Segment::Segmenter.segment_text_optimized_qr`. You can hard-code the segments and version based on
     # its response, and use `QR.encode_segments` to create QR Codes using that segments and version.
-    def self.encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
-      segments, version = self.determine_version_and_segments(text, ecl)
+    def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
+      segments, version = determine_version_and_segments(text, ecl)
       self.encode_segments(segments, ecl, version)
     end
 
@@ -112,7 +114,7 @@ struct Goban::QR < Goban::AbstractQR
     # When constructing your own segments, note that it may not result in the segments that has the
     # shortest data length even if for each character in the source string you choose an encoding type
     # with the smallest character set that supports that supports it.
-    def self.encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
+    def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | Int)
       version = Version.new(version.to_i)
       bit_stream = BitStream.new(version.max_data_bits(ecl))
       segments.each do |segment|
@@ -121,21 +123,18 @@ struct Goban::QR < Goban::AbstractQR
       bit_stream.append_terminator_bits(version, ecl)
       bit_stream.append_padding_bits(version)
 
-      data_codewords = ECC::RSInflator.inflate_codewords(bit_stream.to_bytes, version, ecl)
+      codewords = ECC::RSInflator.inflate_codewords(bit_stream.to_bytes, version, ecl)
 
-      size = version.symbol_size
-      canvas = Matrix(UInt8).new(size, size, 0)
-      CanvasDrawer.draw_function_patterns(canvas, version)
-      CanvasDrawer.draw_data_codewords(canvas, data_codewords)
-      mask, canvas = CanvasDrawer.apply_best_mask(canvas, ecl)
+      canvas = Template.make_canvas(version)
+      self.draw_codewords(canvas, codewords)
+      mask, canvas = self.apply_best_mask(canvas, ecl)
       canvas.normalize
 
       QR.new(version, ecl, canvas, mask)
     end
 
-    # Returns a tuple of the optimized segments and QR Code version
-    # for the given text and error correction level.
-    def self.determine_version_and_segments(text : String, ecl : ECC::Level) : Tuple(Array(Segment), QR::Version)
+    # Returns a tuple of the optimized segments and QR Code version for the given text and error correction level.
+    def determine_version_and_segments(text : String, ecl : ECC::Level)
       chars = text.chars
       segments, version = nil, nil
 
@@ -143,7 +142,7 @@ struct Goban::QR < Goban::AbstractQR
       # the result of segmentation changes at the version 1, 10, and 27,
       # so we first calculate the segments at those boundaries and reduce
       # the version number later
-      {(1..9), (10..26), (27..40)}.each do |group|
+      {1..9, 10..26, 27..40}.each do |group|
         v = QR::Version.new(group.end)
         char_modes = Segment::Segmenter.compute_char_modes(chars, v)
         segments = Segment::Segmenter.make_segments(text, char_modes)
@@ -175,6 +174,56 @@ struct Goban::QR < Goban::AbstractQR
       raise "Text too long" unless segments && version
 
       {segments, version}
+    end
+
+    protected def draw_codewords(canvas : Matrix(UInt8), codewords : Slice(UInt8))
+      size = canvas.size
+      data_length = codewords.size * 8
+
+      i = 0
+      upward = true     # Current filling direction
+      base_x = size - 1 # Zig zag filling starts from bottom right
+      while base_x > 0
+        base_x = 5 if base_x == 6 # Skip vertical timing pattern
+
+        (0...size).reverse_each do |base_y|
+          (0..1).each do |alt|
+            x = base_x - alt
+            y = upward ? base_y : size - 1 - base_y
+            next if canvas[x, y] & 0x80 > 0
+            return if i >= data_length
+
+            bit = codewords[i >> 3].bit(7 - i & 7)
+            canvas[x, y] = bit
+            i += 1
+          end
+        end
+
+        upward = !upward
+        base_x -= 2
+      end
+    end
+
+    protected def apply_best_mask(canvas : Matrix(UInt8), ecl : ECC::Level)
+      mask, best_canvas = nil, nil
+      min_score = Int32::MAX
+
+      8_u8.times do |i|
+        c = canvas.clone
+        msk = Mask.new(i)
+        Template.draw_format_modules(c, msk, ecl)
+        msk.apply_to(c)
+
+        score = Mask.evaluate_score(c)
+        if score < min_score
+          mask = msk
+          best_canvas = c
+          min_score = score
+        end
+      end
+      raise "Unable to set the mask" unless mask && best_canvas
+
+      {mask, best_canvas}
     end
   end
 end

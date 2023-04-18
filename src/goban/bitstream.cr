@@ -9,9 +9,12 @@ module Goban
     getter bits : Pointer(UInt8)
     # Size of the array.
     getter size : Int32
-    # Current tail index of the array. This increases as
-    # more bits are added to itself.
-    getter tail_idx = 0
+    # Current tail index of the writer. This increases as more bits are written.
+    property write_pos = 0
+    # Current tail index of the reader. This increases as more bits are read.
+    property read_pos = 0
+    # Whether this bit stream is read-only.
+    getter read_only : Bool
 
     PAD0 = 0b1110_1100
     PAD1 = 0b0001_0001
@@ -20,6 +23,13 @@ module Goban
       raise "Negative bit stream size: #{size}" if size < 0
       @size = size.to_i
       @bits = Pointer(UInt8).malloc(malloc_size, 0)
+      @read_only = false
+    end
+
+    def initialize(bytes : Slice(UInt8))
+      @size = bytes.size * 8
+      @bits = bytes.to_unsafe
+      @read_only = true
     end
 
     protected def append_segment_bits(segment : Segment, version : AbstractQR::Version)
@@ -30,16 +40,13 @@ module Goban
       cci_bits_count = segment.mode.cci_bits_count(version)
 
       raise "Invalid segment" if !cci_bits_count
-      raise "Text too long" if indicator_length + cci_bits_count + segment.bit_stream.size > size
+      raise "Text too long" if indicator_length + cci_bits_count + segment.bit_size > size
 
-      append_bits(indicator, indicator_length)
-      append_bits(cci_bits, cci_bits_count)
-      append_bit_stream(segment.bit_stream)
-    end
+      push_bits(indicator, indicator_length)
+      push_bits(cci_bits, cci_bits_count)
 
-    private def append_bit_stream(bs : BitStream)
-      bs.each do |bit|
-        push(bit)
+      segment.produce_bits.each do |val, len|
+        push_bits(val, len)
       end
     end
 
@@ -55,44 +62,64 @@ module Goban
       else
         raise "Invalid QR version"
       end
-      terminator_bits_size = Math.min(base, cap_bits - @tail_idx)
-      append_bits(0, terminator_bits_size)
+      terminator_bits_size = Math.min(base, cap_bits - @write_pos)
+      push_bits(0, terminator_bits_size)
     end
 
     protected def append_padding_bits(version : AbstractQR::Version)
-      # In the version M1 and M3, we need to use the shorter padding bits 0000 to fill
-      # the rest of the data stream, but the data stream is already filled with zeros,
-      # so there's nothing more to do here
+      # In version M1 and M3, we need to use shorter padding bits 0000,
+      # but since the data stream is already filled with zeros, there's nothing more to append
       short_pad = typeof(version) == MQR::Version && (version == 1 || version == 3)
-      return if short_pad
-
-      while @tail_idx % 8 != 0
-        push(false)
+      if short_pad
+        # Version M1 and M3 have a shorter last codeword of 4 bits
+        # (for a total of 8 bits including the padding bits 0000),
+        # so we are shifting them to the right by four here
+        @bits[@write_pos - 1] >>= 4
+        return
       end
 
-      while @tail_idx < @size
-        append_bits(PAD0, 8)
-        append_bits(PAD1, 8) if @tail_idx < @size
+      while @write_pos % 8 != 0
+        self.push(false)
+      end
+
+      while @write_pos < @size
+        push_bits(PAD0, 8)
+        push_bits(PAD1, 8) if @write_pos < @size
       end
     end
 
-    protected def append_bits(val : Int?, len : Int?)
+    protected def push_bits(val : Int?, len : Int?)
       return if !val || !len
       return if len == 0
 
-      raise "Value out of range" unless (0..31).includes?(len) && val >> len == 0
-      (0..len - 1).reverse_each do |i|
-        push((val >> i).to_u8! & 1 != 0)
+      raise "Too many bits to append" unless (0..31).includes?(len) && val >> len == 0
+      (0...len).reverse_each do |i|
+        self.push((val >> i) & 1 != 0)
       end
     end
 
-    protected def unsafe_fetch(index : Int) : Bool
+    protected def read_bits(len : Int)
+      raise "Too many bits to read" unless (0..31).includes?(len) && @read_pos + len <= @size
+
+      result = 0_u32
+      len.times do |i|
+        bit = self[@read_pos] ? 1 : 0
+        result = (result << 1) | bit
+        @read_pos += 1
+      end
+
+      result
+    end
+
+    protected def unsafe_fetch(index : Int)
       bit_idx, sub_idx = index.divmod(8)
+      sub_idx = 7 - sub_idx
       (@bits[bit_idx] & (1 << sub_idx)) > 0
     end
 
     protected def unsafe_put(index : Int, value : Bool)
       bit_idx, sub_idx = index.divmod(8)
+      sub_idx = 7 - sub_idx
       if value
         @bits[bit_idx] |= 1 << sub_idx
       else
@@ -102,38 +129,26 @@ module Goban
 
     # Adds a value to the current tail of the array.
     private def push(value : Bool)
-      bit_idx, sub_idx = bit_idx_and_sub_idx(@tail_idx)
-      if value
-        @bits[bit_idx] |= 1 << sub_idx
-      else
-        @bits[bit_idx] &= ~(1 << sub_idx)
-      end
-      @tail_idx += 1
+      raise "Can't write to a read-only bit stream" if read_only
+      self[@write_pos] = value
+      @write_pos += 1
 
       value
     end
 
     protected def to_bytes
-      results = Slice(UInt8).new(malloc_size)
-      byte_value = 0_u8
-      each_with_index do |bit, idx|
-        bit = bit ? 1 : 0
-        byte_value = (byte_value << 1) | bit
-        results[idx // 8] = byte_value if idx % 8 == 7
-      end
-      results[@size // 8] = byte_value << (8 - (@size % 8)) if @size % 8 != 0
-
-      results
+      Slice(UInt8).new(@bits, malloc_size, read_only: true)
     end
 
-    def to_s(io : IO)
-      io << "Goban::BitStream(@tail_idx=" << @tail_idx
+    def inspect(io : IO)
+      io << "Goban::BitStream(@write_pos=" << @write_pos
+      io << ", @read_pos=" << @read_pos
       io << ", @bits=["
       idx = 0
-      each_slice(4) do |bits|
+      self.each_slice(4) do |bits|
         io << ' ' unless idx == 0
         bits.each do |bit|
-          io << '\'' if idx == @tail_idx
+          io << '\'' if idx == @write_pos || idx == @read_pos
           io << (bit ? '1' : '0')
           idx += 1
         end
@@ -143,21 +158,10 @@ module Goban
 
     def <=>(other : BitStream)
       min_size = Math.min(size, other.size)
-      0.upto(min_size - 1) do |i|
+      (0...min_size).each do |i|
         return nil if self[i] != other[i]
       end
       size <=> other.size
-    end
-
-    private def bit_idx_and_sub_idx(idx)
-      bit_idx_and_sub_idx(idx) { raise IndexError.new }
-    end
-
-    private def bit_idx_and_sub_idx(idx)
-      idx = check_index_out_of_bounds(idx) do
-        return yield
-      end
-      idx.divmod(8)
     end
 
     private def malloc_size

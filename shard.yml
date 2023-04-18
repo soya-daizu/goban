@@ -11,14 +11,16 @@ targets:
     main: examples/png.cr
   sample_svg:
     main: examples/svg.cr
+  sample_decode:
+    main: examples/decode.cr
 
 development_dependencies:
   stumpy_png:
     github: stumpycr/stumpy_png
 
 crystalline:
-  main: examples/console.cr
+  main: .crystalline_main.cr
 
-crystal: 1.7.3
+crystal: 1.8.0
 
 license: MIT

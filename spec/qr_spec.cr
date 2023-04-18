@@ -45,5 +45,29 @@ module Goban
         rows.should eq(SAMPLE_RESULT_MODS_QR)
       end
     end
+
+    describe ".draw_data_codewords" do
+      it "fills codewords properly" do
+        version = QR::Version.new(1)
+        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas[8, 8, 7, 7] = 0xc0
+
+        codewords = Slice(UInt8).new(21 ** 2 // 8, 154)
+        QR::Encoder.draw_codewords(canvas, codewords)
+
+        rows = convert_canvas(canvas)
+        rows.should eq(CODEWORDS_FILL_MODS_QR)
+      end
+    end
+
+    describe ".apply_best_mask" do
+      it "applies best mask" do
+        version = QR::Version.new(1)
+        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas.data.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
+
+        QR::Encoder.apply_best_mask(canvas, ECC::Level::Low)[0].value.should eq(2)
+      end
+    end
   end
 end
