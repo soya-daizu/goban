@@ -71,7 +71,7 @@ struct Goban::QR < Goban::AbstractQR
     # `Segment::Segmenter.segment_text_optimized_qr`. You can hard-code the segments and version based on
     # its response, and use `QR.encode_segments` to create QR Codes using that segments and version.
     def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
-      segments, version = determine_version_and_segments(text, ecl)
+      segments, version = self.determine_version_and_segments(text, ecl)
       self.encode_segments(segments, ecl, version)
     end
 

@@ -9,7 +9,7 @@ struct Goban::MQR < Goban::AbstractQR
     #
     # See `QR::Encoder.encode_string` for more information.
     def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium)
-      segments, version = determine_version_and_segments(text, ecl)
+      segments, version = self.determine_version_and_segments(text, ecl)
       self.encode_segments(segments, ecl, version)
     end
 

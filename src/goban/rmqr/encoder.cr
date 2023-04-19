@@ -18,7 +18,7 @@ struct Goban::RMQR < Goban::AbstractQR
     #
     # See `QR::Encoder.encode_string` for more information.
     def encode_string(text : String, ecl : ECC::Level = ECC::Level::Medium, strategy : SizingStrategy = SizingStrategy::MinimizeArea)
-      segments, version = determine_version_and_segments(text, ecl, strategy)
+      segments, version = self.determine_version_and_segments(text, ecl, strategy)
       self.encode_segments(segments, ecl, version)
     end
 
