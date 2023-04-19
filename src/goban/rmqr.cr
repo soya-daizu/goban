@@ -12,13 +12,15 @@ module Goban
     getter version : Version
     # Error correction level of the rMQR Code symbol.
     getter ecl : ECC::Level
+    # Content text segments of the QR Code symbol.
+    getter segments : Array(Segment)
     # Returns the canvas of the rMQR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
     getter canvas : Matrix(UInt8)
     # Width and height of the symbol.
     getter size : SymbolDimension
 
-    protected def initialize(@version, @ecl, @canvas)
+    protected def initialize(@version, @ecl, @segments, @canvas)
       @size = @version.symbol_size
     end
   end

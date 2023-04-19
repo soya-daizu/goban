@@ -130,7 +130,7 @@ struct Goban::QR < Goban::AbstractQR
       mask, canvas = self.apply_best_mask(canvas, ecl)
       canvas.normalize
 
-      QR.new(version, ecl, canvas, mask)
+      QR.new(version, ecl, segments, canvas, mask)
     end
 
     # Returns a tuple of the optimized segments and QR Code version for the given text and error correction level.

@@ -33,7 +33,7 @@ struct Goban::MQR < Goban::AbstractQR
       mask, canvas = self.apply_best_mask(canvas, version, ecl)
       canvas.normalize
 
-      MQR.new(version, ecl, canvas, mask)
+      MQR.new(version, ecl, segments, canvas, mask)
     end
 
     # Returns a tuple of the optimized segments and Micro QR Code version

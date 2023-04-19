@@ -44,7 +44,7 @@ struct Goban::RMQR < Goban::AbstractQR
       mask, canvas = self.apply_mask(canvas)
       canvas.normalize
 
-      RMQR.new(version, ecl, canvas)
+      RMQR.new(version, ecl, segments, canvas)
     end
 
     # Returns a tuple of the optimized segments and rMQR Code version

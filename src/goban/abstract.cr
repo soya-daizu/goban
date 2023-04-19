@@ -4,6 +4,7 @@ module Goban
   abstract struct AbstractQR
     getter version
     getter ecl
+    getter segments
     getter canvas
     getter size
 

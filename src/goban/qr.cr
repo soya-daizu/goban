@@ -13,6 +13,8 @@ module Goban
     getter version : Version
     # Error correction level of the QR Code symbol.
     getter ecl : ECC::Level
+    # Content text segments of the QR Code symbol.
+    getter segments : Array(Segment)
     # Returns the canvas of the QR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
     getter canvas : Matrix(UInt8)
@@ -21,7 +23,7 @@ module Goban
     # Mask applied to this QR Code symbol.
     getter mask : Mask
 
-    protected def initialize(@version, @ecl, @canvas, @mask)
+    protected def initialize(@version, @ecl, @segments, @canvas, @mask)
       @size = @version.symbol_size
     end
   end
