@@ -10,11 +10,11 @@ struct Goban::QR < Goban::AbstractQR
     end
 
     def decode_to_string(matrix : Matrix(UInt8))
-      segments = self.decode_to_segments(matrix)
+      segments = self.decode(matrix).segments
       segments.join { |seg| seg.text }
     end
 
-    def decode_to_segments(matrix : Matrix(UInt8))
+    def decode(matrix : Matrix(UInt8))
       version = self.read_version(matrix)
       raise "Invalid version" unless (Version::MIN..Version::MAX).includes?(version)
       mask, ecl = self.read_format(matrix)
@@ -27,7 +27,7 @@ struct Goban::QR < Goban::AbstractQR
       data_codewords = ECC::RSDeflator.deflate_codewords(raw_data_codewords, version, ecl)
 
       bit_stream = BitStream.new(data_codewords)
-      result = Array(Segment).new
+      segments = Array(Segment).new
       while bit_stream.read_pos < bit_stream.size
         header_bits = bit_stream.read_bits(4)
         break if header_bits == 0b0000
@@ -38,11 +38,11 @@ struct Goban::QR < Goban::AbstractQR
         char_count = bit_stream.read_bits(cci_bits_count).to_i
 
         segment = Segment.new(mode, char_count, bit_stream)
-        result.push(segment)
+        segments.push(segment)
         bit_stream.read_pos += segment.bit_size
       end
 
-      result
+      QR.new(version, ecl, segments, matrix, mask)
     end
 
     private def read_version(matrix : Matrix(UInt8))
