@@ -21,15 +21,16 @@ require "benchmark"
 require "qr-code"
 require "goban"
 
+text = "QR Code is a registered trademark of Denso Wave Incorporated. https://www.qrcode.com/en/patent.html"
 Benchmark.ips do |x|
-  x.report("qr-code") { QRCode.new("Hello World!", level: :h) }
-  x.report("goban") { Goban::QR.encode_string("Hello World!", Goban::ECC::Level::High) }
+  x.report("qr-code") { QRCode.new(text, level: :h) }
+  x.report("goban") { Goban::QR.encode_string(text, Goban::ECC::Level::High) }
 end
 ```
 
 ```
-qr-code   3.49k (286.18µs) (± 1.51%)   149kB/op   5.33× slower
-  goban  18.61k ( 53.74µs) (± 1.81%)  8.08kB/op        fastest
+qr-code 389.26  (  2.57ms) (± 1.17%)  0.96MB/op   4.12× slower
+  goban   1.60k (623.68µs) (± 0.89%)  31.5kB/op        fastest
 ```
 
 ## Features
