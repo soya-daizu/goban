@@ -1,5 +1,13 @@
 require "./spec_helper"
 
+def convert_bit_stream(bit_stream : Goban::BitStream)
+  String.build do |io|
+    bit_stream.each do |bit|
+      io << (bit ? '1' : '0')
+    end
+  end
+end
+
 module Goban
   describe BitStream do
     it "builds data bits properly" do

@@ -14,7 +14,7 @@ module Goban
       end
 
       it "encodes properly" do
-        rows = convert_canvas(qr.canvas)
+        rows = convert_canvas_to_text(qr.canvas)
         rows.should eq(SAMPLE_RESULT_MODS_QR)
       end
 
@@ -41,8 +41,17 @@ module Goban
       end
 
       it "encodes properly" do
-        rows = convert_canvas(qr.canvas)
+        rows = convert_canvas_to_text(qr.canvas)
         rows.should eq(SAMPLE_RESULT_MODS_QR)
+      end
+    end
+
+    describe ".decode" do
+      canvas = convert_text_to_matrix(SAMPLE_RESULT_MODS_QR)
+
+      it "decodes properly" do
+        segments = QR.decode(canvas).segments
+        segments.should eq(SAMPLE_SEGS)
       end
     end
 
@@ -55,7 +64,7 @@ module Goban
         codewords = Slice(UInt8).new(21 ** 2 // 8, 154)
         QR::Encoder.draw_codewords(canvas, codewords)
 
-        rows = convert_canvas(canvas)
+        rows = convert_canvas_to_text(canvas)
         rows.should eq(CODEWORDS_FILL_MODS_QR)
       end
     end

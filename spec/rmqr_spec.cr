@@ -14,7 +14,7 @@ module Goban
       end
 
       it "encodes properly" do
-        rows = convert_canvas(qr.canvas)
+        rows = convert_canvas_to_text(qr.canvas)
         rows.should eq(SAMPLE_RESULT_MODS_RMQR)
       end
 
@@ -41,7 +41,7 @@ module Goban
       end
 
       it "encodes properly" do
-        rows = convert_canvas(qr.canvas)
+        rows = convert_canvas_to_text(qr.canvas)
         rows.should eq(SAMPLE_RESULT_MODS_RMQR)
       end
     end

@@ -14,7 +14,7 @@ module Goban
       end
 
       it "encodes properly" do
-        rows = convert_canvas(qr.canvas)
+        rows = convert_canvas_to_text(qr.canvas)
         rows.should eq(SAMPLE_RESULT_MODS_MQR)
       end
 
@@ -41,7 +41,7 @@ module Goban
       end
 
       it "encodes properly" do
-        rows = convert_canvas(qr.canvas)
+        rows = convert_canvas_to_text(qr.canvas)
         rows.should eq(SAMPLE_RESULT_MODS_MQR)
       end
     end
@@ -55,7 +55,7 @@ module Goban
         codewords = Slice(UInt8).new(11 ** 2 // 8, 154)
         MQR::Encoder.draw_codewords(canvas, codewords, version, ECC::Level::Low)
 
-        rows = convert_canvas(canvas)
+        rows = convert_canvas_to_text(canvas)
         rows.should eq(CODEWORDS_FILL_MODS_MQR)
       end
     end

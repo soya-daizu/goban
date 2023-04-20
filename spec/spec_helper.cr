@@ -1,15 +1,7 @@
 require "spec"
 require "../src/goban"
 
-def convert_bit_stream(bit_stream : Goban::BitStream)
-  String.build do |io|
-    bit_stream.each do |bit|
-      io << (bit ? '1' : '0')
-    end
-  end
-end
-
-def convert_canvas(canvas : Goban::Matrix(UInt8))
+def convert_canvas_to_text(canvas : Goban::Matrix(UInt8))
   String.build do |io|
     canvas.each_row do |row|
       row.each do |mod|
@@ -18,6 +10,19 @@ def convert_canvas(canvas : Goban::Matrix(UInt8))
       io << '\n'
     end
   end.lines
+end
+
+def convert_text_to_matrix(lines : Array(String))
+  matrix = Goban::Matrix(UInt8).new(lines[0].size // 2, lines.size, 0)
+
+  lines.each_with_index do |line, y|
+    line.each_char.each_slice(2, reuse: true).each_with_index do |slice, x|
+      mod = slice[0] == '█' ? 1_u8 : 0_u8
+      matrix[x, y] = mod
+    end
+  end
+
+  matrix
 end
 
 ALL_NUMERIC_STR  = "0123456789"

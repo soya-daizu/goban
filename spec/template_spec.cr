@@ -9,7 +9,7 @@ module Goban
         QR::Template.draw_function_patterns(canvas, version)
         canvas.normalize
 
-        rows = convert_canvas(canvas)
+        rows = convert_canvas_to_text(canvas)
         rows.should eq(FUNCTION_PATTERN_MODS_QR)
       end
     end
@@ -23,7 +23,7 @@ module Goban
         MQR::Template.draw_function_patterns(canvas)
         canvas.normalize
 
-        rows = convert_canvas(canvas)
+        rows = convert_canvas_to_text(canvas)
         rows.should eq(FUNCTION_PATTERN_MODS_MQR)
       end
     end
@@ -37,7 +37,7 @@ module Goban
         RMQR::Template.draw_function_patterns(canvas, version, ECC::Level::Medium)
         canvas.normalize
 
-        rows = convert_canvas(canvas)
+        rows = convert_canvas_to_text(canvas)
         rows.should eq(FUNCTION_PATTERN_MODS_RMQR)
       end
     end
