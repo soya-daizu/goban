@@ -18,21 +18,6 @@ module Goban
       @data = Slice.new(@size_x * @size_y, value)
     end
 
-    def self.new_with_values(size_x, size_y, & : Int32, Int32, Int32 -> T)
-      x, y = 0, 0
-      data = Slice.new(size_x * size_y) do |i|
-        v = yield i, x, y
-        x += 1
-        if x == size_x
-          x = 0
-          y += 1
-        end
-        v
-      end
-
-      self.new(size_x, size_y, data)
-    end
-
     def clone
       Matrix(T).new(@size_x, @size_y, @data.dup)
     end
