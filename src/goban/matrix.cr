@@ -11,7 +11,8 @@ module Goban
     delegate unsafe_fetch, to: @data
     delegate unsafe_put, to: @data
 
-    def initialize(@size_x, @size_y, @data)
+    def initialize(@size_x, @size_y, data : Slice(T))
+      @data = data
     end
 
     def initialize(@size_x, @size_y, value : T)
