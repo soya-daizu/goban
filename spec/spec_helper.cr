@@ -16,7 +16,7 @@ def convert_text_to_matrix(lines : Array(String))
   matrix = Goban::Matrix(UInt8).new(lines[0].size // 2, lines.size, 0)
 
   lines.each_with_index do |line, y|
-    line.each_char.each_slice(2, reuse: true).each_with_index do |slice, x|
+    line.each_char.each_slice(2, reuse: true).with_index do |slice, x|
       mod = slice[0] == '█' ? 1_u8 : 0_u8
       matrix[x, y] = mod
     end
