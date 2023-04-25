@@ -27,7 +27,7 @@ struct Goban::RMQR < Goban::AbstractQR
     #
     # See `QR::Encoder.encode_segments` for more information.
     def encode_segments(segments : Array(Segment), ecl : ECC::Level, version : Version | VersionValue)
-      raise "Unsupported EC Level" unless ecl.medium? || ecl.high?
+      raise InputError.new("Unsupported EC Level") unless ecl.medium? || ecl.high?
 
       version = Version.new(version.value)
       bit_stream = BitStream.new(version.max_data_bits(ecl))
@@ -64,7 +64,7 @@ struct Goban::RMQR < Goban::AbstractQR
         cap_bits = v.max_data_bits(ecl)
         begin
           used_bits = Segment.count_total_bits(segments, v)
-        rescue e
+        rescue e : InputError
           next if e.message == "Segment too long"
           raise e
         end
@@ -75,7 +75,7 @@ struct Goban::RMQR < Goban::AbstractQR
           break
         end
       end
-      raise "Text too long" unless segments && version
+      raise InputError.new("Text too long") unless segments && version
 
       {segments, version}
     end

@@ -20,7 +20,7 @@ module Goban
     PAD1 = 0b0001_0001
 
     def initialize(size : Int)
-      raise "Negative bit stream size: #{size}" if size < 0
+      raise InputError.new("Negative bit stream size") if size < 0
       @size = size.to_i
       @bits = Pointer(UInt8).malloc(malloc_size, 0)
       @read_only = false
@@ -39,8 +39,8 @@ module Goban
       cci_bits = segment.char_count
       cci_bits_count = segment.mode.cci_bits_count(version)
 
-      raise "Invalid segment" if !cci_bits_count
-      raise "Text too long" if indicator_length + cci_bits_count + segment.bit_size > size
+      raise InternalError.new("Invalid segment") if !cci_bits_count
+      raise InternalError.new("Text too long") if indicator_length + cci_bits_count + segment.bit_size > size
 
       push_bits(indicator, indicator_length)
       push_bits(cci_bits, cci_bits_count)
@@ -60,7 +60,7 @@ module Goban
       when RMQR::Version
         base = 3
       else
-        raise "Invalid QR version"
+        raise InternalError.new("Invalid QR version")
       end
       terminator_bits_size = Math.min(base, cap_bits - @write_pos)
       push_bits(0, terminator_bits_size)
@@ -92,14 +92,14 @@ module Goban
       return if !val || !len
       return if len == 0
 
-      raise "Too many bits to append" unless (0..31).includes?(len) && val >> len == 0
+      raise InternalError.new("Too many bits to append") unless (0..31).includes?(len) && val >> len == 0
       (0...len).reverse_each do |i|
         self.push((val >> i) & 1 != 0)
       end
     end
 
     protected def read_bits(len : Int)
-      raise "Too many bits to read" unless (0..31).includes?(len) && @read_pos + len <= @size
+      raise InternalError.new("Too many bits to read") unless (0..31).includes?(len) && @read_pos + len <= @size
 
       result = 0_u32
       len.times do |i|
@@ -129,7 +129,7 @@ module Goban
 
     # Adds a value to the current tail of the array.
     private def push(value : Bool)
-      raise "Can't write to a read-only bit stream" if read_only
+      raise InternalError.new("Can't write to a read-only bit stream") if read_only
       self[@write_pos] = value
       @write_pos += 1
 

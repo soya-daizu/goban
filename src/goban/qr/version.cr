@@ -25,14 +25,14 @@ struct Goban::QR < Goban::AbstractQR
     @mode_indicator_length : Int32
 
     def initialize(value)
-      raise "Invalid version number" unless (MIN..MAX).includes?(value)
+      raise InputError.new("Invalid version number") unless (MIN..MAX).includes?(value)
       @value = value.to_u8
       @symbol_size = 4 * @value + 17 # 21 + 4(v - 1)
       @mode_indicator_length = 4
     end
 
     protected def get_version_bits
-      raise "Invalid access to version bits with version number below 7" if @value < 7
+      raise InternalError.new("Invalid access to version bits with version number below 7") if @value < 7
       VERSION_BITS[@value]
     end
 
@@ -87,7 +87,7 @@ struct Goban::QR < Goban::AbstractQR
     # codewords.
     def max_data_codewords(ecl : ECC::Level)
       ecc_codewords = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][@value] * EC_BLOCKS_QR[ecl.to_s][@value]
-      raise "Invalid EC level or version" if ecc_codewords < 0
+      raise InputError.new("Invalid EC level or version") if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
     end
 

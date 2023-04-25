@@ -30,13 +30,13 @@ module Goban
       when .kanji?
         self.kanji(text)
       else
-        raise "Unsupported mode"
+        raise InputError.new("Unsupported mode")
       end
     end
 
     # Shorthand method for creating a Numeric mode segment.
     def self.numeric(text : String)
-      raise "Numeric data contains non-numeric characters" unless text.each_char.all?(&.ascii_number?)
+      raise InputError.new("Numeric data contains non-numeric characters") unless text.each_char.all?(&.ascii_number?)
 
       bit_size = text.size * 3 + (text.size + 2) // 3
       self.new(Segment::Mode::Numeric, text.size, text, bit_size)
@@ -47,7 +47,7 @@ module Goban
       is_all_alphanumeric = text.each_char.all? do |c|
         ALPHANUMERIC_CHARS.index(c)
       end
-      raise "Alphanumeric data contains unencodable characters" unless is_all_alphanumeric
+      raise InputError.new("Alphanumeric data contains unencodable characters") unless is_all_alphanumeric
 
       bit_size = text.size * 5 + (text.size + 1) // 2
       self.new(Segment::Mode::Alphanumeric, text.size, text, bit_size)
@@ -75,7 +75,7 @@ module Goban
       when .kanji?
         produce_bits_kanji
       else
-        raise "Unsupported mode"
+        raise InternalError.new("Unsupported mode")
       end
     end
 
@@ -112,13 +112,13 @@ module Goban
       # In accordance to JIS X 0208, this doesn't include
       # extended characters as in CP932 or other variants
       bytes = @text.encode("SHIFT_JIS")
-      raise "Kanji data contains unencodable characters" unless bytes.size % 2 == 0
+      raise InputError.new("Kanji data contains unencodable characters") unless bytes.size % 2 == 0
 
       bytes.each_slice(2, reuse: true).map do |byte_pair|
         if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
           # significant byte is within the range of SHIFT_JIS
-          raise "Kanji data contains unencodable characters"
+          raise InputError.new("Kanji data contains unencodable characters")
         end
 
         val = (byte_pair[0].to_u16 << 8) | byte_pair[1]
@@ -129,7 +129,7 @@ module Goban
         else
           # Again, this should be caught in the first place
           # as it's not a valid SHIFT_JIS code anyway
-          raise "Kanji data contains unencodable characters"
+          raise InputError.new("Kanji data contains unencodable characters")
         end
         val = (val >> 8) * 0xc0 + (val & 0xff)
 
@@ -150,7 +150,7 @@ module Goban
       when .kanji?
         consume_bits_kanji
       else
-        raise "Unsupported mode"
+        raise InputError.new("Unsupported mode")
       end
 
       self.new(mode, char_count, text, bit_size)
@@ -223,8 +223,8 @@ module Goban
       result = 0
       segments.each do |segment|
         cci_bits_count = segment.mode.cci_bits_count(version)
-        raise "Invalid segment" if !cci_bits_count
-        raise "Segment too long" if segment.char_count >= (1 << cci_bits_count)
+        raise InternalError.new("Invalid segment") if !cci_bits_count
+        raise InputError.new("Segment too long") if segment.char_count >= (1 << cci_bits_count)
         result += 4 + cci_bits_count + segment.bit_size
       end
       result

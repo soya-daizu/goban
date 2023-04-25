@@ -16,7 +16,6 @@ struct Goban::QR < Goban::AbstractQR
 
     def decode(matrix : Matrix(UInt8))
       version = self.read_version(matrix)
-      raise "Invalid version" unless (Version::MIN..Version::MAX).includes?(version)
       mask, ecl = self.read_format(matrix)
 
       # For reserving function patterns
@@ -48,6 +47,7 @@ struct Goban::QR < Goban::AbstractQR
     private def read_version(matrix : Matrix(UInt8))
       size = matrix.size_x
       v = (size - 17) // 4 # Version estimated from the matrix size
+      raise InputError.new("Invalid version") unless (Version::MIN..Version::MAX).includes?(v)
       return Version.new(v) if v < 7
 
       v1_bits, v2_bits = 0, 0
@@ -77,7 +77,7 @@ struct Goban::QR < Goban::AbstractQR
         end
       end
 
-      raise "Unable to read version" if v1_best_diff > 3 && v2_best_diff > 3
+      raise InputError.new("Unable to read version") if v1_best_diff > 3 && v2_best_diff > 3
 
       actual_version = v1_best_diff <= v2_best_diff ? v1_best : v2_best
       raise VersionMismatchError.new(actual_version) unless v == actual_version
@@ -124,8 +124,8 @@ struct Goban::QR < Goban::AbstractQR
         end
       end
 
-      raise "Unable to read format information" if (f1_best_diff > 3 && f2_best_diff > 3) ||
-                                                   !f1_best || !f2_best
+      raise InputError.new("Unable to read format information") if (f1_best_diff > 3 && f2_best_diff > 3) ||
+                                                                    !f1_best || !f2_best
 
       f1_best_diff <= f2_best_diff ? f1_best : f2_best
     end

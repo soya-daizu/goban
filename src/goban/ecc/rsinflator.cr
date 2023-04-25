@@ -16,7 +16,7 @@ module Goban::ECC
     end
 
     def inflate_codewords(codewords : Slice(UInt8), version : QR::Version | RMQR::Version, ecl : Level)
-      raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
+      raise InputError.new("Codewords size mismatch") if codewords.size != version.max_data_codewords(ecl)
 
       case version
       when QR::Version
@@ -26,7 +26,7 @@ module Goban::ECC
         ec_blocks_count = EC_BLOCKS_RMQR[ecl.to_s][version.to_i + 1]
         ec_block_size = EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][version.to_i + 1]
       else
-        raise "Unknown QR Type"
+        raise InternalError.new("Unknown QR Type")
       end
 
       raw_codewords_count = version.raw_max_data_codewords
@@ -61,7 +61,7 @@ module Goban::ECC
     end
 
     def inflate_codewords(codewords : Slice(UInt8), version : MQR::Version, ecl : Level)
-      raise "Codewords size mismatch" if codewords.size != version.max_data_codewords(ecl)
+      raise InputError.new("Codewords size mismatch") if codewords.size != version.max_data_codewords(ecl)
 
       ec_block_size = EC_CODEWORDS_MQR[ecl.to_s][version.to_i]
       raw_codewords_count = version.raw_max_data_codewords

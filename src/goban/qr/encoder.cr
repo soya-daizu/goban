@@ -150,7 +150,7 @@ struct Goban::QR < Goban::AbstractQR
         cap_bits = v.max_data_bits(ecl)
         begin
           used_bits = Segment.count_total_bits(segments, v)
-        rescue e
+        rescue e : InputError
           next if e.message == "Segment too long"
           raise e
         end
@@ -171,7 +171,7 @@ struct Goban::QR < Goban::AbstractQR
           break
         end
       end
-      raise "Text too long" unless segments && version
+      raise InputError.new("Text too long") unless segments && version
 
       {segments, version}
     end
@@ -221,7 +221,7 @@ struct Goban::QR < Goban::AbstractQR
           min_score = score
         end
       end
-      raise "Unable to set the mask" unless mask && best_canvas
+      raise InternalError.new("Unable to set the mask") unless mask && best_canvas
 
       {mask, best_canvas}
     end

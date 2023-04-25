@@ -9,7 +9,7 @@ struct Goban::Segment
     StructuredAppend
     Undefined        = UInt8::MAX
 
-    def self.from_bits(bits : Int, ver : QR::Version)
+    protected def self.from_bits(bits : Int, ver : QR::Version)
       case bits
       when 0b0001
         Numeric
@@ -20,7 +20,7 @@ struct Goban::Segment
       when 0b1000
         Kanji
       else
-        raise "Unknown encoding mode"
+        raise InputError.new("Unknown encoding mode")
       end
     end
 
@@ -35,7 +35,7 @@ struct Goban::Segment
       when Kanji
         0b1000
       else
-        raise "Unknown encoding mode"
+        raise InternalError.new("Unknown encoding mode")
       end
     end
 
@@ -50,7 +50,7 @@ struct Goban::Segment
       when Kanji
         values = {nil, nil, 0b11, 0b011}
       else
-        raise "Unknown encoding mode"
+        raise InternalError.new("Unknown encoding mode")
       end
 
       values[ver.to_i - 1]
@@ -67,7 +67,7 @@ struct Goban::Segment
       when Kanji
         0b100
       else
-        raise "Unknown encoding mode"
+        raise InternalError.new("Unknown encoding mode")
       end
     end
 
@@ -83,7 +83,7 @@ struct Goban::Segment
       when Kanji
         values = {8, 10, 12}
       else
-        raise "Unknown encoding mode"
+        raise InternalError.new("Unknown encoding mode")
       end
 
       index = {1..9, 10..26, 27..40}.index! { |range| range.includes?(ver) }
@@ -102,7 +102,7 @@ struct Goban::Segment
       when Kanji
         counts = {nil, nil, 3, 4}
       else
-        raise "Unknown encoding mode"
+        raise InternalError.new("Unknown encoding mode")
       end
 
       counts[ver.to_i - 1]
@@ -120,7 +120,7 @@ struct Goban::Segment
       when Kanji
         counts = {2, 3, 4, 5, 5, 3, 4, 5, 5, 6, 2, 4, 5, 5, 6, 6, 3, 5, 5, 6, 6, 7, 5, 5, 6, 6, 7, 5, 6, 6, 6, 7}
       else
-        raise "Unknown encoding mode"
+        raise InternalError.new("Unknown encoding mode")
       end
 
       counts[ver.to_i]

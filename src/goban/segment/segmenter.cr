@@ -82,7 +82,7 @@ struct Goban::Segment
 
     # Converts a list of encoding modes for each character to an actual segment objects.
     protected def make_segments(text : String, char_modes : Array(Segment::Mode))
-      raise "Text size does not match the char modes" if text.size != char_modes.size
+      raise InternalError.new("Text size does not match the char modes") if text.size != char_modes.size
 
       result = [] of Segment
       count = 0

@@ -19,7 +19,7 @@ struct Goban::MQR < Goban::AbstractQR
     @mode_indicator_length : Int32
 
     def initialize(value : Int)
-      raise "Invalid version number" unless (MIN..MAX).includes?(value)
+      raise InputError.new("Invalid version number") unless (MIN..MAX).includes?(value)
       @value = value.to_u8
       @symbol_size = 2 * @value + 9 # 11 + 2(v - 1)
       @mode_indicator_length = value.to_i - 1
@@ -53,7 +53,7 @@ struct Goban::MQR < Goban::AbstractQR
     # codewords.
     def max_data_codewords(ecl : ECC::Level)
       ecc_codewords = EC_CODEWORDS_MQR[ecl.to_s][@value]
-      raise "Invalid EC level or version" if ecc_codewords < 0
+      raise InputError.new("Invalid EC level or version") if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
     end
 
@@ -62,7 +62,7 @@ struct Goban::MQR < Goban::AbstractQR
     # codewords.
     def max_data_bits(ecl : ECC::Level)
       ecc_codewords = EC_CODEWORDS_MQR[ecl.to_s][@value]
-      raise "Invalid EC level or version" if ecc_codewords < 0
+      raise InputError.new("Invalid EC level or version") if ecc_codewords < 0
       raw_data_mods_count - ecc_codewords * 8
     end
   end

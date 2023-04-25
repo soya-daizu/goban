@@ -155,7 +155,7 @@ struct Goban::RMQR < Goban::AbstractQR
       when 5
         {27, 55, 81, 109}
       else
-        raise "Invalid w_group"
+        raise InternalError.new("Invalid w_group")
       end
     end
 
@@ -191,7 +191,7 @@ struct Goban::RMQR < Goban::AbstractQR
     # codewords.
     def max_data_codewords(ecl : ECC::Level)
       ecc_codewords = EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][@value.value + 1] * EC_BLOCKS_RMQR[ecl.to_s][@value.value + 1]
-      raise "Invalid EC level or version" if ecc_codewords < 0
+      raise InputError.new("Invalid EC level or version") if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
     end
 

@@ -92,7 +92,7 @@ module Goban::ECC
     end
 
     def div(other : Indexable(UInt8))
-      raise "Division by 0" if other.is_zero?
+      raise InputError.new("Division by 0") if other.is_zero?
 
       result = Slice(UInt8).new(self.size + other.size - 1)
       @data.copy_to(result)
@@ -110,7 +110,7 @@ module Goban::ECC
     end
 
     def div2(other : Indexable(UInt8))
-      raise "Division by 0" if other.is_zero?
+      raise InputError.new("Division by 0") if other.is_zero?
 
       quotient = GFPoly.zero
       remainder = self

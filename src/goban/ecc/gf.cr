@@ -29,7 +29,7 @@ module Goban::ECC
     end
 
     def log(x : UInt8)
-      raise "Can't take log(0)" if x == 0
+      raise InputError.new("Can't take log(0)") if x == 0
       LOG_TABLE[x]
     end
 
@@ -43,7 +43,7 @@ module Goban::ECC
     end
 
     def div(x : UInt8, y : UInt8)
-      raise "Division by 0" if y == 0
+      raise InputError.new("Division by 0") if y == 0
       return 0_u8 if x == 0
       EXP_TABLE[(LOG_TABLE[x].to_i + 255 - LOG_TABLE[y]) % 255]
     end
@@ -53,7 +53,7 @@ module Goban::ECC
     end
 
     def inv(x : UInt8)
-      raise "Can't invert 0" if x == 0
+      raise InputError.new("Can't invert 0") if x == 0
       EXP_TABLE[255 - LOG_TABLE[x]]
     end
   end

@@ -73,10 +73,10 @@ module Goban::ECC
         q, r = r_last_last.div2(r_last)
         t = q.mul(t_last).add_or_sub(t_last_last)
 
-        raise "Unable to correct error" if r.degree >= r_last.degree
+        raise InputError.new("Unable to correct error") if r.degree >= r_last.degree
       end
 
-      raise "Unable to correct error" if t.get_coeff(0) == 0
+      raise InputError.new("Unable to correct error") if t.get_coeff(0) == 0
 
       inv = GF.inv(t.get_coeff(0))
       {t.scale(inv), r.scale(inv)}
@@ -95,7 +95,7 @@ module Goban::ECC
         end
         i += 1
       end
-      raise "Unable to correct error" unless err_count == err_cap
+      raise InputError.new("Unable to correct error") unless err_count == err_cap
 
       result
     end
@@ -103,7 +103,7 @@ module Goban::ECC
     private def correct_err(block : Slice(UInt8), evaluator : GFPoly, loc : Slice(UInt8))
       loc.each_with_index do |l, i|
         pos = block.size - 1 - GF.log(l)
-        raise "Unable to correct error" if pos < 0
+        raise InternalError.new("Unable to correct error") if pos < 0
         l_inv = GF.inv(l)
 
         denominator = 1_u8
