@@ -55,6 +55,7 @@ struct Goban::MQR < Goban::AbstractQR
           used_bits = Segment.count_total_bits(segments, v)
         rescue e : InputError
           next if e.message == "Segment too long"
+          next if e.message == "Invalid segment"
           raise e
         end
 

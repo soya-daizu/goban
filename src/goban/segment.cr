@@ -223,7 +223,7 @@ module Goban
       result = 0
       segments.each do |segment|
         cci_bits_count = segment.mode.cci_bits_count(version)
-        raise InternalError.new("Invalid segment") if !cci_bits_count
+        raise InputError.new("Invalid segment") if !cci_bits_count
         raise InputError.new("Segment too long") if segment.char_count >= (1 << cci_bits_count)
         result += 4 + cci_bits_count + segment.bit_size
       end
