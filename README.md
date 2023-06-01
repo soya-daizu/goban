@@ -227,21 +227,19 @@ Just like regular QR Codes and Micro QR Codes, rMQR Codes can also be generated 
 # Note that rMQR Code only supports Medium and High ECC Level
 rmqr = Goban::RMQR.encode_string("Hello World!", Goban::ECC::Level::Medium)
 puts rmqr.version.value
-# => R13x27
+# => R11x43
 rmqr.print_to_console
-# => ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████
-#    ██          ██        ████████  ██████              ██
-#    ██  ██████  ██  ████    ██        ██    ██  ████    ██
-#    ██  ██████  ██    ████      ████    ████  ██    ██
-#    ██  ██████  ██  ██████  ████████████  ██████    ██████
-#    ██          ██      ████████  ██  ██          ██
-#    ██████████████  ██████        ██  ██  ████  ██  ██████
-#                    ██  ████    ████      ██      ████
-#    ████  ██  ██            ██████████    ██    ██████████
-#      ████  ██████████  ██    ██    ██  ██      ██      ██
-#    ██  ████            ████      ██  ██    ██  ██  ██  ██
-#    ██        ██████  ██████  ██  ██████        ██      ██
-#    ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████
+# => ██████████████  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██████
+#    ██          ██          ██    ████████  ██  ██████████  ██████████  ██    ██        ██
+#    ██  ██████  ██    ██  ██████        ██████████    ██    ████  ██  ████  ██    ████  ██
+#    ██  ██████  ██  ██      ██    ██        ██            ████    ██████      ██      ██  
+#    ██  ██████  ██    ██  ██████    ████  ██  ████  ████    ██      ████      ████  ██████
+#    ██          ██      ██  ██████                ████  ██  ██████    ██  ██    ██  ██    
+#    ██████████████  ██        ██  ██          ████████    ██████████████        ██████████
+#                        ██  ██    ██████████    ████████      ████  ██    ████████      ██
+#    ████    ██    ██      ██████    ████    ████████  ████    ██    ██    ████████  ██  ██
+#    ██    ████    ██  ██    ██      ████    ██  ██  ██████  ██████  ██████      ██      ██
+#    ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██████████
 ```
 
 However, unlike regular QR Codes and Micro QR Codes, rMQR Codes has different sizes in width and height, which means that there can be multiple versions that are optimal in terms of capacity. rMQR Code versions are represented in the format of `R{height}x{width}` with the following available combinations.
