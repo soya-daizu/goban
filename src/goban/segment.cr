@@ -225,7 +225,7 @@ module Goban
         cci_bits_count = segment.mode.cci_bits_count(version)
         raise InputError.new("Invalid segment") if !cci_bits_count
         raise InputError.new("Segment too long") if segment.char_count >= (1 << cci_bits_count)
-        result += 4 + cci_bits_count + segment.bit_size
+        result += version.mode_indicator_length + cci_bits_count + segment.bit_size
       end
       result
     end
