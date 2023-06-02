@@ -1,12 +1,12 @@
 struct Goban::RMQR < Goban::AbstractQR
+  enum SizingStrategy : UInt8
+    MinimizeArea
+    MinimizeWidth
+    MinimizeHeight
+  end
+
   module Encoder
     extend self
-
-    enum SizingStrategy : UInt8
-      MinimizeArea
-      MinimizeWidth
-      MinimizeHeight
-    end
 
     # Creates a new Micro QR Code object for the given string, error correction level, and sizing strategy.
     #
