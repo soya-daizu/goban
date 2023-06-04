@@ -43,17 +43,20 @@ module Goban
 
     @[AlwaysInline]
     def [](x : Int, y : Int)
-      @data[y * @size_x + x]
+      raise IndexError.new unless 0 <= x && x < @size_x && 0 <= y && y < @size_y
+      @data.unsafe_fetch(y * @size_x + x)
     end
 
     @[AlwaysInline]
     def []?(x : Int, y : Int)
-      @data[y * @size_x + x]?
+      return nil unless 0 <= x && x < @size_x && 0 <= y && y < @size_y
+      @data.unsafe_fetch(y * @size_x + x)
     end
 
     @[AlwaysInline]
     def []=(x : Int, y : Int, value : UInt8)
-      @data[y * @size_x + x] = value
+      raise IndexError.new unless 0 <= x && x < @size_x && 0 <= y && y < @size_y
+      @data.unsafe_put(y * @size_x + x, value)
     end
 
     @[AlwaysInline]
