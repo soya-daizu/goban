@@ -15,6 +15,8 @@ struct Goban::QR < Goban::AbstractQR
     end
 
     def decode(matrix : Matrix(UInt8))
+      raise InputError.new("Matrix not square") unless matrix.size_x == matrix.size_y
+
       version = self.read_version(matrix)
       mask, ecl = self.read_format(matrix)
 
