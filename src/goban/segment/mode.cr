@@ -24,6 +24,24 @@ struct Goban::Segment
       end
     end
 
+    protected def self.from_bits(bits : Int, ver : MQR::Version)
+      case bits
+      when 0b000
+        Numeric
+      when 0b001
+        raise InputError.new("Invalid encoding mode") if ver < 2
+        Alphanumeric
+      when 0b010
+        raise InputError.new("Invalid encoding mode") if ver < 3
+        Byte
+      when 0b011
+        raise InputError.new("Invalid encoding mode") if ver < 3
+        Kanji
+      else
+        raise InputError.new("Unknown encoding mode")
+      end
+    end
+
     protected def indicator(ver : QR::Version)
       case self
       when Numeric
@@ -75,19 +93,19 @@ struct Goban::Segment
     protected def cci_bits_count(ver : QR::Version)
       case self
       when Numeric
-        values = {10, 12, 14}
+        counts = {10, 12, 14}
       when Alphanumeric
-        values = {9, 11, 13}
+        counts = {9, 11, 13}
       when Byte
-        values = {8, 16, 16}
+        counts = {8, 16, 16}
       when Kanji
-        values = {8, 10, 12}
+        counts = {8, 10, 12}
       else
         raise InternalError.new("Unknown encoding mode")
       end
 
       index = {1..9, 10..26, 27..40}.index! { |range| range.includes?(ver) }
-      values[index]
+      counts[index]
     end
 
     # Number of the character count indicator bits for this mode.

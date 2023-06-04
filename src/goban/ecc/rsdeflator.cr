@@ -41,6 +41,17 @@ module Goban::ECC
       result
     end
 
+    def deflate_codewords(codewords : Slice(UInt8), version : MQR::Version, ecl : Level)
+      data_codewords_count = version.max_data_codewords(ecl)
+
+      ec_block_size = EC_CODEWORDS_MQR[ecl.to_s][version.to_i]
+      raw_codewords_count = version.raw_max_data_codewords
+      block_size = raw_codewords_count
+      data_size = block_size - ec_block_size
+
+      self.decode_block(codewords, ec_block_size)[0, data_size]
+    end
+
     private def decode_block(block : Slice(UInt8), ec_block_size : Int)
       has_no_err = true
       block_poly = GFPoly.new(block)

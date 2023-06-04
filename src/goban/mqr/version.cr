@@ -7,7 +7,7 @@ struct Goban::MQR < Goban::AbstractQR
     MAX = 4_u8
 
     SYMBOL_NUMS = {
-      NamedTuple(),
+      NamedTuple.new, # For padding
       {Low: 0b000, Medium: 0b000, Quartile: 0b000},
       {Low: 0b001, Medium: 0b010, Quartile: -1},
       {Low: 0b011, Medium: 0b100, Quartile: -1},
