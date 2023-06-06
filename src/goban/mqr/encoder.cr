@@ -70,7 +70,7 @@ struct Goban::MQR < Goban::AbstractQR
       {segments, version}
     end
 
-    protected def draw_codewords(canvas : Matrix(UInt8), codewords : Slice(UInt8), version : Version, ecl : ECC::Level)
+    protected def draw_codewords(canvas : Canvas(UInt8), codewords : Slice(UInt8), version : Version, ecl : ECC::Level)
       size = canvas.size
       data_length = codewords.size * 8
 
@@ -106,7 +106,7 @@ struct Goban::MQR < Goban::AbstractQR
       end
     end
 
-    protected def apply_best_mask(canvas : Matrix(UInt8), version : Version, ecl : ECC::Level)
+    protected def apply_best_mask(canvas : Canvas(UInt8), version : Version, ecl : ECC::Level)
       mask, best_canvas = nil, nil
       max_score = Int32::MIN
 

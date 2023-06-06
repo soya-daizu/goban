@@ -1,6 +1,6 @@
 module Goban
-  # Data type representing 2D matrix symbol.
-  struct Matrix(T)
+  # Data type representing 2D canvas symbol.
+  struct Canvas(T)
     include Indexable::Mutable(T)
 
     getter size_x : Int32
@@ -20,7 +20,7 @@ module Goban
     end
 
     def clone
-      Matrix(T).new(@size_x, @size_y, @data.dup)
+      Canvas(T).new(@size_x, @size_y, @data.dup)
     end
 
     def size

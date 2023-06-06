@@ -16,7 +16,7 @@ module Goban
     getter segments : Array(Segment)
     # Returns the canvas of the Micro QR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
-    getter canvas : Matrix(UInt8)
+    getter canvas : Canvas(UInt8)
     # Length of a side in the symbol.
     getter size : Int32
     # Mask applied to this Micro QR Code symbol.

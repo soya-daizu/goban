@@ -5,7 +5,7 @@ module Goban
     describe ".draw_function_patterns" do
       it "draws all function patterns" do
         version = QR::Version.new(7)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         QR::Template.draw_function_patterns(canvas, version)
         canvas.normalize
 
@@ -19,7 +19,7 @@ module Goban
     describe ".draw_function_patterns" do
       it "draws all function patterns" do
         version = MQR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         MQR::Template.draw_function_patterns(canvas)
         canvas.normalize
 
@@ -33,7 +33,7 @@ module Goban
     describe ".draw_function_patterns" do
       it "draws all function patterns" do
         version = RMQR::Version.new(RMQR::VersionValue::R7x77)
-        canvas = Matrix(UInt8).new(version.symbol_size.width, version.symbol_size.height, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size.width, version.symbol_size.height, 0)
         RMQR::Template.draw_function_patterns(canvas, version, ECC::Level::Medium)
         canvas.normalize
 

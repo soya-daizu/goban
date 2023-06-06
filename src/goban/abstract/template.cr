@@ -26,7 +26,7 @@ abstract struct Goban::AbstractQR
       0xc1_u8, 0xc1_u8, 0xc1_u8,
     }
 
-    protected def draw_pattern(canvas : Matrix(UInt8), x : Int, y : Int, pattern, pattern_size : Int)
+    protected def draw_pattern(canvas : Canvas(UInt8), x : Int, y : Int, pattern, pattern_size : Int)
       pattern_size.times do |i|
         xx = x + i
         pattern_size.times do |j|
@@ -36,7 +36,7 @@ abstract struct Goban::AbstractQR
       end
     end
 
-    protected def draw_timing_pattern(canvas : Matrix(UInt8), j : Int, count : Int)
+    protected def draw_timing_pattern(canvas : Canvas(UInt8), j : Int, count : Int)
       count.times do |k|
         i = 8 + k
         mod = i.even? ? 0xc1_u8 : 0xc0_u8

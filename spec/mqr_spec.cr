@@ -49,7 +49,7 @@ module Goban
     describe ".draw_data_codewords" do
       it "fills codewords properly" do
         version = MQR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         canvas[3, 3, 3, 3] = 0xc0
 
         codewords = Slice(UInt8).new(11 ** 2 // 8, 154)
@@ -63,7 +63,7 @@ module Goban
     describe ".apply_best_mask" do
       it "applies best mask" do
         version = MQR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         canvas.data.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
 
         MQR::Encoder.apply_best_mask(canvas, version, ECC::Level::Low)[0].value.should eq(3)

@@ -4,10 +4,10 @@ struct Goban::QR < Goban::AbstractQR
     extend self
     include AbstractQR::Template
 
-    # Creates a new matrix canvas with all the function patterns drawn for the given version.
+    # Creates a new canvas with all the function patterns drawn for the given version.
     protected def make_canvas(version : Version)
       size = version.symbol_size
-      canvas = Matrix(UInt8).new(size, size, 0)
+      canvas = Canvas(UInt8).new(size, size, 0)
       self.draw_function_patterns(canvas, version)
 
       canvas
@@ -19,7 +19,7 @@ struct Goban::QR < Goban::AbstractQR
     # - Finder patterns on each corner except bottom right
     # - Alignment patterns depending on the QR Code version
     # - Timing patterns in both directions
-    protected def draw_function_patterns(canvas : Matrix(UInt8), version : Version)
+    protected def draw_function_patterns(canvas : Canvas(UInt8), version : Version)
       size = canvas.size
 
       self.draw_pattern(canvas, 0, 0, FINDER_PATTERN, 7)
@@ -55,7 +55,7 @@ struct Goban::QR < Goban::AbstractQR
       canvas[8, canvas.size - 8] = 0xc1
     end
 
-    private def draw_version_modules(canvas : Matrix(UInt8), version : Version)
+    private def draw_version_modules(canvas : Canvas(UInt8), version : Version)
       return if version < 7
       bits = version.get_version_bits
 
@@ -68,7 +68,7 @@ struct Goban::QR < Goban::AbstractQR
       end
     end
 
-    protected def draw_format_modules(canvas : Matrix(UInt8), mask : Mask, ecl : ECC::Level)
+    protected def draw_format_modules(canvas : Canvas(UInt8), mask : Mask, ecl : ECC::Level)
       bits = mask.get_format_bits(ecl)
 
       (0...8).each do |i|

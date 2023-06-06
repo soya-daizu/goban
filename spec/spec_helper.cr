@@ -1,7 +1,7 @@
 require "spec"
 require "../src/goban"
 
-def convert_canvas_to_text(canvas : Goban::Matrix(UInt8))
+def convert_canvas_to_text(canvas : Goban::Canvas(UInt8))
   String.build do |io|
     canvas.each_row do |row|
       row.each do |mod|
@@ -12,17 +12,17 @@ def convert_canvas_to_text(canvas : Goban::Matrix(UInt8))
   end.lines
 end
 
-def convert_text_to_matrix(lines : Array(String))
-  matrix = Goban::Matrix(UInt8).new(lines[0].size // 2, lines.size, 0)
+def convert_text_to_canvas(lines : Array(String))
+  canvas = Goban::Canvas(UInt8).new(lines[0].size // 2, lines.size, 0)
 
   lines.each_with_index do |line, y|
     line.each_char.each_slice(2, reuse: true).with_index do |slice, x|
       mod = slice[0] == '█' ? 1_u8 : 0_u8
-      matrix[x, y] = mod
+      canvas[x, y] = mod
     end
   end
 
-  matrix
+  canvas
 end
 
 ALL_NUMERIC_STR  = "0123456789"

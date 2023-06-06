@@ -47,7 +47,7 @@ struct Goban::QR < Goban::AbstractQR
 
     # Evaluate penalty score for the given canvas.
     # It assumes that one of the masks is applied to the canvas.
-    protected def self.evaluate_score(canvas : Matrix(UInt8))
+    protected def self.evaluate_score(canvas : Canvas(UInt8))
       s1_a, s3_a, s2, dark_count = self.compute_score_h(canvas)
       s1_b, s3_b = self.compute_score_v(canvas)
       s4 = self.compute_balance_score(dark_count, canvas.size)
@@ -115,11 +115,11 @@ struct Goban::QR < Goban::AbstractQR
       }
     end
 
-    private def self.compute_score_h(canvas : Matrix(UInt8))
+    private def self.compute_score_h(canvas : Canvas(UInt8))
       compute_score(true)
     end
 
-    private def self.compute_score_v(canvas : Matrix(UInt8))
+    private def self.compute_score_v(canvas : Canvas(UInt8))
       compute_score(false)
     end
 

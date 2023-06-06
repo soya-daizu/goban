@@ -42,7 +42,7 @@ struct Goban::MQR < Goban::AbstractQR
 
     # Evaluate penalty score for the given canvas.
     # It assumes that one of the masks is applied to the canvas.
-    protected def self.evaluate_score(canvas : Matrix(UInt8))
+    protected def self.evaluate_score(canvas : Canvas(UInt8))
       s1, s2 = 0, 0
       canvas.size.times do |i|
         s1 += canvas[canvas.size - 1, i] & 1

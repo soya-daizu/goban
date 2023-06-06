@@ -47,7 +47,7 @@ module Goban
     end
 
     describe ".decode" do
-      canvas = convert_text_to_matrix(SAMPLE_RESULT_MODS_QR)
+      canvas = convert_text_to_canvas(SAMPLE_RESULT_MODS_QR)
 
       it "decodes properly" do
         segments = QR.decode(canvas).segments
@@ -58,7 +58,7 @@ module Goban
     describe ".draw_data_codewords" do
       it "fills codewords properly" do
         version = QR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         canvas[8, 8, 7, 7] = 0xc0
 
         codewords = Slice(UInt8).new(21 ** 2 // 8, 154)
@@ -72,7 +72,7 @@ module Goban
     describe ".apply_best_mask" do
       it "applies best mask" do
         version = QR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         canvas.data.map_with_index! { |_, idx| idx.odd?.to_unsafe.to_u8 }
 
         QR::Encoder.apply_best_mask(canvas, ECC::Level::Low)[0].value.should eq(2)

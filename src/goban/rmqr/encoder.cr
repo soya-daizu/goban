@@ -80,7 +80,7 @@ struct Goban::RMQR < Goban::AbstractQR
       {segments, version}
     end
 
-    protected def draw_codewords(canvas : Matrix(UInt8), codewords : Slice(UInt8))
+    protected def draw_codewords(canvas : Canvas(UInt8), codewords : Slice(UInt8))
       width, height = canvas.size_x, canvas.size_y
       data_length = codewords.size * 8
 
@@ -106,7 +106,7 @@ struct Goban::RMQR < Goban::AbstractQR
       end
     end
 
-    protected def apply_mask(canvas : Matrix(UInt8))
+    protected def apply_mask(canvas : Canvas(UInt8))
       mask = Mask.new
       mask.apply_to(canvas)
 

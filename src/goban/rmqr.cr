@@ -16,7 +16,7 @@ module Goban
     getter segments : Array(Segment)
     # Returns the canvas of the rMQR Code symbol. Canvas contains information about
     # each single module (pixel) in the symbol.
-    getter canvas : Matrix(UInt8)
+    getter canvas : Canvas(UInt8)
     # Width and height of the symbol.
     getter size : SymbolDimension
 

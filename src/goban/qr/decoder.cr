@@ -9,22 +9,22 @@ struct Goban::QR < Goban::AbstractQR
       end
     end
 
-    def decode_to_string(matrix : Matrix(UInt8))
-      segments = self.decode(matrix).segments
+    def decode_to_string(canvas : Canvas(UInt8))
+      segments = self.decode(canvas).segments
       segments.join { |seg| seg.text }
     end
 
-    def decode(matrix : Matrix(UInt8))
-      raise InputError.new("Matrix not square") unless matrix.size_x == matrix.size_y
+    def decode(canvas : Canvas(UInt8))
+      raise InputError.new("Canvas not square") unless canvas.size_x == canvas.size_y
 
-      version = self.read_version(matrix)
-      mask, ecl = self.read_format(matrix)
+      version = self.read_version(canvas)
+      mask, ecl = self.read_format(canvas)
 
       # For reserving function patterns
-      Template.draw_function_patterns(matrix, version)
-      mask.apply_to(matrix)
+      Template.draw_function_patterns(canvas, version)
+      mask.apply_to(canvas)
 
-      raw_data_codewords = self.read_data_codewords(matrix, version)
+      raw_data_codewords = self.read_data_codewords(canvas, version)
       data_codewords = ECC::RSDeflator.deflate_codewords(raw_data_codewords, version, ecl)
 
       bit_stream = BitStream.new(data_codewords)
@@ -43,12 +43,12 @@ struct Goban::QR < Goban::AbstractQR
         bit_stream.read_pos += segment.bit_size
       end
 
-      QR.new(version, ecl, segments, matrix, mask)
+      QR.new(version, ecl, segments, canvas, mask)
     end
 
-    private def read_version(matrix : Matrix(UInt8))
-      size = matrix.size_x
-      v = (size - 17) // 4 # Version estimated from the matrix size
+    private def read_version(canvas : Canvas(UInt8))
+      size = canvas.size_x
+      v = (size - 17) // 4 # Version estimated from the canvas size
       raise InputError.new("Invalid version") unless (Version::MIN..Version::MAX).includes?(v)
       return Version.new(v) if v < 7
 
@@ -57,8 +57,8 @@ struct Goban::QR < Goban::AbstractQR
         x = size - 11 + i % 3
         y = i // 3
 
-        v1_bits = (v1_bits << 1) | matrix[x, y]
-        v2_bits = (v2_bits << 1) | matrix[y, x]
+        v1_bits = (v1_bits << 1) | canvas[x, y]
+        v2_bits = (v2_bits << 1) | canvas[y, x]
       end
 
       v1_best, v1_best_diff = 0, 18
@@ -87,21 +87,21 @@ struct Goban::QR < Goban::AbstractQR
       Version.new(actual_version)
     end
 
-    private def read_format(matrix : Matrix(UInt8))
-      size = matrix.size_x
+    private def read_format(canvas : Canvas(UInt8))
+      size = canvas.size_x
 
       f1_bits, f2_bits = 0, 0
       (8..14).reverse_each do |i|
         pos = i == 8 ? 7 : (14 - i)
-        f1_bits = (f1_bits << 1) | matrix[pos, 8]
+        f1_bits = (f1_bits << 1) | canvas[pos, 8]
         pos = size - 1 - (14 - i)
-        f2_bits = (f2_bits << 1) | matrix[8, pos]
+        f2_bits = (f2_bits << 1) | canvas[8, pos]
       end
       (0..7).reverse_each do |i|
         pos = i >= 6 ? i + 1 : i
-        f1_bits = (f1_bits << 1) | matrix[8, pos]
+        f1_bits = (f1_bits << 1) | canvas[8, pos]
         pos = size - 1 - i
-        f2_bits = (f2_bits << 1) | matrix[pos, 8]
+        f2_bits = (f2_bits << 1) | canvas[pos, 8]
       end
 
       f1_best, f1_best_diff = nil, 15
@@ -132,8 +132,8 @@ struct Goban::QR < Goban::AbstractQR
       f1_best_diff <= f2_best_diff ? f1_best : f2_best
     end
 
-    private def read_data_codewords(matrix : Matrix(UInt8), version : Version)
-      size = matrix.size
+    private def read_data_codewords(canvas : Canvas(UInt8), version : Version)
+      size = canvas.size
       data_codewords = Slice(UInt8).new(version.raw_max_data_codewords, 0)
       data_length = data_codewords.size * 8
 
@@ -147,7 +147,7 @@ struct Goban::QR < Goban::AbstractQR
           (0..1).each do |alt|
             x = base_x - alt
             y = upward ? base_y : size - 1 - base_y
-            bit = matrix[x, y]
+            bit = canvas[x, y]
             next if bit & 0x80 > 0
             return data_codewords if i >= data_length
 

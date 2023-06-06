@@ -4,10 +4,10 @@ struct Goban::RMQR < Goban::AbstractQR
     extend self
     include AbstractQR::Template
 
-    # Creates a new matrix canvas with all the function patterns drawn for the given version.
+    # Creates a new canvas with all the function patterns drawn for the given version.
     protected def make_canvas(version : Version, ecl : ECC::Level)
       size = version.symbol_size
-      canvas = Matrix(UInt8).new(size.width, size.height, 0)
+      canvas = Canvas(UInt8).new(size.width, size.height, 0)
       self.draw_function_patterns(canvas, version, ecl)
 
       canvas
@@ -19,7 +19,7 @@ struct Goban::RMQR < Goban::AbstractQR
     # - A finder pattern and a finder sub pattern on the top left and bottom right corner each
     # - Alignment patterns depending on the QR Code version
     # - Timing patterns in both directions
-    protected def draw_function_patterns(canvas : Matrix(UInt8), version : Version, ecl : ECC::Level)
+    protected def draw_function_patterns(canvas : Canvas(UInt8), version : Version, ecl : ECC::Level)
       width, height = canvas.size_x, canvas.size_y
 
       self.draw_pattern(canvas, 0, 0, FINDER_PATTERN, 7)
@@ -57,7 +57,7 @@ struct Goban::RMQR < Goban::AbstractQR
       self.draw_version_modules(canvas, version, ecl)
     end
 
-    private def draw_timing_line(canvas : Matrix(UInt8), x : Int, y : Int, count : Int, horizontal : Bool)
+    private def draw_timing_line(canvas : Canvas(UInt8), x : Int, y : Int, count : Int, horizontal : Bool)
       return if count < 1
       count.times do |k|
         i = horizontal ? x + k : x
@@ -67,7 +67,7 @@ struct Goban::RMQR < Goban::AbstractQR
       end
     end
 
-    private def draw_version_modules(canvas : Matrix(UInt8), version : Version, ecl : ECC::Level)
+    private def draw_version_modules(canvas : Canvas(UInt8), version : Version, ecl : ECC::Level)
       width, height = canvas.size_x, canvas.size_y
       bits_left, bits_right = version.get_version_bits(ecl)
 

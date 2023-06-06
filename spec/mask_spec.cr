@@ -5,7 +5,7 @@ module Goban
     describe ".evaluate_score" do
       it "reports correct score" do
         version = QR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         QR::Template.draw_function_patterns(canvas, version)
 
         expected = 283 + 283 + 711 + 360 + 360 + 50 # = 2047
@@ -18,7 +18,7 @@ module Goban
     describe ".evaluate_score" do
       it "reports correct score" do
         version = MQR::Version.new(1)
-        canvas = Matrix(UInt8).new(version.symbol_size, version.symbol_size, 0)
+        canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         canvas[10, 0, 1, 6] = 1
         canvas[0, 10, 5, 1] = 1
 
