@@ -127,7 +127,7 @@ struct Goban::QR < Goban::AbstractQR
       end
 
       raise InputError.new("Unable to read format information") if (f1_best_diff > 3 && f2_best_diff > 3) ||
-                                                                    !f1_best || !f2_best
+                                                                   !f1_best || !f2_best
 
       f1_best_diff <= f2_best_diff ? f1_best : f2_best
     end

@@ -4,7 +4,7 @@ struct Goban::MQR < Goban::AbstractQR
     extend self
     include AbstractQR::Template
 
-    # Creates a new canvas canvas with all the function patterns drawn for the given version.
+    # Creates a new canvas with all the function patterns drawn for the given version.
     protected def make_canvas(version : Version)
       size = version.symbol_size
       canvas = Canvas(UInt8).new(size, size, 0)
