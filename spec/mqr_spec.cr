@@ -46,6 +46,15 @@ module Goban
       end
     end
 
+    describe ".decode" do
+      canvas = convert_text_to_canvas(SAMPLE_RESULT_MODS_MQR)
+
+      it "decodes properly" do
+        segments = MQR.decode(canvas).segments
+        segments.should eq(SAMPLE_SEGS_2)
+      end
+    end
+
     describe ".draw_data_codewords" do
       it "fills codewords properly" do
         version = MQR::Version.new(1)
