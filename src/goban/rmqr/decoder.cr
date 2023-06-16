@@ -22,16 +22,14 @@ struct Goban::RMQR < Goban::AbstractQR
       raise InputError.new("Invalid version") unless version
       actual_version, ecl = self.read_format(canvas)
       raise VersionMismatchError.new(actual_version.to_i) unless actual_version == version
-      p! version, ecl
+      # p! version, ecl
 
       # For reserving function patterns
       Template.draw_function_patterns(canvas, version, ecl)
       Mask.new.apply_to(canvas)
 
       raw_data_codewords = self.read_data_codewords(canvas, version)
-      p! raw_data_codewords
       data_codewords = ECC::RSDeflator.deflate_codewords(raw_data_codewords, version, ecl)
-      p! data_codewords
 
       bit_stream = BitStream.new(data_codewords)
       segments = Array(Segment).new
