@@ -6,6 +6,7 @@ struct Goban::MQR < Goban::AbstractQR
       getter actual_version : Int32
 
       def initialize(@actual_version)
+        @message = "Symbol size does not match the detected version"
       end
     end
 
