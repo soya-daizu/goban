@@ -33,7 +33,7 @@ struct Goban::MQR < Goban::AbstractQR
       end
       raise InputError.new("Unalbe to read format information") unless ecl
       version = Version.new(version)
-      p! version, mask, ecl
+      # p! version, mask, ecl
 
       # For reserving function patterns
       Template.draw_function_patterns(canvas)

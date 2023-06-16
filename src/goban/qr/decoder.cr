@@ -20,6 +20,7 @@ struct Goban::QR < Goban::AbstractQR
 
       version = self.read_version(canvas)
       mask, ecl = self.read_format(canvas)
+      # p! version, mask, ecl
 
       # For reserving function patterns
       Template.draw_function_patterns(canvas, version)
