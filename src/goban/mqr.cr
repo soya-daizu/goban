@@ -6,6 +6,7 @@ module Goban
   # Object that represents an encoded Micro QR Code symbol.
   struct MQR < AbstractQR
     extend Encoder
+    extend Decoder
 
     # Version of the Micro QR Code symbol. Version in QR Code does not refer to its revision,
     # but simply indicates the size format of the QR Code symbol.
