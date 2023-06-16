@@ -42,6 +42,21 @@ struct Goban::Segment
       end
     end
 
+    protected def self.from_bits(bits : Int, ver : RMQR::Version)
+      case bits
+      when 0b001
+        Numeric
+      when 0b010
+        Alphanumeric
+      when 0b011
+        Byte
+      when 0b100
+        Kanji
+      else
+        raise InputError.new("Unknown encoding mode")
+      end
+    end
+
     protected def indicator(ver : QR::Version)
       case self
       when Numeric

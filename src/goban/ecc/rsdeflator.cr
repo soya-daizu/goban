@@ -2,11 +2,19 @@ module Goban::ECC
   module RSDeflator
     extend self
 
-    def deflate_codewords(codewords : Slice(UInt8), version : QR::Version, ecl : Level)
+    def deflate_codewords(codewords : Slice(UInt8), version : QR::Version | RMQR::Version, ecl : Level)
       data_codewords_count = version.max_data_codewords(ecl)
 
-      ec_blocks_count = EC_BLOCKS_QR[ecl.to_s][version.to_i]
-      ec_block_size = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i]
+      case version
+      when QR::Version
+        ec_blocks_count = EC_BLOCKS_QR[ecl.to_s][version.to_i]
+        ec_block_size = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i]
+      when RMQR::Version
+        ec_blocks_count = EC_BLOCKS_RMQR[ecl.to_s][version.to_i + 1]
+        ec_block_size = EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][version.to_i + 1]
+      else
+        raise InternalError.new("Unknown QR Type")
+      end
 
       raw_codewords_count = version.raw_max_data_codewords
       short_blocks_count = ec_blocks_count - raw_codewords_count % ec_blocks_count

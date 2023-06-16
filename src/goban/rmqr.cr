@@ -6,6 +6,7 @@ module Goban
   # Object that represents an encoded rMQR Code symbol.
   struct RMQR < AbstractQR
     extend Encoder
+    extend Decoder
 
     # Version of the rMQR Code symbol. Version in QR Code does not refer to its revision,
     # but simply indicates the size format of the QR Code symbol.
