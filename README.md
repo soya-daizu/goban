@@ -7,7 +7,7 @@ The implementation aims compliance with following standards:
 - [ISO/IEC 18004:2015](https://www.iso.org/standard/62021.html)/[JIS X 0510:2018](https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510%3A2018)
 - [ISO/IEC 23941:2022](https://www.iso.org/standard/77404.html)
 
-The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate matrix barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
+The name comes from the board game [Go](<https://en.wikipedia.org/wiki/Go_(game)>), which inspired the QR Code inventor to come up with a fast and accurate canvas barcode to read. 碁盤(Goban) literally means [Go board](https://en.wikipedia.org/wiki/Go_equipment#Board) in Japanese.
 
 _"QR Code" is a registered trademark of Denso Wave Incorporated._
 https://www.qrcode.com/en/patent.html
@@ -21,7 +21,7 @@ require "benchmark"
 require "qr-code"
 require "goban"
 
-text = "QR Code is a registered trademark of Denso Wave Incorporated. https://www.qrcode.com/en/patent.html"
+text = "Hello World!"
 Benchmark.ips do |x|
   x.report("qr-code") { QRCode.new(text, level: :h) }
   x.report("goban") { Goban::QR.encode_string(text, Goban::ECC::Level::High) }
@@ -29,8 +29,8 @@ end
 ```
 
 ```
-qr-code 389.26  (  2.57ms) (± 1.17%)  0.96MB/op   4.12× slower
-  goban   1.60k (623.68µs) (± 0.89%)  31.5kB/op        fastest
+qr-code   4.59k (218.03µs) (± 0.48%)  149kB/op   6.64× slower
+  goban  30.46k ( 32.83µs) (± 0.13%)  7.6kB/op        fastest
 ```
 
 ## Features
@@ -232,9 +232,9 @@ rmqr.print_to_console
 # => ██████████████  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██████
 #    ██          ██          ██    ████████  ██  ██████████  ██████████  ██    ██        ██
 #    ██  ██████  ██    ██  ██████        ██████████    ██    ████  ██  ████  ██    ████  ██
-#    ██  ██████  ██  ██      ██    ██        ██            ████    ██████      ██      ██  
+#    ██  ██████  ██  ██      ██    ██        ██            ████    ██████      ██      ██
 #    ██  ██████  ██    ██  ██████    ████  ██  ████  ████    ██      ████      ████  ██████
-#    ██          ██      ██  ██████                ████  ██  ██████    ██  ██    ██  ██    
+#    ██          ██      ██  ██████                ████  ██  ██████    ██  ██    ██  ██
 #    ██████████████  ██        ██  ██          ████████    ██████████████        ██████████
 #                        ██  ██    ██████████    ████████      ████  ██    ████████      ██
 #    ████    ██    ██      ██████    ████    ████████  ████    ██    ██    ████████  ██  ██
