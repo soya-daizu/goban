@@ -70,8 +70,7 @@ struct Goban::RMQR < Goban::AbstractQR
             {% for ecl in {:Medium, :High} %}
               {% data = ver %}
               {% data |= 1 << 5 if ecl == :High %}
-              {% rem = ver %}
-              {% rem |= 1 << 5 if ecl == :High %}
+              {% rem = data %}
               {% for _ in (0..11) %}
                 {% rem = (rem << 1) ^ ((rem >> 11) * 0x1F25) %}
               {% end %}
