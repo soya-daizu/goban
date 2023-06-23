@@ -35,22 +35,18 @@ qr-code   4.59k (218.03µs) (± 0.48%)  149kB/op   6.64× slower
 
 ## Features
 
-| QR Code Type      | Encoding | Decoding |
-| ----------------- | :------: | :------: |
-| QR Code Model 1\* |    -     |    -     |
-| QR Code Model 2   |    ✓     |    ✓     |
-| Micro QR Code     |    ✓     |    -     |
-| rMQR Code         |    ✓     |    -     |
+| QR Code Type  | Encoding | Decoding |
+| ------------- | :------: | :------: |
+| QR Code\*     |    ✓     |    ✓     |
+| Micro QR Code |    ✓     |    ✓     |
+| rMQR Code     |    ✓     |    ✓     |
 
 \* QR Code Model 1 will not be supported as it is considered obsolete.
 
 ## Roadmap
 
-- Encoding
-  - Add ECI mode encoding
-  - Support structured append of symbols
-- Decoding
-  - Support decoding Micro QR Code and rMQR code symbols
+- Add ECI mode encoding
+- Support structured append of symbols
 
 ## Installation
 
