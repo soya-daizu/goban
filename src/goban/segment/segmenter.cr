@@ -28,7 +28,7 @@ struct Goban::Segment
         cur_costs[0] = prev_costs[0] + c.bytesize * 8 * 6
         c_modes[0] = modes[0]
 
-        is_alphanumeric = ALPHANUMERIC_CHARS.includes?(c)
+        is_alphanumeric = c.in?(ALPHANUMERIC_CHARS)
         if is_alphanumeric
           # 33 / 6 bits per char
           cur_costs[1] = prev_costs[1] + 33

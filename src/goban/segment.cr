@@ -115,16 +115,16 @@ module Goban
       raise InputError.new("Kanji data contains unencodable characters") unless bytes.size % 2 == 0
 
       bytes.each_slice(2, reuse: true).map do |byte_pair|
-        if !(0x40..0xfc).includes?(byte_pair[1]) || byte_pair[1] == 0x7f
+        if !byte_pair[1].in?(0x40..0xfc) || byte_pair[1] == 0x7f
           # Probably unnecessary, but making sure that the least
           # significant byte is within the range of SHIFT_JIS
           raise InputError.new("Kanji data contains unencodable characters")
         end
 
         val = (byte_pair[0].to_u16 << 8) | byte_pair[1]
-        if (0x8140..0x9ffc).includes?(val)
+        if val.in?(0x8140..0x9ffc)
           val -= 0x8140
-        elsif (0xe040..0xebbf).includes?(val)
+        elsif val.in?(0xe040..0xebbf)
           val -= 0xc140
         else
           # Again, this should be caught in the first place

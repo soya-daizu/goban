@@ -119,7 +119,7 @@ struct Goban::Segment
         raise InternalError.new("Unknown encoding mode")
       end
 
-      index = {1..9, 10..26, 27..40}.index! { |range| range.includes?(ver) }
+      index = {1..9, 10..26, 27..40}.index! { |range| ver.in?(range) }
       counts[index]
     end
 

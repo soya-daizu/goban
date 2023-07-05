@@ -19,7 +19,7 @@ struct Goban::MQR < Goban::AbstractQR
       raise InputError.new("Canvas not square") unless canvas.size_x == canvas.size_y
 
       version = (canvas.size_x - 9) // 2
-      raise InputError.new("Invalid version") unless (Version::MIN..Version::MAX).includes?(version)
+      raise InputError.new("Invalid version") unless version.in?(Version::MIN..Version::MAX)
       mask, symbol_num = self.read_format(canvas)
       ecl = nil
       Version::SYMBOL_NUMS.each_with_index do |group, ver|

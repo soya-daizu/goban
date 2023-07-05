@@ -31,7 +31,7 @@ struct Goban::MQR < Goban::AbstractQR
     {% end %}
 
     def initialize(value)
-      raise InputError.new("Invalid mask number") unless (MIN..MAX).includes?(value)
+      raise InputError.new("Invalid mask number") unless value.in?(MIN..MAX)
       @value = value.to_u8
       @mask_pattern = MASK_PATTERNS[@value]
     end

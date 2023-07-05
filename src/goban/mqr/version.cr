@@ -19,7 +19,7 @@ struct Goban::MQR < Goban::AbstractQR
     @mode_indicator_length : Int32
 
     def initialize(value : Int)
-      raise InputError.new("Invalid version number") unless (MIN..MAX).includes?(value)
+      raise InputError.new("Invalid version number") unless value.in?(MIN..MAX)
       @value = value.to_u8
       @symbol_size = 2 * @value + 9 # 11 + 2(v - 1)
       @mode_indicator_length = value.to_i - 1

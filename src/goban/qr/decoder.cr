@@ -51,7 +51,7 @@ struct Goban::QR < Goban::AbstractQR
     private def read_version(canvas : Canvas(UInt8))
       size = canvas.size_x
       v = (size - 17) // 4 # Version estimated from the canvas size
-      raise InputError.new("Invalid version") unless (Version::MIN..Version::MAX).includes?(v)
+      raise InputError.new("Invalid version") unless v.in?(Version::MIN..Version::MAX)
       return Version.new(v) if v < 7
 
       v1_bits, v2_bits = 0, 0

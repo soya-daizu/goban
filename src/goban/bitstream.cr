@@ -92,14 +92,14 @@ module Goban
       return if !val || !len
       return if len == 0
 
-      raise InternalError.new("Too many bits to append") unless (0..31).includes?(len) && val >> len == 0
+      raise InternalError.new("Too many bits to append") unless len.in?(0..31) && val >> len == 0
       (0...len).reverse_each do |i|
         self.push((val >> i) & 1 != 0)
       end
     end
 
     protected def read_bits(len : Int)
-      raise InternalError.new("Too many bits to read") unless (0..31).includes?(len) && @read_pos + len <= @size
+      raise InternalError.new("Too many bits to read") unless len.in?(0..31) && @read_pos + len <= @size
 
       result = 0_u32
       len.times do |i|
