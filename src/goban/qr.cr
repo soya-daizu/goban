@@ -1,6 +1,6 @@
 require "./abstract/*"
-require "./qr/*"
 require "./ecc/*"
+require "./qr/*"
 
 module Goban
   # Object that represents an encoded QR Code symbol.

@@ -190,7 +190,7 @@ struct Goban::RMQR < Goban::AbstractQR
     # symbol of this version. This does not include the number of error correction
     # codewords.
     def max_data_codewords(ecl : ECC::Level)
-      ecc_codewords = EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][@value.value + 1] * EC_BLOCKS_RMQR[ecl.to_s][@value.value + 1]
+      ecc_codewords = ECC::EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][@value.value + 1] * ECC::EC_BLOCKS_RMQR[ecl.to_s][@value.value + 1]
       raise InputError.new("Invalid EC level or version") if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
     end

@@ -7,11 +7,11 @@ module Goban::ECC
 
       case version
       when QR::Version
-        ec_blocks_count = EC_BLOCKS_QR[ecl.to_s][version.to_i]
-        ec_block_size = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i]
+        ec_blocks_count = ECC::EC_BLOCKS_QR[ecl.to_s][version.to_i]
+        ec_block_size = ECC::EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i]
       when RMQR::Version
-        ec_blocks_count = EC_BLOCKS_RMQR[ecl.to_s][version.to_i + 1]
-        ec_block_size = EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][version.to_i + 1]
+        ec_blocks_count = ECC::EC_BLOCKS_RMQR[ecl.to_s][version.to_i + 1]
+        ec_block_size = ECC::EC_CODEWORDS_PER_BLOCK_RMQR[ecl.to_s][version.to_i + 1]
       else
         raise InternalError.new("Unknown QR Type")
       end

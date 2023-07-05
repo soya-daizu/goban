@@ -86,7 +86,7 @@ struct Goban::QR < Goban::AbstractQR
     # symbol of this version. This does not include the number of error correction
     # codewords.
     def max_data_codewords(ecl : ECC::Level)
-      ecc_codewords = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][@value] * EC_BLOCKS_QR[ecl.to_s][@value]
+      ecc_codewords = ECC::EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][@value] * ECC::EC_BLOCKS_QR[ecl.to_s][@value]
       raise InputError.new("Invalid EC level or version") if ecc_codewords < 0
       raw_max_data_codewords - ecc_codewords
     end

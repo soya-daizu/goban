@@ -19,7 +19,7 @@ module Goban
 
         version = QR::Version.new(3)
         ecl = ECC::Level::Quartile
-        ecc_codewords = EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i] * EC_BLOCKS_QR[ecl.to_s][version.to_i]
+        ecc_codewords = ECC::EC_CODEWORDS_PER_BLOCK_QR[ecl.to_s][version.to_i] * ECC::EC_BLOCKS_QR[ecl.to_s][version.to_i]
         (ecc_codewords // 2).times do |i|
           corrupted[i] = Random.rand(256).to_u8
         end

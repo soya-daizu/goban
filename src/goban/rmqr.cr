@@ -1,6 +1,6 @@
 require "./abstract/*"
-require "./rmqr/*"
 require "./ecc/*"
+require "./rmqr/*"
 
 module Goban
   # Object that represents an encoded rMQR Code symbol.
