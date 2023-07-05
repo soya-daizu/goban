@@ -109,17 +109,9 @@ module Goban
     end
 
     private macro produce_bits_kanji
-      # In accordance to JIS X 0208, this doesn't include
-      # extended characters as in CP932 or other variants
-      bytes = @text.encode("SHIFT_JIS")
-      raise InputError.new("Kanji data contains unencodable characters") unless bytes.size % 2 == 0
-
-      bytes.each_slice(2, reuse: true).map do |byte_pair|
-        if !byte_pair[1].in?(0x40..0xfc) || byte_pair[1] == 0x7f
-          # Probably unnecessary, but making sure that the least
-          # significant byte is within the range of SHIFT_JIS
-          raise InputError.new("Kanji data contains unencodable characters")
-        end
+      @text.each_char.map do |char|
+        v = UNICODE_SHIFTJIS_TABLE[char.ord] rescue raise InputError.new("Kanji data contains unencodable characters")
+        byte_pair = {v >> 8, v & 0x00ff}
 
         val = (byte_pair[0].to_u16 << 8) | byte_pair[1]
         if val.in?(0x8140..0x9ffc)

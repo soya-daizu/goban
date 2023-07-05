@@ -42,7 +42,7 @@ struct Goban::Segment
           c_modes[2] = modes[2]
         end
 
-        is_kanji = c.bytesize > 1 && !c.to_s.encode("SHIFT_JIS", :skip).empty?
+        is_kanji = c.bytesize > 1 && UNICODE_SHIFTJIS_TABLE[c.ord]?
         if is_kanji
           # 78 / 6 bits per char
           cur_costs[3] = prev_costs[3] + 78
