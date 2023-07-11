@@ -106,7 +106,10 @@ module Goban::ECC
         end
       end
 
-      {GFPoly.new(result[0, self.size]), GFPoly.new(result[self.size, result.size - self.size])}
+      {
+        GFPoly.new(result[0, self.size], truncate: false),
+        GFPoly.new(result[self.size, result.size - self.size], truncate: false),
+      }
     end
 
     def div2(other : Indexable(UInt8))
