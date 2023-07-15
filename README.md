@@ -56,8 +56,8 @@ qrencode  44.18k ( 22.63µs) (± 0.28%)   112B/op        fastest
 
 ```
 ❯ ./bin/qr_test "こんにちは"
-   goban  28.04k ( 35.67µs) (± 0.38%)  9.08kB/op   1.16× slower
-qrencode  32.52k ( 30.75µs) (± 0.26%)    112B/op        fastest
+   goban  31.45k ( 31.80µs) (± 0.22%)  7.56kB/op   1.03× slower
+qrencode  32.42k ( 30.84µs) (± 0.52%)    112B/op        fastest
 ```
 
 When compared to the C library, Goban is usually a bit slower, but it should be noted that Goban uses [a more advanced algorithm](#about-the-encoding-modes-and-the-text-segmentation) for text segmentation and is more likely to produce a smaller QR Code symbol.
