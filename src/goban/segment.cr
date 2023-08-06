@@ -119,8 +119,6 @@ module Goban
         elsif val.in?(0xe040..0xebbf)
           val -= 0xc140
         else
-          # Again, this should be caught in the first place
-          # as it's not a valid SHIFT_JIS code anyway
           raise InputError.new("Kanji data contains unencodable characters")
         end
         val = (val >> 8) * 0xc0 + (val & 0xff)
