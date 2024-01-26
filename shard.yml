@@ -1,5 +1,5 @@
 name: goban
-version: 1.6.1
+version: 1.7.0
 
 authors:
   - soya_daizu <soya_daizu@proton.me>
@@ -21,6 +21,6 @@ development_dependencies:
 crystalline:
   main: .crystalline_main.cr
 
-crystal: 1.9.0
+crystal: 1.11.0
 
 license: MIT
