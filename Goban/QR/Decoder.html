@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.12.2">
+<meta name="crystal_docs.project_version" content="1.8.0">
+<meta name="crystal_docs.project_name" content="goban">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="goban">
+  <title>Goban::QR::Decoder - goban 1.8.0</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          goban
+        </a>
+      </h1>
+
+      <span class="project-version">
+        1.8.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="goban/Goban" data-name="goban">
+      <a href="../../Goban.html">Goban</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/AbstractQR" data-name="goban::abstractqr">
+      <a href="../../Goban/AbstractQR.html">AbstractQR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Mask" data-name="goban::abstractqr::mask">
+      <a href="../../Goban/AbstractQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Template" data-name="goban::abstractqr::template">
+      <a href="../../Goban/AbstractQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Version" data-name="goban::abstractqr::version">
+      <a href="../../Goban/AbstractQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/BitStream" data-name="goban::bitstream">
+      <a href="../../Goban/BitStream.html">BitStream</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Canvas" data-name="goban::canvas(t)">
+      <a href="../../Goban/Canvas.html">Canvas</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+      <a href="../../Goban/ECC.html">ECC</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/ECC/GF" data-name="goban::ecc::gf">
+      <a href="../../Goban/ECC/GF.html">GF</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/GFPoly" data-name="goban::ecc::gfpoly">
+      <a href="../../Goban/ECC/GFPoly.html">GFPoly</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
+      <a href="../../Goban/ECC/Level.html">Level</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/RSDeflator" data-name="goban::ecc::rsdeflator">
+      <a href="../../Goban/ECC/RSDeflator.html">RSDeflator</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/RSInflator" data-name="goban::ecc::rsinflator">
+      <a href="../../Goban/ECC/RSInflator.html">RSInflator</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/InputError" data-name="goban::inputerror">
+      <a href="../../Goban/InputError.html">InputError</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/InternalError" data-name="goban::internalerror">
+      <a href="../../Goban/InternalError.html">InternalError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/MQR" data-name="goban::mqr">
+      <a href="../../Goban/MQR.html">MQR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/MQR/Decoder" data-name="goban::mqr::decoder">
+      <a href="../../Goban/MQR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/MQR/Decoder/VersionMismatchError" data-name="goban::mqr::decoder::versionmismatcherror">
+      <a href="../../Goban/MQR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Encoder" data-name="goban::mqr::encoder">
+      <a href="../../Goban/MQR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Mask" data-name="goban::mqr::mask">
+      <a href="../../Goban/MQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Template" data-name="goban::mqr::template">
+      <a href="../../Goban/MQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Version" data-name="goban::mqr::version">
+      <a href="../../Goban/MQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
+      <a href="../../Goban/PNGExporter.html">PNGExporter</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="goban/Goban/QR" data-name="goban::qr">
+      <a href="../../Goban/QR.html">QR</a>
+      
+        <ul>
+  
+  <li class="parent open current" data-id="goban/Goban/QR/Decoder" data-name="goban::qr::decoder">
+      <a href="../../Goban/QR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/QR/Decoder/VersionMismatchError" data-name="goban::qr::decoder::versionmismatcherror">
+      <a href="../../Goban/QR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Encoder" data-name="goban::qr::encoder">
+      <a href="../../Goban/QR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
+      <a href="../../Goban/QR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Template" data-name="goban::qr::template">
+      <a href="../../Goban/QR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Version" data-name="goban::qr::version">
+      <a href="../../Goban/QR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/RMQR" data-name="goban::rmqr">
+      <a href="../../Goban/RMQR.html">RMQR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/RMQR/Decoder" data-name="goban::rmqr::decoder">
+      <a href="../../Goban/RMQR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Decoder/VersionMismatchError" data-name="goban::rmqr::decoder::versionmismatcherror">
+      <a href="../../Goban/RMQR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Encoder" data-name="goban::rmqr::encoder">
+      <a href="../../Goban/RMQR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Mask" data-name="goban::rmqr::mask">
+      <a href="../../Goban/RMQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/SizingStrategy" data-name="goban::rmqr::sizingstrategy">
+      <a href="../../Goban/RMQR/SizingStrategy.html">SizingStrategy</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/SymbolDimension" data-name="goban::rmqr::symboldimension">
+      <a href="../../Goban/RMQR/SymbolDimension.html">SymbolDimension</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Template" data-name="goban::rmqr::template">
+      <a href="../../Goban/RMQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Version" data-name="goban::rmqr::version">
+      <a href="../../Goban/RMQR/Version.html">Version</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/VersionValue" data-name="goban::rmqr::versionvalue">
+      <a href="../../Goban/RMQR/VersionValue.html">VersionValue</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
+      <a href="../../Goban/Segment.html">Segment</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
+      <a href="../../Goban/Segment/Mode.html">Mode</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Segment/Segmenter" data-name="goban::segment::segmenter">
+      <a href="../../Goban/Segment/Segmenter.html">Segmenter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/SVGExporter" data-name="goban::svgexporter">
+      <a href="../../Goban/SVGExporter.html">SVGExporter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">module</span> Goban::<wbr>QR::<wbr>Decoder
+
+</h1>
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="extended-modules" class="anchor" href="#extended-modules">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Extended Modules
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../../Goban/QR/Decoder.html">Goban::QR::Decoder</a></li>
+    
+  </ul>
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      goban/qr/decoder.cr
+    
+    <br/>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#decode%28canvas%3ACanvas%28UInt8%29%29-instance-method" class="signature"><strong>#decode</strong>(canvas : Canvas(UInt8))</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#decode_to_string%28canvas%3ACanvas%28UInt8%29%29-instance-method" class="signature"><strong>#decode_to_string</strong>(canvas : Canvas(UInt8))</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+<div class="methods-inherited">
+  
+</div>
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="decode(canvas:Canvas(UInt8))-instance-method">
+      <div class="signature">
+        
+        def <strong>decode</strong>(canvas : <a href="../../Goban/Canvas.html">Canvas</a>(UInt8))
+
+        <a class="method-permalink" href="#decode%28canvas%3ACanvas%28UInt8%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="decode_to_string(canvas:Canvas(UInt8))-instance-method">
+      <div class="signature">
+        
+        def <strong>decode_to_string</strong>(canvas : <a href="../../Goban/Canvas.html">Canvas</a>(UInt8))
+
+        <a class="method-permalink" href="#decode_to_string%28canvas%3ACanvas%28UInt8%29%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+</div>
+
+</body>
+</html>

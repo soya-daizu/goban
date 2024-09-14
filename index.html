@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.12.2">
+<meta name="crystal_docs.project_version" content="1.8.0">
+<meta name="crystal_docs.project_name" content="goban">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="goban">
+  <title>goban 1.8.0</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          goban
+        </a>
+      </h1>
+
+      <span class="project-version">
+        1.8.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent " data-id="goban/Goban" data-name="goban">
+      <a href="Goban.html">Goban</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/AbstractQR" data-name="goban::abstractqr">
+      <a href="Goban/AbstractQR.html">AbstractQR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Mask" data-name="goban::abstractqr::mask">
+      <a href="Goban/AbstractQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Template" data-name="goban::abstractqr::template">
+      <a href="Goban/AbstractQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Version" data-name="goban::abstractqr::version">
+      <a href="Goban/AbstractQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/BitStream" data-name="goban::bitstream">
+      <a href="Goban/BitStream.html">BitStream</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Canvas" data-name="goban::canvas(t)">
+      <a href="Goban/Canvas.html">Canvas</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+      <a href="Goban/ECC.html">ECC</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/ECC/GF" data-name="goban::ecc::gf">
+      <a href="Goban/ECC/GF.html">GF</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/GFPoly" data-name="goban::ecc::gfpoly">
+      <a href="Goban/ECC/GFPoly.html">GFPoly</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
+      <a href="Goban/ECC/Level.html">Level</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/RSDeflator" data-name="goban::ecc::rsdeflator">
+      <a href="Goban/ECC/RSDeflator.html">RSDeflator</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/RSInflator" data-name="goban::ecc::rsinflator">
+      <a href="Goban/ECC/RSInflator.html">RSInflator</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/InputError" data-name="goban::inputerror">
+      <a href="Goban/InputError.html">InputError</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/InternalError" data-name="goban::internalerror">
+      <a href="Goban/InternalError.html">InternalError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/MQR" data-name="goban::mqr">
+      <a href="Goban/MQR.html">MQR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/MQR/Decoder" data-name="goban::mqr::decoder">
+      <a href="Goban/MQR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/MQR/Decoder/VersionMismatchError" data-name="goban::mqr::decoder::versionmismatcherror">
+      <a href="Goban/MQR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Encoder" data-name="goban::mqr::encoder">
+      <a href="Goban/MQR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Mask" data-name="goban::mqr::mask">
+      <a href="Goban/MQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Template" data-name="goban::mqr::template">
+      <a href="Goban/MQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Version" data-name="goban::mqr::version">
+      <a href="Goban/MQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
+      <a href="Goban/PNGExporter.html">PNGExporter</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qr">
+      <a href="Goban/QR.html">QR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/QR/Decoder" data-name="goban::qr::decoder">
+      <a href="Goban/QR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/QR/Decoder/VersionMismatchError" data-name="goban::qr::decoder::versionmismatcherror">
+      <a href="Goban/QR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Encoder" data-name="goban::qr::encoder">
+      <a href="Goban/QR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
+      <a href="Goban/QR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Template" data-name="goban::qr::template">
+      <a href="Goban/QR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Version" data-name="goban::qr::version">
+      <a href="Goban/QR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/RMQR" data-name="goban::rmqr">
+      <a href="Goban/RMQR.html">RMQR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/RMQR/Decoder" data-name="goban::rmqr::decoder">
+      <a href="Goban/RMQR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Decoder/VersionMismatchError" data-name="goban::rmqr::decoder::versionmismatcherror">
+      <a href="Goban/RMQR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Encoder" data-name="goban::rmqr::encoder">
+      <a href="Goban/RMQR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Mask" data-name="goban::rmqr::mask">
+      <a href="Goban/RMQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/SizingStrategy" data-name="goban::rmqr::sizingstrategy">
+      <a href="Goban/RMQR/SizingStrategy.html">SizingStrategy</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/SymbolDimension" data-name="goban::rmqr::symboldimension">
+      <a href="Goban/RMQR/SymbolDimension.html">SymbolDimension</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Template" data-name="goban::rmqr::template">
+      <a href="Goban/RMQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Version" data-name="goban::rmqr::version">
+      <a href="Goban/RMQR/Version.html">Version</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/VersionValue" data-name="goban::rmqr::versionvalue">
+      <a href="Goban/RMQR/VersionValue.html">VersionValue</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
+      <a href="Goban/Segment.html">Segment</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
+      <a href="Goban/Segment/Mode.html">Mode</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Segment/Segmenter" data-name="goban::segment::segmenter">
+      <a href="Goban/Segment/Segmenter.html">Segmenter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/SVGExporter" data-name="goban::svgexporter">
+      <a href="Goban/SVGExporter.html">SVGExporter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1><a id="goban" class="anchor" href="#goban">  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Goban</h1>
+<p>A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (4-10×) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal (<a href="https://github.com/spider-gazelle/qr-code">spider-gazelle/qr-code</a>), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.</p>
+<p>The implementation aims compliance with following standards:</p>
+<ul>
+<li><a href="https://www.iso.org/standard/62021.html">ISO/IEC 18004:2015</a>/<a href="https://webdesk.jsa.or.jp/books/W11M0090/index/?bunsyo_id=JIS+X+0510:2018">JIS X 0510:2018</a></li>
+<li><a href="https://www.iso.org/standard/77404.html">ISO/IEC 23941:2022</a></li>
+</ul>
+<p>The name comes from the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>, which inspired the QR Code inventor to come up with a fast and accurate canvas barcode to read. 碁盤(Goban) literally means <a href="https://en.wikipedia.org/wiki/Go_equipment#Board">Go board</a> in Japanese.</p>
+<p><em>&quot;QR Code&quot; is a registered trademark of Denso Wave Incorporated.</em>
+https://www.qrcode.com/en/patent.html</p>
+<h2><a id="benchmarks" class="anchor" href="#benchmarks">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Benchmarks</h2>
+<h3><a id="vs-spider-gazelleqr-code" class="anchor" href="#vs-spider-gazelleqr-code">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>vs <a href="https://github.com/spider-gazelle/qr-code">spider-gazelle/qr-code</a>:</h3>
+<pre><code class="language-crystal">text <span class="o">=</span> <span class="t">ARGV</span>[<span class="n">0</span>]
+<span class="t">Benchmark</span>.ips <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x.report(<span class="s">&quot;goban&quot;</span>) { <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(text, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">High</span>) }
+  x.report(<span class="s">&quot;qr-code&quot;</span>) { <span class="t">QRCode</span>.new(text, level: <span class="n">:h</span>) }
+<span class="k">end</span></code></pre>
+<pre><code class="language-crystal">❯ .<span class="o">/</span>bin<span class="o">/</span>qr_test <span class="s">&quot;Hello World\!&quot;</span>
+  goban  <span class="n">30.76</span>k ( <span class="n">32.51</span>µs) (± <span class="n">0.21</span><span class="o">%</span>)  <span class="n">7.6</span>kB<span class="o">/</span>op        fastest
+qr<span class="o">-</span>code   <span class="n">4.59</span>k (<span class="n">217.64</span>µs) (± <span class="n">0.64</span><span class="o">%</span>)  <span class="n">149</span>kB<span class="o">/</span>op   <span class="n">6.69</span>× slower</code></pre>
+<pre><code class="language-crystal">❯ .<span class="o">/</span>bin<span class="o">/</span>qr_test <span class="s">&quot;こんにちは&quot;</span>
+  goban  <span class="n">30.99</span>k ( <span class="n">32.26</span>µs) (± <span class="n">0.31</span><span class="o">%</span>)  <span class="n">7.56</span>kB<span class="o">/</span>op        fastest
+qr<span class="o">-</span>code   <span class="n">3.08</span>k (<span class="n">324.90</span>µs) (± <span class="n">0.59</span><span class="o">%</span>)   <span class="n">198</span>kB<span class="o">/</span>op  <span class="n">10.07</span>× slower</code></pre>
+<p>It goes even faster with a larger data and multithreading:</p>
+<pre><code class="language-crystal">❯ shards build --release -Dpreview_mt
+Dependencies are satisfied
+Building: qr_test
+
+❯ CRYSTAL_WORKERS=4 ./bin/qr_test &quot;A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (4-10×) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal (spider-gazelle/qr-code), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.&quot;
+  goban   2.45k (408.47µs) (± 6.31%)  95.3kB/op        fastest
+qr-code 168.07  (  5.95ms) (± 2.17%)  2.55MB/op  14.57× slower
+
+❯ CRYSTAL_WORKERS=8 ./bin/qr_test &quot;A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (4-10×) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal (spider-gazelle/qr-code), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.&quot;
+  goban   3.41k (292.99µs) (± 2.03%)  95.3kB/op        fastest
+qr-code 173.34  (  5.77ms) (± 1.81%)  2.55MB/op  19.69× slower</code></pre>
+<h3><a id="vs-woodruffwqrencode.cr-crystal-bindings-to-libqrencode" class="anchor" href="#vs-woodruffwqrencode.cr-crystal-bindings-to-libqrencode">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>vs <a href="https://github.com/woodruffw/qrencode.cr">woodruffw/qrencode.cr</a> (Crystal bindings to libqrencode):</h3>
+<pre><code class="language-crystal">text <span class="o">=</span> <span class="t">ARGV</span>[<span class="n">0</span>]
+<span class="t">Benchmark</span>.ips <span class="k">do</span> <span class="o">|</span>x<span class="o">|</span>
+  x.report(<span class="s">&quot;goban&quot;</span>) { <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(text, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">High</span>) }
+  x.report(<span class="s">&quot;qrencode&quot;</span>) { <span class="t">QRencode</span><span class="t">::</span><span class="t">QRcode</span>.new(text, level: <span class="t">QRencode</span><span class="t">::</span><span class="t">ECLevel</span><span class="t">::</span><span class="t">HIGH</span>) }
+<span class="k">end</span></code></pre>
+<pre><code class="language-crystal">❯ .<span class="o">/</span>bin<span class="o">/</span>qr_test <span class="s">&quot;Hello World\!&quot;</span>
+   goban  <span class="n">30.31</span>k ( <span class="n">32.99</span>µs) (± <span class="n">0.20</span><span class="o">%</span>)  <span class="n">7.6</span>kB<span class="o">/</span>op   <span class="n">1.46</span>× slower
+qrencode  <span class="n">44.18</span>k ( <span class="n">22.63</span>µs) (± <span class="n">0.28</span><span class="o">%</span>)   <span class="n">112</span><span class="t">B</span><span class="o">/</span>op        fastest</code></pre>
+<pre><code class="language-crystal">❯ .<span class="o">/</span>bin<span class="o">/</span>qr_test <span class="s">&quot;こんにちは&quot;</span>
+   goban  <span class="n">31.45</span>k ( <span class="n">31.80</span>µs) (± <span class="n">0.22</span><span class="o">%</span>)  <span class="n">7.56</span>kB<span class="o">/</span>op   <span class="n">1.03</span>× slower
+qrencode  <span class="n">32.42</span>k ( <span class="n">30.84</span>µs) (± <span class="n">0.52</span><span class="o">%</span>)    <span class="n">112</span><span class="t">B</span><span class="o">/</span>op        fastest</code></pre>
+<p>* The heap allocation value reported for qrencode.cr is not accurate as it doesn't include memory allocations happened on the C library.</p>
+<p>When compared to the C library, Goban is usually a bit slower, but it should be noted that Goban uses <a href="#about-the-encoding-modes-and-the-text-segmentation">a more advanced algorithm</a> for text segmentation and is more likely to produce a smaller QR Code symbol as a result.</p>
+<h2><a id="features" class="anchor" href="#features">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Features</h2>
+<p>| QR Code Type  | Encoding | Decoding |
+| ------------- | :------: | :------: |
+| QR Code*     |    ✓     |    ✓     |
+| Micro QR Code |    ✓     |    ✓     |
+| rMQR Code     |    ✓     |    ✓     |</p>
+<p>* QR Code Model 1 will not be supported as it is considered obsolete.</p>
+<h2><a id="roadmap" class="anchor" href="#roadmap">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Roadmap</h2>
+<ul>
+<li>Add ECI mode encoding</li>
+<li>Support structured append of symbols</li>
+</ul>
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+<ol>
+<li>
+<p>Add the dependency to your <code>shard.yml</code>:</p>
+<pre><code class="language-yaml">dependencies:
+  goban:
+    github: soya-daizu/goban</code></pre>
+</li>
+<li>
+<p>Run <code>shards install</code></p>
+</li>
+</ol>
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+<p>A simple example to generate a QR Code for the given string and output to the console:</p>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban&quot;</span>
+
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Low</span>)
+qr.print_to_console
+<span class="c"># =&gt; ██████████████  ████    ██  ██████████████</span>
+<span class="c">#    ██          ██    ██    ██  ██          ██</span>
+<span class="c">#    ██  ██████  ██  ██  ██  ██  ██  ██████  ██</span>
+<span class="c">#    ██  ██████  ██  ██    ██    ██  ██████  ██</span>
+<span class="c">#    ██  ██████  ██  ██████      ██  ██████  ██</span>
+<span class="c">#    ██          ██              ██          ██</span>
+<span class="c">#    ██████████████  ██  ██  ██  ██████████████</span>
+<span class="c">#                      ████</span>
+<span class="c">#    ████████    ██  ██  ██    ██    ██████  ██</span>
+<span class="c">#    ██████████    ██  ██    ██████████████  ██</span>
+<span class="c">#        ██    ████    ██    ████  ██      ████</span>
+<span class="c">#    ████  ██      ██████    ██    ██  ██  ██</span>
+<span class="c">#    ████  ██████████  ██████  ████          ██</span>
+<span class="c">#                    ████████    ████    ██  ██</span>
+<span class="c">#    ██████████████      ██    ████████</span>
+<span class="c">#    ██          ██    ██████████  ██  ████</span>
+<span class="c">#    ██  ██████  ██    ██  ██          ██████</span>
+<span class="c">#    ██  ██████  ██  ██  ██  ██  ██    ██████</span>
+<span class="c">#    ██  ██████  ██  ██████  ██    ██    ██</span>
+<span class="c">#    ██          ██  ██    ██  ████████      ██</span>
+<span class="c">#    ██████████████  ██    ██  ██████    ██</span></code></pre>
+<p><code><a href="Goban/ECC/Level.html">Goban::ECC::Level</a></code> represents the ECC (Error Correction Coding) level to use when encoding the data. The available options are:</p>
+<p>| Level    | Error Correction Capability |
+| -------- | --------------------------- |
+| Low      | Approx 7%                   |
+| Medium   | Approx 15%                  |
+| Quartile | Approx 25%                  |
+| High     | Approx 30%                  |</p>
+<p>The default ECC level is <code>Medium</code>. Use <code>Low</code> if you want your QR Code to be as compact as possible, or increase the level to <code>Quartile</code> or <code>High</code> if you want it to be more resistant to damage.</p>
+<p>Higher ECC levels are especially capable of interpolating a large chunk of loss in the symbol such as by tears and stains. Typically, it is not necessary to set the ECC level high for display purposes on the screen.</p>
+<h3><a id="using-exporters-to-generate-a-png-and-svg-image" class="anchor" href="#using-exporters-to-generate-a-png-and-svg-image">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Using exporters to generate a PNG and SVG image</h3>
+<p>To generate a PNG image, add <a href="https://github.com/stumpycr/stumpy_png">stumpy_png</a> as a dependency in your shard.yml, and <code>require &quot;goban/exporters/png&quot;</code> to use <code><a href="Goban/PNGExporter.html">Goban::PNGExporter</a></code>:</p>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban/exporters/png&quot;</span>
+
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
+puts <span class="s">&quot;Exporting with targeted size: 500&quot;</span>
+size <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">PNGExporter</span>.export(qr, <span class="s">&quot;output.png&quot;</span>, <span class="n">500</span>)
+puts <span class="s">&quot;Actual QR Code size: </span><span class="i">#{</span>size<span class="i">}</span><span class="s">&quot;</span></code></pre>
+<p><code><a href="Goban/SVGExporter.html">Goban::SVGExporter</a></code> requires no external dependency and can be used like below:</p>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;goban/exporters/svg&quot;</span>
+
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
+<span class="c"># Get SVG string</span>
+puts <span class="t">Goban</span><span class="t">::</span><span class="t">SVGExporter</span>.svg_string(qr, <span class="n">4</span>)
+<span class="c"># or export as a file</span>
+<span class="t">Goban</span><span class="t">::</span><span class="t">SVGExporter</span>.export(qr, <span class="s">&quot;test.svg&quot;</span>)</code></pre>
+<p>Alternatively, you can write your own export logic by iterating over the canvas of the QR Code object.</p>
+<pre><code class="language-crystal">qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>)
+qr.canvas.each_row <span class="k">do</span> <span class="o">|</span>row, y<span class="o">|</span>
+  row.each <span class="k">do</span> <span class="o">|</span>mod, x<span class="o">|</span>
+    <span class="c"># mod is each module (pixel or dot in other words) included in the symbol</span>
+    <span class="c"># and the value is either 0 (= light) or 1 (= dark)</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+<h3><a id="about-the-encoding-modes-and-the-text-segmentation" class="anchor" href="#about-the-encoding-modes-and-the-text-segmentation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>About the encoding modes and the text segmentation</h3>
+<p>The <code>Goban::QR.encode_string</code> method under the hood encodes a string to an optimized sequence of text segments where each segment is encoded in one of the following encoding modes:</p>
+<p>| Mode         | Supported Characters        |
+| ------------ | --------------------------- |
+| Numeric      | 0-9                         |
+| Alphanumeric | 0-9 A-Z \s $ % * + - . / : |
+| Byte         | Any UTF-8 characters        |
+| Kanji        | Any Shift-JIS characters    |</p>
+<p>The <code>Byte</code> mode supports the widest range of characters but it is inefficient and produces longer data bits, meaning that when comparing the two QR Code symbols, one encoded entirely in the <code>Byte</code> mode and the other encoded in the appropriate mode for each character*, the former one can be more challenging to scan and decode than the other given that both symbols are printed in the same size.</p>
+<p>* Because each text segment includes additional header bits to indicate its encoding mode, simply encoding each character in the supported mode that has the smallest character set may not always produce the most optimal segments. Goban addresses this by using the technique of dynamic programming.</p>
+<p>Finding out the optimal segmentation requires some processing, so if you are generating thousands of QR Codes with all the same limited sets of characters, you may want to hard-code the text segments and apply the characters to those to generate the QR Codes.</p>
+<p>This can be done by using the <code>Goban::QR.encode_segments</code> method, which is the lower-level method used by the <code>Goban::QR.encode_string</code> method.</p>
+<pre><code class="language-crystal">segments <span class="o">=</span> [
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.kanji(<span class="s">&quot;こんにち&quot;</span>),
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.byte(<span class="s">&quot;wa&quot;</span>),
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.kanji(<span class="s">&quot;、世界！&quot;</span>),
+  <span class="t">Goban</span><span class="t">::</span><span class="t">Segment</span>.alphanumeric(<span class="s">&quot; 123&quot;</span>),
+]
+<span class="c"># Note that when using this method, you have to manually assign the version (= size) of the QR Code.</span>
+qr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">QR</span>.encode_segments(segments, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Low</span>, <span class="n">2</span>)</code></pre>
+<p>The optimal segments and version to hard-code can be figured out by manually executing the <code>Goban::QR.determine_version_and_segments</code> method.</p>
+<h3><a id="generating-micro-qr-codes" class="anchor" href="#generating-micro-qr-codes">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Generating Micro QR Codes</h3>
+<p>Micro QR Codes can be generated just like regular QR Codes using the <code>Goban::MQR.encode_string</code> or <code>Goban::MQR.encode_segments</code> methods.</p>
+<pre><code class="language-crystal">mqr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">MQR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Low</span>)
+mqr.print_to_console
+<span class="c"># =&gt; ██████████████  ██  ██  ██  ██  ██</span>
+<span class="c">#    ██          ██  ██        ██</span>
+<span class="c">#    ██  ██████  ██    ██    ████</span>
+<span class="c">#    ██  ██████  ██  ██      ██████  ██</span>
+<span class="c">#    ██  ██████  ██      ██  ██████  ██</span>
+<span class="c">#    ██          ██  ██        ██  ██</span>
+<span class="c">#    ██████████████  ██████    ██    ██</span>
+<span class="c">#                            ██████  ██</span>
+<span class="c">#    ██    ██  ██████  ████  ██      ██</span>
+<span class="c">#      ██████████            ██</span>
+<span class="c">#    ████    ████████  ██████████  ██</span>
+<span class="c">#      ██      ██  ████    ████</span>
+<span class="c">#    ████████  ██  ██  ████  ██████  ██</span>
+<span class="c">#              ██████████████████</span>
+<span class="c">#    ██████      ████████        ██</span>
+<span class="c">#        ██      ██  ██████  ████</span>
+<span class="c">#    ██████  ██    ██  ████  ██      ██</span></code></pre>
+<p>You can learn more about the text segments and encoding modes <a href="#about-the-encoding-modes-and-the-text-segmentation">above</a>.</p>
+<p>Note that Micro QR Code has strong limitations in the data capacity, supported encoding modes, and error correction capabilities.</p>
+<p>| Version | Supported ECC Level         | Supported Modes                    |
+| ------- | --------------------------- | ---------------------------------- |
+| M1      | None (Error Detection Only) | Numeric                            |
+| M2      | Low, Medium                 | Numeric, Alphanumeric              |
+| M3      | Low, Medium                 | Numeric, Alphanumeric, Byte, Kanji |
+| M4      | Low, Medium, Quartile       | Numeric, Alphanumeric, Byte, Kanji |</p>
+<p>Data capacity for each combination of the symbol version and ECC level can be found <a href="https://www.qrcode.com/en/codes/microqr.html">here</a>.</p>
+<p>Since the version M1 doesn't support error correction at all, the value passed as the ECC level will be ignored.</p>
+<h3><a id="generating-r-mqr-codes" class="anchor" href="#generating-r-mqr-codes">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Generating rMQR Codes</h3>
+<p>Just like regular QR Codes and Micro QR Codes, rMQR Codes can also be generated using the <code>Goban::RMQR.encode_string</code> and <code><a href="Goban/RMQR.html">Goban::RMQR</a>::encode_segments</code> methods.</p>
+<pre><code class="language-crystal"><span class="c"># Note that rMQR Code only supports Medium and High ECC Level</span>
+rmqr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">RMQR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Medium</span>)
+puts rmqr.version.value
+<span class="c"># =&gt; R11x43</span>
+rmqr.print_to_console
+<span class="c"># =&gt; ██████████████  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██████</span>
+<span class="c">#    ██          ██          ██    ████████  ██  ██████████  ██████████  ██    ██        ██</span>
+<span class="c">#    ██  ██████  ██    ██  ██████        ██████████    ██    ████  ██  ████  ██    ████  ██</span>
+<span class="c">#    ██  ██████  ██  ██      ██    ██        ██            ████    ██████      ██      ██</span>
+<span class="c">#    ██  ██████  ██    ██  ██████    ████  ██  ████  ████    ██      ████      ████  ██████</span>
+<span class="c">#    ██          ██      ██  ██████                ████  ██  ██████    ██  ██    ██  ██</span>
+<span class="c">#    ██████████████  ██        ██  ██          ████████    ██████████████        ██████████</span>
+<span class="c">#                        ██  ██    ██████████    ████████      ████  ██    ████████      ██</span>
+<span class="c">#    ████    ██    ██      ██████    ████    ████████  ████    ██    ██    ████████  ██  ██</span>
+<span class="c">#    ██    ████    ██  ██    ██      ████    ██  ██  ██████  ██████  ██████      ██      ██</span>
+<span class="c">#    ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██████████</span></code></pre>
+<p>However, unlike regular QR Codes and Micro QR Codes, rMQR Codes has different sizes in width and height, which means that there can be multiple versions that are optimal in terms of capacity. rMQR Code versions are represented in the format of <code>R{height}x{width}</code> with the following available combinations.</p>
+<p>|     | 27  | 43  | 59  | 77  | 99  | 139 |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: |
+| R7  |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R9  |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R11 |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R13 |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R15 |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |
+| R17 |  -  |  ✓  |  ✓  |  ✓  |  ✓  |  ✓  |</p>
+<p><code>SizingStrategy</code> is used to prioritize one version than the other based on whether you want the symbol to be smaller in total area, width, or height. By default, it tries to balance the width and height, keeping the total area as small as possible.</p>
+<p>For example, if you want to encode the same text but prioritizing smaller height rather than area:</p>
+<pre><code class="language-crystal">rmqr <span class="o">=</span> <span class="t">Goban</span><span class="t">::</span><span class="t">RMQR</span>.encode_string(<span class="s">&quot;Hello World!&quot;</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">ECC</span><span class="t">::</span><span class="t">Level</span><span class="t">::</span><span class="t">Medium</span>, <span class="t">Goban</span><span class="t">::</span><span class="t">RMQR</span><span class="t">::</span><span class="t">SizingStrategy</span><span class="t">::</span><span class="t">MinimizeHeight</span>)
+puts rmqr.version.value
+<span class="c"># =&gt; R7x77</span>
+rmqr.print_to_console
+<span class="c"># =&gt; ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████</span>
+<span class="c">#    ██          ██  ██    ████████    ██████        ██  ██          ██  ████  ████  ██  ████        ██  ██  ████    ██        ██  ██    ██████          ██  ██</span>
+<span class="c">#    ██  ██████  ██    ██████████      ██████    ██  ██████      ██████    ██████████████      ████  ████████████  ██    ████  ██  ██    ██  ██    ████████████</span>
+<span class="c">#    ██  ██████  ██  ██████  ██  ██    ████        ████  ██  ██████████  ████  ██  ██  ██████  ██████    ██    ██████      ██        ████  ██████    ██      ██</span>
+<span class="c">#    ██  ██████  ██  ████    ██          ████    ██████████          ██  ██      ██  ██████  ██        ████████    ██  ██  ██          ████████  ██████  ██  ██</span>
+<span class="c">#    ██          ██  ██████  ██████  ██████    ████████  ██    ██  ██        ████  ██  ██    ██  ██  ██  ██  ██      ████████  ██  ██  ████    ████  ██      ██</span>
+<span class="c">#    ██████████████  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████  ██  ██  ██  ██  ██  ██  ██  ██  ██  ██████████</span></code></pre>
+<h2><a id="api-documentations" class="anchor" href="#api-documentations">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>API Documentations</h2>
+<p>The API docs for the current master branch are available from the link below:</p>
+<p><a href="https://soya-daizu.github.io/goban/">API docs</a></p>
+<p>You might want to first look at the <code><a href="Goban/QR.html">Goban::QR</a></code> or one of the exporters (<code><a href="Goban/PNGExporter.html">Goban::PNGExporter</a></code> and <code>Goban::SVGExporters</code>) to understand how to use this library.</p>
+<h2><a id="contributing" class="anchor" href="#contributing">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributing</h2>
+<ol>
+<li>Fork it (<a href="https://github.com/soya-daizu/goban/fork">https://github.com/soya-daizu/goban/fork</a>)</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create a new Pull Request</li>
+</ol>
+<h2><a id="contributors" class="anchor" href="#contributors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributors</h2>
+<ul>
+<li><a href="https://github.com/soya-daizu">soya_daizu</a> - creator and maintainer</li>
+</ul>
+<h2><a id="credits" class="anchor" href="#credits">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Credits</h2>
+<ul>
+<li><a href="https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes">Optimal text segmentation for QR Codes</a></li>
+<li><a href="https://github.com/zxing/zxing">zxing/zxing</a></li>
+<li><a href="https://github.com/OUDON/rmqrcode-python">OUDON/rmqrcode-python</a></li>
+</ul>
+</div>
+</body>
+</html>

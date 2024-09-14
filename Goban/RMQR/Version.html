@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.12.2">
+<meta name="crystal_docs.project_version" content="1.8.0">
+<meta name="crystal_docs.project_name" content="goban">
+
+
+
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/doc.js"></script>
+
+  <meta name="repository-name" content="goban">
+  <title>Goban::RMQR::Version - goban 1.8.0</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill="currentColor" fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../index.html">
+          goban
+        </a>
+      </h1>
+
+      <span class="project-version">
+        1.8.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="goban/Goban" data-name="goban">
+      <a href="../../Goban.html">Goban</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/AbstractQR" data-name="goban::abstractqr">
+      <a href="../../Goban/AbstractQR.html">AbstractQR</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Mask" data-name="goban::abstractqr::mask">
+      <a href="../../Goban/AbstractQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Template" data-name="goban::abstractqr::template">
+      <a href="../../Goban/AbstractQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/AbstractQR/Version" data-name="goban::abstractqr::version">
+      <a href="../../Goban/AbstractQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/BitStream" data-name="goban::bitstream">
+      <a href="../../Goban/BitStream.html">BitStream</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Canvas" data-name="goban::canvas(t)">
+      <a href="../../Goban/Canvas.html">Canvas</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/ECC" data-name="goban::ecc">
+      <a href="../../Goban/ECC.html">ECC</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/ECC/GF" data-name="goban::ecc::gf">
+      <a href="../../Goban/ECC/GF.html">GF</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/GFPoly" data-name="goban::ecc::gfpoly">
+      <a href="../../Goban/ECC/GFPoly.html">GFPoly</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/Level" data-name="goban::ecc::level">
+      <a href="../../Goban/ECC/Level.html">Level</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/RSDeflator" data-name="goban::ecc::rsdeflator">
+      <a href="../../Goban/ECC/RSDeflator.html">RSDeflator</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/ECC/RSInflator" data-name="goban::ecc::rsinflator">
+      <a href="../../Goban/ECC/RSInflator.html">RSInflator</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/InputError" data-name="goban::inputerror">
+      <a href="../../Goban/InputError.html">InputError</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/InternalError" data-name="goban::internalerror">
+      <a href="../../Goban/InternalError.html">InternalError</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/MQR" data-name="goban::mqr">
+      <a href="../../Goban/MQR.html">MQR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/MQR/Decoder" data-name="goban::mqr::decoder">
+      <a href="../../Goban/MQR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/MQR/Decoder/VersionMismatchError" data-name="goban::mqr::decoder::versionmismatcherror">
+      <a href="../../Goban/MQR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Encoder" data-name="goban::mqr::encoder">
+      <a href="../../Goban/MQR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Mask" data-name="goban::mqr::mask">
+      <a href="../../Goban/MQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Template" data-name="goban::mqr::template">
+      <a href="../../Goban/MQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/MQR/Version" data-name="goban::mqr::version">
+      <a href="../../Goban/MQR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/PNGExporter" data-name="goban::pngexporter">
+      <a href="../../Goban/PNGExporter.html">PNGExporter</a>
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/QR" data-name="goban::qr">
+      <a href="../../Goban/QR.html">QR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/QR/Decoder" data-name="goban::qr::decoder">
+      <a href="../../Goban/QR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/QR/Decoder/VersionMismatchError" data-name="goban::qr::decoder::versionmismatcherror">
+      <a href="../../Goban/QR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Encoder" data-name="goban::qr::encoder">
+      <a href="../../Goban/QR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Mask" data-name="goban::qr::mask">
+      <a href="../../Goban/QR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Template" data-name="goban::qr::template">
+      <a href="../../Goban/QR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/QR/Version" data-name="goban::qr::version">
+      <a href="../../Goban/QR/Version.html">Version</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent open current" data-id="goban/Goban/RMQR" data-name="goban::rmqr">
+      <a href="../../Goban/RMQR.html">RMQR</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="goban/Goban/RMQR/Decoder" data-name="goban::rmqr::decoder">
+      <a href="../../Goban/RMQR/Decoder.html">Decoder</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Decoder/VersionMismatchError" data-name="goban::rmqr::decoder::versionmismatcherror">
+      <a href="../../Goban/RMQR/Decoder/VersionMismatchError.html">VersionMismatchError</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Encoder" data-name="goban::rmqr::encoder">
+      <a href="../../Goban/RMQR/Encoder.html">Encoder</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Mask" data-name="goban::rmqr::mask">
+      <a href="../../Goban/RMQR/Mask.html">Mask</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/SizingStrategy" data-name="goban::rmqr::sizingstrategy">
+      <a href="../../Goban/RMQR/SizingStrategy.html">SizingStrategy</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/SymbolDimension" data-name="goban::rmqr::symboldimension">
+      <a href="../../Goban/RMQR/SymbolDimension.html">SymbolDimension</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/Template" data-name="goban::rmqr::template">
+      <a href="../../Goban/RMQR/Template.html">Template</a>
+      
+    </li>
+  
+  <li class=" current" data-id="goban/Goban/RMQR/Version" data-name="goban::rmqr::version">
+      <a href="../../Goban/RMQR/Version.html">Version</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/RMQR/VersionValue" data-name="goban::rmqr::versionvalue">
+      <a href="../../Goban/RMQR/VersionValue.html">VersionValue</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class="parent " data-id="goban/Goban/Segment" data-name="goban::segment">
+      <a href="../../Goban/Segment.html">Segment</a>
+      
+        <ul>
+  
+  <li class=" " data-id="goban/Goban/Segment/Mode" data-name="goban::segment::mode">
+      <a href="../../Goban/Segment/Mode.html">Mode</a>
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/Segment/Segmenter" data-name="goban::segment::segmenter">
+      <a href="../../Goban/Segment/Segmenter.html">Segmenter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="goban/Goban/SVGExporter" data-name="goban::svgexporter">
+      <a href="../../Goban/SVGExporter.html">SVGExporter</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">struct</span> Goban::<wbr>RMQR::<wbr>Version
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../../Goban/RMQR/Version.html">Goban::RMQR::Version</a></li><li class="superclass"><a href="../../Goban/AbstractQR/Version.html">Goban::AbstractQR::Version</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      goban/rmqr/version.cr
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="ORDERED">
+        <strong>ORDERED</strong> = <code>{<span class="t">ORDERED_BY_AREA</span>, <span class="t">ORDERED_BY_WIDTH</span>, <span class="t">ORDERED_BY_HEIGHT</span>}</code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ORDERED_BY_AREA">
+        <strong>ORDERED_BY_AREA</strong> = <code><span class="t">StaticArray</span>[<span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x27</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x27</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x139</span>].sort <span class="k">do</span> <span class="o">|</span>a, b<span class="o">|</span>
+  a_size <span class="o">=</span> <span class="t">SymbolDimension</span>.new(a)
+  b_size <span class="o">=</span> <span class="t">SymbolDimension</span>.new(b)
+  (a_size.width <span class="o">*</span> a_size.height) <span class="o">&lt;=&gt;</span> (b_size.width <span class="o">*</span> b_size.height)
+<span class="k">end</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ORDERED_BY_HEIGHT">
+        <strong>ORDERED_BY_HEIGHT</strong> = <code><span class="t">StaticArray</span>[<span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x27</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x27</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x139</span>].sort <span class="k">do</span> <span class="o">|</span>a, b<span class="o">|</span>
+  a_size <span class="o">=</span> <span class="t">SymbolDimension</span>.new(a)
+  b_size <span class="o">=</span> <span class="t">SymbolDimension</span>.new(b)
+  cmp <span class="o">=</span> a_size.height <span class="o">&lt;=&gt;</span> b_size.height
+  <span class="k">if</span> cmp <span class="o">==</span> <span class="n">0</span>
+    cmp <span class="o">=</span> a_size.width <span class="o">&lt;=&gt;</span> b_size.width
+  <span class="k">end</span>
+  cmp
+<span class="k">end</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ORDERED_BY_WIDTH">
+        <strong>ORDERED_BY_WIDTH</strong> = <code><span class="t">StaticArray</span>[<span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R7x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R9x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x27</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R11x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x27</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R13x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R15x139</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x43</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x59</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x77</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x99</span>, <span class="t">VersionValue</span><span class="t">::</span><span class="t">R17x139</span>].sort <span class="k">do</span> <span class="o">|</span>a, b<span class="o">|</span>
+  a_size <span class="o">=</span> <span class="t">SymbolDimension</span>.new(a)
+  b_size <span class="o">=</span> <span class="t">SymbolDimension</span>.new(b)
+  cmp <span class="o">=</span> a_size.width <span class="o">&lt;=&gt;</span> b_size.width
+  <span class="k">if</span> cmp <span class="o">==</span> <span class="n">0</span>
+    cmp <span class="o">=</span> a_size.height <span class="o">&lt;=&gt;</span> b_size.height
+  <span class="k">end</span>
+  cmp
+<span class="k">end</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="VERSION_BITS">
+        <strong>VERSION_BITS</strong> = <code>{ {<span class="t">Medium</span>: {<span class="n">129714</span>, <span class="n">133755</span>}, <span class="t">High</span>: {<span class="n">258919</span>, <span class="n">942</span>}}, {<span class="t">Medium</span>: {<span class="n">124311</span>, <span class="n">136542</span>}, <span class="t">High</span>: {<span class="n">257090</span>, <span class="n">7307</span>}}, {<span class="t">Medium</span>: {<span class="n">121821</span>, <span class="n">142100</span>}, <span class="t">High</span>: {<span class="n">250376</span>, <span class="n">8897</span>}}, {<span class="t">Medium</span>: {<span class="n">115960</span>, <span class="n">144433</span>}, <span class="t">High</span>: {<span class="n">249133</span>, <span class="n">15844</span>}}, {<span class="t">Medium</span>: {<span class="n">112748</span>, <span class="n">149669</span>}, <span class="t">High</span>: {<span class="n">242105</span>, <span class="n">16752</span>}}, {<span class="t">Medium</span>: {<span class="n">108361</span>, <span class="n">153472</span>}, <span class="t">High</span>: {<span class="n">241308</span>, <span class="n">24149</span>}}, {<span class="t">Medium</span>: {<span class="n">104707</span>, <span class="n">158154</span>}, <span class="t">High</span>: {<span class="n">233686</span>, <span class="n">24607</span>}}, {<span class="t">Medium</span>: {<span class="n">99878</span>, <span class="n">161519</span>}, <span class="t">High</span>: {<span class="n">233459</span>, <span class="n">32570</span>}}, {<span class="t">Medium</span>: {<span class="n">98062</span>, <span class="n">167879</span>}, <span class="t">High</span>: {<span class="n">227035</span>, <span class="n">34322</span>}}, {<span class="t">Medium</span>: {<span class="n">90155</span>, <span class="n">168162</span>}, <span class="t">High</span>: {<span class="n">223742</span>, <span class="n">39223</span>}}, {<span class="t">Medium</span>: {<span class="n">89697</span>, <span class="n">175784</span>}, <span class="t">High</span>: {<span class="n">219060</span>, <span class="n">42877</span>}}, {<span class="t">Medium</span>: {<span class="n">82244</span>, <span class="n">176525</span>}, <span class="t">High</span>: {<span class="n">215185</span>, <span class="n">47192</span>}}, {<span class="t">Medium</span>: {<span class="n">81360</span>, <span class="n">183577</span>}, <span class="t">High</span>: {<span class="n">209925</span>, <span class="n">50380</span>}}, {<span class="t">Medium</span>: {<span class="n">74485</span>, <span class="n">184892</span>}, <span class="t">High</span>: {<span class="n">207648</span>, <span class="n">56297</span>}}, {<span class="t">Medium</span>: {<span class="n">72895</span>, <span class="n">191606</span>}, <span class="t">High</span>: {<span class="n">202090</span>, <span class="n">58787</span>}}, {<span class="t">Medium</span>: {<span class="n">66458</span>, <span class="n">193363</span>}, <span class="t">High</span>: {<span class="n">199247</span>, <span class="n">64134</span>}}, {<span class="t">Medium</span>: {<span class="n">61898</span>, <span class="n">196867</span>}, <span class="t">High</span>: {<span class="n">194591</span>, <span class="n">67798</span>}}, {<span class="t">Medium</span>: {<span class="n">61167</span>, <span class="n">204326</span>}, <span class="t">High</span>: {<span class="n">190266</span>, <span class="n">71667</span>}}, {<span class="t">Medium</span>: {<span class="n">53413</span>, <span class="n">204908</span>}, <span class="t">High</span>: {<span class="n">186736</span>, <span class="n">76217</span>}}, {<span class="t">Medium</span>: {<span class="n">53120</span>, <span class="n">212809</span>}, <span class="t">High</span>: {<span class="n">181845</span>, <span class="n">79516</span>}}, {<span class="t">Medium</span>: {<span class="n">45844</span>, <span class="n">213981</span>}, <span class="t">High</span>: {<span class="n">178881</span>, <span class="n">84488</span>}}, {<span class="t">Medium</span>: {<span class="n">44081</span>, <span class="n">220408</span>}, <span class="t">High</span>: {<span class="n">173540</span>, <span class="n">87341</span>}}, {<span class="t">Medium</span>: {<span class="n">37499</span>, <span class="n">221874</span>}, <span class="t">High</span>: {<span class="n">170926</span>, <span class="n">93031</span>}}, {<span class="t">Medium</span>: {<span class="n">36190</span>, <span class="n">228759</span>}, <span class="t">High</span>: {<span class="n">165003</span>, <span class="n">95298</span>}}, {<span class="t">Medium</span>: {<span class="n">29814</span>, <span class="n">230591</span>}, <span class="t">High</span>: {<span class="n">163235</span>, <span class="n">101738</span>}}, {<span class="t">Medium</span>: {<span class="n">27475</span>, <span class="n">236442</span>}, <span class="t">High</span>: {<span class="n">156294</span>, <span class="n">102991</span>}}, {<span class="t">Medium</span>: {<span class="n">21785</span>, <span class="n">239056</span>}, <span class="t">High</span>: {<span class="n">154828</span>, <span class="n">109573</span>}}, {<span class="t">Medium</span>: {<span class="n">19004</span>, <span class="n">244469</span>}, <span class="t">High</span>: {<span class="n">148457</span>, <span class="n">111392</span>}}, {<span class="t">Medium</span>: {<span class="n">13992</span>, <span class="n">247393</span>}, <span class="t">High</span>: {<span class="n">147325</span>, <span class="n">118708</span>}}, {<span class="t">Medium</span>: {<span class="n">10637</span>, <span class="n">252228</span>}, <span class="t">High</span>: {<span class="n">139352</span>, <span class="n">118929</span>}}, {<span class="t">Medium</span>: {<span class="n">6087</span>, <span class="n">255758</span>}, <span class="t">High</span>: {<span class="n">138770</span>, <span class="n">126683</span>}}, {<span class="t">Medium</span>: {<span class="n">2274</span>, <span class="n">260139</span>}, <span class="t">High</span>: {<span class="n">131383</span>, <span class="n">127486</span>}} }</code>
+      </dt>
+      
+    
+  </dl>
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28width%3AInt%2Cheight%3AInt%29-class-method" class="signature"><strong>.new</strong>(width : Int, height : Int)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#new%28value%3AVersionValue%29-class-method" class="signature"><strong>.new</strong>(value : VersionValue)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#new%28str%3AString%29-class-method" class="signature"><strong>.new</strong>(str : String)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#new%28value%3AInt%29-class-method" class="signature"><strong>.new</strong>(value : Int)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#%3C%3D%3E%28other%3AInt%29-instance-method" class="signature"><strong>#<=></strong>(other : Int)</a>
+        
+          <div class="summary"><p>The comparison operator.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#max_data_bits%28ecl%3AECC%3A%3ALevel%29-instance-method" class="signature"><strong>#max_data_bits</strong>(ecl : ECC::Level)</a>
+        
+          <div class="summary"><p>Maximum number of data bits that can be contained in the rMQR Code symbol of this version.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#max_data_codewords%28ecl%3AECC%3A%3ALevel%29-instance-method" class="signature"><strong>#max_data_codewords</strong>(ecl : ECC::Level)</a>
+        
+          <div class="summary"><p>Maximum number of data codewords that can be contained in the rMQR Code symbol of this version.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_i-instance-method" class="signature"><strong>#to_i</strong></a>
+        
+      </li>
+    
+  </ul>
+
+
+
+<div class="methods-inherited">
+  
+    
+
+  <h3>Instance methods inherited from struct <code><a href="../../Goban/AbstractQR/Version.html">Goban::AbstractQR::Version</a></code></h3>
+  
+  
+    <a href="../../Goban/AbstractQR/Version.html#%3C%3D%3E%28other%3AInt%29-instance-method" class="tooltip">
+      <span><=>(other : Int)</span>
+    <=></a>, 
+    
+  
+    <a href="../../Goban/AbstractQR/Version.html#symbol_size-instance-method" class="tooltip">
+      <span>symbol_size</span>
+    symbol_size</a>, 
+    
+  
+    <a href="../../Goban/AbstractQR/Version.html#to_i-instance-method" class="tooltip">
+      <span>to_i</span>
+    to_i</a>, 
+    
+  
+    <a href="../../Goban/AbstractQR/Version.html#value-instance-method" class="tooltip">
+      <span>value</span>
+    value</a>
+    
+  
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(width:Int,height:Int)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(width : Int, height : Int)
+
+        <a class="method-permalink" href="#new%28width%3AInt%2Cheight%3AInt%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="new(value:VersionValue)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(value : <a href="../../Goban/RMQR/VersionValue.html">VersionValue</a>)
+
+        <a class="method-permalink" href="#new%28value%3AVersionValue%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="new(str:String)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(str : String)
+
+        <a class="method-permalink" href="#new%28str%3AString%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="new(value:Int)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(value : Int)
+
+        <a class="method-permalink" href="#new%28value%3AInt%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="&lt;=&gt;(other:Int)-instance-method">
+      <div class="signature">
+        
+        def <strong><=></strong>(other : Int)
+
+        <a class="method-permalink" href="#%3C%3D%3E%28other%3AInt%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+            <div class="doc-inherited">
+              Description copied from module Comparable(Int)
+            </div>
+          
+          <p>The comparison operator. Returns <code>0</code> if the two objects are equal,
+a negative number if this object is considered less than <em>other</em>,
+a positive number if this object is considered greater than <em>other</em>,
+or <code>nil</code> if the two objects are not comparable.</p>
+<p>Subclasses define this method to provide class-specific ordering.</p>
+<p>The comparison operator is usually used to sort values:</p>
+<pre><code class="language-crystal"><span class="c"># Sort in a descending way:</span>
+[<span class="n">3</span>, <span class="n">1</span>, <span class="n">2</span>].sort { <span class="o">|</span>x, y<span class="o">|</span> y <span class="o">&lt;=&gt;</span> x } <span class="c"># =&gt; [3, 2, 1]</span>
+
+<span class="c"># Sort in an ascending way:</span>
+[<span class="n">3</span>, <span class="n">1</span>, <span class="n">2</span>].sort { <span class="o">|</span>x, y<span class="o">|</span> x <span class="o">&lt;=&gt;</span> y } <span class="c"># =&gt; [1, 2, 3]</span></code></pre>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="max_data_bits(ecl:ECC::Level)-instance-method">
+      <div class="signature">
+        
+        def <strong>max_data_bits</strong>(ecl : <a href="../../Goban/ECC/Level.html">ECC::Level</a>)
+
+        <a class="method-permalink" href="#max_data_bits%28ecl%3AECC%3A%3ALevel%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Maximum number of data bits that can be contained in the rMQR Code
+symbol of this version. This does not include the number of error correction
+codewords.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="max_data_codewords(ecl:ECC::Level)-instance-method">
+      <div class="signature">
+        
+        def <strong>max_data_codewords</strong>(ecl : <a href="../../Goban/ECC/Level.html">ECC::Level</a>)
+
+        <a class="method-permalink" href="#max_data_codewords%28ecl%3AECC%3A%3ALevel%29-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Maximum number of data codewords that can be contained in the rMQR Code
+symbol of this version. This does not include the number of error correction
+codewords.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_i-instance-method">
+      <div class="signature">
+        
+        def <strong>to_i</strong>
+
+        <a class="method-permalink" href="#to_i-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+      </div>
+    </div>
+  
+
+
+</div>
+
+</body>
+</html>
