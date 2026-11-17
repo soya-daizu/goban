@@ -68,7 +68,7 @@ struct Goban::RMQR < Goban::AbstractQR
         {% for ver in (VersionValue::R7x43..VersionValue::R17x139) %}
           {
             {% for ecl in {:Medium, :High} %}
-              {% data = ver %}
+              {% data = 0_i32 + ver %}
               {% data |= 1 << 5 if ecl == :High %}
               {% rem = data %}
               {% for _ in (0..11) %}
