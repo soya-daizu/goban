@@ -153,7 +153,7 @@ struct Goban::RMQR < Goban::AbstractQR
       when 4
         {23, 49, 73}
       when 5
-        {27, 55, 81, 109}
+        {27, 55, 83, 111}
       else
         raise InternalError.new("Invalid w_group")
       end
