@@ -9,7 +9,7 @@ struct Goban::QR < Goban::AbstractQR
     {% begin %}
       VERSION_BITS = {
         -1, -1, -1, -1, -1, -1, -1,
-        {% for ver in (7..MAX) %}
+        {% for ver in (7..(0_i32 + MAX)) %}
           {% rem = ver %}
           {% for _ in (0..11) %}
             {% rem = (rem << 1) ^ ((rem >> 11) * 0x1F25) %}
