@@ -121,7 +121,11 @@ struct Goban::MQR < Goban::AbstractQR
                version == 3 && ecl.low? && data_i == 10 ||
                version == 3 && ecl.medium? && data_i == 8
               i += 1
-              i += 4 if i % 4 == 0
+              if i % 4 == 0
+                # The 4-bit codeword represents the upper half of the byte
+                data_codewords[data_i] <<= 4
+                i += 4
+              end
             else
               i += 1
             end

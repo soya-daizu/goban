@@ -89,7 +89,7 @@ struct Goban::MQR < Goban::AbstractQR
             if version == 1 && data_i == 2 ||
                version == 3 && ecl.low? && data_i == 10 ||
                version == 3 && ecl.medium? && data_i == 8
-              bit = codewords[data_i].bit(3 - i & 3)
+              bit = codewords[data_i].bit(7 - (i & 3))
               i += 1
               i += 4 if i % 4 == 0
             else

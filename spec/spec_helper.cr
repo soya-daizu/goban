@@ -249,7 +249,7 @@ STRING
 
 CODEWORDS_FILL_MODS_MQR = <<-STRING.lines
   ██  ████    ██    ██
-  ██  ██  ██    ██  ██
+  ██  ██  ██    ████  
   ██████  ██    ██  ██
             ██  ██  ██
   ██        ████    ██
