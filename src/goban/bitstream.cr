@@ -40,7 +40,7 @@ module Goban
       cci_bits_count = segment.mode.cci_bits_count(version)
 
       raise InternalError.new("Invalid segment") if !cci_bits_count
-      raise InternalError.new("Text too long") if indicator_length + cci_bits_count + segment.bit_size > size
+      raise InputError.new("Text too long") if @write_pos + indicator_length + cci_bits_count + segment.bit_size > size
 
       push_bits(indicator, indicator_length)
       push_bits(cci_bits, cci_bits_count)
