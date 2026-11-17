@@ -99,7 +99,7 @@ module Goban
     end
 
     protected def read_bits(len : Int)
-      raise InternalError.new("Too many bits to read") unless len.in?(0..31) && @read_pos + len <= @size
+      raise InternalError.new("Too many bits to read (len: #{len}, size: #{@size}, read_pos: #{@read_pos})") unless len.in?(0..31) && @read_pos + len <= @size
 
       result = 0_u32
       len.times do |i|
