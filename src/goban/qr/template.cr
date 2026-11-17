@@ -69,22 +69,29 @@ struct Goban::QR < Goban::AbstractQR
     end
 
     protected def draw_format_modules(canvas : Canvas(UInt8), mask : Mask, ecl : ECC::Level)
+      self.each_format_module(canvas.size, mask, ecl) do |x, y, bit|
+        canvas[x, y] = bit | 0xc0
+      end
+    end
+
+    # Yields the position and value (0 or 1) of each format information module.
+    protected def each_format_module(size : Int32, mask : Mask, ecl : ECC::Level, &)
       bits = mask.get_format_bits(ecl)
 
       (0...8).each do |i|
-        bit = (bits >> i & 1).to_u8 | 0xc0
+        bit = (bits >> i & 1).to_u8
         pos = i >= 6 ? i + 1 : i
-        canvas[8, pos] = bit
-        pos = canvas.size - 1 - i
-        canvas[pos, 8] = bit
+        yield 8, pos, bit
+        pos = size - 1 - i
+        yield pos, 8, bit
       end
 
       (0...7).each do |i|
-        bit = (bits >> 14 - i & 1).to_u8 | 0xc0
+        bit = (bits >> 14 - i & 1).to_u8
         pos = i >= 6 ? i + 1 : i
-        canvas[pos, 8] = bit
-        pos = canvas.size - 1 - i
-        canvas[8, pos] = bit
+        yield pos, 8, bit
+        pos = size - 1 - i
+        yield 8, pos, bit
       end
     end
   end

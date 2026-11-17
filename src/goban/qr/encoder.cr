@@ -205,48 +205,12 @@ struct Goban::QR < Goban::AbstractQR
     end
 
     protected def apply_best_mask(canvas : Canvas(UInt8), ecl : ECC::Level)
-      mask, best_canvas = nil, nil
-      min_score = Int32::MAX
+      mask = Mask.choose_best(canvas, ecl)
+      canvas = canvas.clone
+      Template.draw_format_modules(canvas, mask, ecl)
+      mask.apply_to(canvas)
 
-      {% if flag?(:preview_mt) %}
-        channel = Channel(Tuple(Canvas(UInt8), UInt8, Int32)).new(8)
-        8_u8.times do |i|
-          spawn do
-            c = canvas.clone
-            msk = Mask.new(i)
-            Template.draw_format_modules(c, msk, ecl)
-            msk.apply_to(c)
-
-            score = Mask.evaluate_score(c)
-            channel.send({c, i, score})
-          end
-        end
-        8.times do
-          c, i, score = channel.receive
-          if score < min_score
-            mask = Mask.new(i)
-            best_canvas = c
-            min_score = score
-          end
-        end
-      {% else %}
-        8_u8.times do |i|
-          c = canvas.clone
-          msk = Mask.new(i)
-          Template.draw_format_modules(c, msk, ecl)
-          msk.apply_to(c)
-
-          score = Mask.evaluate_score(c)
-          if score < min_score
-            mask = msk
-            best_canvas = c
-            min_score = score
-          end
-        end
-      {% end %}
-      raise InternalError.new("Unable to set the mask") unless mask && best_canvas
-
-      {mask, best_canvas}
+      {mask, canvas}
     end
   end
 end

@@ -34,6 +34,33 @@ module Goban
     end
   end
 
+  describe QR::Mask do
+    describe "#apply_to" do
+      # The masks are applied with precomputed patterns that repeat every
+      # 12 modules, so check them against the mask definitions on the
+      # largest symbol size
+      it "inverts the data modules where the mask pattern holds" do
+        size = 177
+        rng = Random.new(1)
+        original = Canvas(UInt8).new(size, size, 0_u8)
+        original.data.map! { (rng.rand(2) == 0 ? 0xc0_u8 : 0_u8) | rng.rand(2).to_u8 }
+
+        8.times do |i|
+          canvas = original.clone
+          QR::Mask.new(i).apply_to(canvas)
+
+          size.times do |y|
+            size.times do |x|
+              value = original[x, y]
+              expected = value & 0x80 == 0 && QR::Mask::MASK_PATTERNS[i].call(x, y) ? value ^ 1 : value
+              canvas[x, y].should eq(expected)
+            end
+          end
+        end
+      end
+    end
+  end
+
   describe MQR::Mask do
     describe ".evaluate_score" do
       it "reports correct score" do
