@@ -135,7 +135,7 @@ struct Goban::QR < Goban::AbstractQR
 
     # Returns a tuple of the optimized segments and QR Code version for the given text and error correction level.
     def determine_version_and_segments(text : String, ecl : ECC::Level)
-      chars = text.chars
+      analysis = Segment::Segmenter::Analysis.new(text)
       segments, version = nil, nil
 
       # The number of the character count indicator bits which affect
@@ -144,8 +144,7 @@ struct Goban::QR < Goban::AbstractQR
       # the version number later
       {1..9, 10..26, 27..40}.each do |group|
         v = QR::Version.new(group.end)
-        char_modes = Segment::Segmenter.compute_char_modes(chars, v)
-        segments = Segment::Segmenter.make_segments(text, char_modes)
+        segments = analysis.segments_for(v)
 
         cap_bits = v.max_data_bits(ecl)
         begin

@@ -70,4 +70,30 @@ module Goban
       end
     end
   end
+
+  describe Segment::Segmenter::Analysis do
+    it "splits segments at the character boundaries of multibyte text" do
+      analysis = Segment::Segmenter::Analysis.new("漢字abc0123456789漢字")
+      analysis.byte_offsets.to_a.should eq([0, 3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22, 25])
+      analysis.segments_for(QR::Version.new(1)).map { |s| {s.mode, s.text} }.should eq([
+        {Segment::Mode::Kanji, "漢字"},
+        {Segment::Mode::Byte, "abc"},
+        {Segment::Mode::Numeric, "0123456789"},
+        {Segment::Mode::Kanji, "漢字"},
+      ])
+    end
+
+    it "keeps the original bytes of invalid UTF-8 sequences" do
+      text = String.new(Bytes[0x41, 0xff, 0x42])
+      segments = Segment::Segmenter::Analysis.new(text).segments_for(QR::Version.new(1))
+      segments.sum(&.text.bytesize).should eq(3)
+      segments.map(&.text).join.to_slice.should eq(text.to_slice)
+    end
+
+    it "reuses the segments for versions with the same indicator lengths" do
+      analysis = Segment::Segmenter::Analysis.new("HELLO 123")
+      analysis.segments_for(QR::Version.new(1)).should be(analysis.segments_for(QR::Version.new(9)))
+      analysis.segments_for(QR::Version.new(9)).should_not be(analysis.segments_for(QR::Version.new(10)))
+    end
+  end
 end

@@ -39,7 +39,7 @@ struct Goban::MQR < Goban::AbstractQR
     # Returns a tuple of the optimized segments and Micro QR Code version
     # for the given text and error correction level.
     def determine_version_and_segments(text : String, ecl : ECC::Level)
-      chars = text.chars
+      analysis = Segment::Segmenter::Analysis.new(text)
       segments, version = nil, nil
 
       # The number of the character count indicator bits which affect
@@ -47,8 +47,7 @@ struct Goban::MQR < Goban::AbstractQR
       # the segments in each version and see if they fit in that version
       (Version::MIN..Version::MAX).each do |i|
         v = Version.new(i)
-        char_modes = Segment::Segmenter.compute_char_modes(chars, v)
-        segments = Segment::Segmenter.make_segments(text, char_modes)
+        segments = analysis.segments_for(v)
 
         cap_bits = v.max_data_bits(ecl)
         begin

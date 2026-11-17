@@ -4,99 +4,181 @@ struct Goban::Segment
   module Segmenter
     extend self
 
+    # Encoding modes considered by the segmentation, in the order of the
+    # cost arrays below.
+    private MODES = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
+
+    # Character classes. Every character can be encoded in Byte mode.
+    private CLASS_ALPHANUMERIC = 1_u8
+    private CLASS_NUMERIC      = 2_u8
+    private CLASS_KANJI        = 4_u8
+
+    # Costs are in sixths of a bit, so that the per-character costs of all
+    # modes are integers. Unreachable states have this cost. It is a multiple
+    # of 6 so that rounding it up to a whole bit leaves it unchanged.
+    private INFINITE_COST = 6_i64 << 50
+
+    # A text prepared for segmentation. The characters are classified only
+    # once, and the segments computed for a version are reused for the other
+    # versions that have the same mode indicator and character count
+    # indicator lengths, since the segmentation depends only on those.
+    class Analysis
+      getter text : String
+      # Bitwise OR of the `CLASS_*` flags of each character
+      getter classes : Slice(UInt8)
+      # Number of bytes of each character, as used for the Byte mode cost
+      getter bytesizes : Slice(UInt8)
+      # Byte offset of each character in the text, followed by the text bytesize
+      getter byte_offsets : Slice(Int32)
+
+      @cache = {} of Tuple(Int32, Int32?, Int32?, Int32?, Int32?) => Array(Segment)
+
+      def initialize(@text : String)
+        size = @text.size
+        @classes = Slice(UInt8).new(size)
+        @bytesizes = Slice(UInt8).new(size)
+        @byte_offsets = Slice(Int32).new(size + 1)
+
+        reader = Char::Reader.new(@text)
+        i = 0
+        while reader.has_next?
+          char = reader.current_char
+          @byte_offsets[i] = reader.pos
+          @bytesizes[i] = char.bytesize.to_u8
+          @classes[i] = Segmenter.classify(char)
+          reader.next_char
+          i += 1
+        end
+        @byte_offsets[size] = @text.bytesize
+      end
+
+      def size
+        @classes.size
+      end
+
+      # Returns the optimal segments for the given version.
+      def segments_for(version : AbstractQR::Version)
+        key = {
+          version.mode_indicator_length,
+          MODES[0].cci_bits_count(version),
+          MODES[1].cci_bits_count(version),
+          MODES[2].cci_bits_count(version),
+          MODES[3].cci_bits_count(version),
+        }
+        @cache[key] ||= begin
+          char_modes = Segmenter.compute_char_modes(self, version)
+          Segmenter.make_segments(self, char_modes)
+        end
+      end
+    end
+
+    protected def classify(char : Char)
+      klass = 0_u8
+      klass |= CLASS_ALPHANUMERIC if Segment.alphanumeric_index(char)
+      klass |= CLASS_NUMERIC if char.ascii_number?
+      klass |= CLASS_KANJI if char.bytesize > 1 && UNICODE_SHIFTJIS_TABLE.has_key?(char.ord)
+      klass
+    end
+
     # Makes a list of the best encoding mode for the each given character
     # by dynamic programming algorithm. The code is based on:
     # https://www.nayuki.io/page/optimal-text-segmentation-for-qr-codes
-    protected def compute_char_modes(chars : Array(Char), version : AbstractQR::Version)
-      modes = {Segment::Mode::Byte, Segment::Mode::Alphanumeric, Segment::Mode::Numeric, Segment::Mode::Kanji}
-
-      head_costs = modes.map do |m|
-        mode_indicator_length = version.mode_indicator_length
-        cci_bits_count = m.cci_bits_count(version) || Float32::INFINITY
-        ((mode_indicator_length + cci_bits_count) * 6).to_f32
+    protected def compute_char_modes(analysis : Analysis, version : AbstractQR::Version)
+      mode_indicator_length = version.mode_indicator_length
+      head_costs = StaticArray(Int64, 4).new do |i|
+        cci_bits_count = MODES[i].cci_bits_count(version)
+        cci_bits_count ? (mode_indicator_length + cci_bits_count).to_i64 * 6 : INFINITE_COST
       end
 
-      char_modes = Array(StaticArray(Segment::Mode, 4)).new(chars.size)
-      prev_costs = StaticArray(Float32, 4).new { |i| head_costs[i] }
+      size = analysis.size
+      classes = analysis.classes
+      bytesizes = analysis.bytesizes
+      # Mode to come from for each character and each mode to end in
+      char_modes = Slice(StaticArray(Segment::Mode, 4)).new(size, StaticArray(Segment::Mode, 4).new(Segment::Mode::Undefined))
+      prev_costs = head_costs
 
-      chars.each do |c|
+      size.times do |i|
+        klass = classes.unsafe_fetch(i)
         c_modes = StaticArray(Segment::Mode, 4).new(Segment::Mode::Undefined)
-        cur_costs = StaticArray(Float32, 4).new(Float32::INFINITY)
+        cur_costs = StaticArray(Int64, 4).new(INFINITE_COST)
 
         # Byte mode is always calculated
         # bytesize * 8 / 6 bits per char
-        cur_costs[0] = prev_costs[0] + c.bytesize * 8 * 6
-        c_modes[0] = modes[0]
+        cur_costs[0] = self.saturate(prev_costs[0] + bytesizes.unsafe_fetch(i).to_i64 * 8 * 6)
+        c_modes[0] = MODES[0]
 
-        is_alphanumeric = c.in?(ALPHANUMERIC_CHARS)
-        if is_alphanumeric
+        if klass & CLASS_ALPHANUMERIC != 0
           # 33 / 6 bits per char
-          cur_costs[1] = prev_costs[1] + 33
-          c_modes[1] = modes[1]
+          cur_costs[1] = self.saturate(prev_costs[1] + 33)
+          c_modes[1] = MODES[1]
         end
 
-        is_numeric = c.ascii_number?
-        if is_numeric
+        if klass & CLASS_NUMERIC != 0
           # 20 / 6 bits per char
-          cur_costs[2] = prev_costs[2] + 20
-          c_modes[2] = modes[2]
+          cur_costs[2] = self.saturate(prev_costs[2] + 20)
+          c_modes[2] = MODES[2]
         end
 
-        is_kanji = c.bytesize > 1 && UNICODE_SHIFTJIS_TABLE[c.ord]?
-        if is_kanji
+        if klass & CLASS_KANJI != 0
           # 78 / 6 bits per char
-          cur_costs[3] = prev_costs[3] + 78
-          c_modes[3] = modes[3]
+          cur_costs[3] = self.saturate(prev_costs[3] + 78)
+          c_modes[3] = MODES[3]
         end
 
-        modes.size.times do |j|
-          modes.each_with_index do |from_mode, k|
-            # ceil up to next integer
-            new_cost = (cur_costs[k] / 6).ceil * 6 + head_costs[j]
+        4.times do |j|
+          4.times do |k|
+            # ceil up to next whole bit
+            new_cost = self.saturate((cur_costs[k] + 5) // 6 * 6 + head_costs[j])
 
             if c_modes[k] != Segment::Mode::Undefined && new_cost < cur_costs[j]
               cur_costs[j] = new_cost
-              c_modes[j] = from_mode
+              c_modes[j] = MODES[k]
             end
           end
         end
 
-        char_modes.push(c_modes)
+        char_modes[i] = c_modes
         prev_costs = cur_costs
       end
 
       cur_mode_index = 0
-      modes.each_with_index do |mode, i|
+      4.times do |i|
         cur_mode_index = i if prev_costs[i] < prev_costs[cur_mode_index]
       end
 
-      result = Array(Segment::Mode).new(chars.size)
-      (0...chars.size).reverse_each do |i|
+      result = Array(Segment::Mode).new(size, Segment::Mode::Undefined)
+      (0...size).reverse_each do |i|
         cur_mode = char_modes[i][cur_mode_index]
-        cur_mode_index = modes.index(cur_mode).not_nil!
-        result.push(cur_mode)
+        cur_mode_index = MODES.index(cur_mode).not_nil!
+        result[i] = cur_mode
       end
 
-      result.reverse!
+      result
+    end
+
+    # Clamps the cost so that adding to an unreachable state keeps it unreachable.
+    @[AlwaysInline]
+    private def saturate(cost : Int64)
+      cost < INFINITE_COST ? cost : INFINITE_COST
     end
 
     # Converts a list of encoding modes for each character to an actual segment objects.
-    protected def make_segments(text : String, char_modes : Array(Segment::Mode))
-      raise InternalError.new("Text size does not match the char modes") if text.size != char_modes.size
+    protected def make_segments(analysis : Analysis, char_modes : Array(Segment::Mode))
+      raise InternalError.new("Text size does not match the char modes") if analysis.size != char_modes.size
 
+      text = analysis.text
+      offsets = analysis.byte_offsets
       result = [] of Segment
-      count = 0
+      start = 0
 
-      text.size.times do |i|
+      char_modes.size.times do |i|
         mode = char_modes[i]
-        if i != text.size - 1 && mode == char_modes[i + 1]
-          count += 1
-          next
-        end
+        next if i != char_modes.size - 1 && mode == char_modes[i + 1]
 
-        segment = Segment.new(mode, text[i - count..i])
+        byte_start = offsets[start]
+        segment = Segment.new(mode, text.byte_slice(byte_start, offsets[i + 1] - byte_start))
         result.push(segment)
-        count = 0
+        start = i + 1
       end
 
       result

@@ -16,6 +16,22 @@ module Goban
       '+', '-', '.', '/', ':',
     }
 
+    # Index of each ASCII character in `ALPHANUMERIC_CHARS`, or -1 if not included.
+    private ALPHANUMERIC_INDICES = begin
+      a = StaticArray(Int8, 128).new(-1_i8)
+      ALPHANUMERIC_CHARS.each_with_index { |c, i| a[c.ord] = i.to_i8 }
+      a
+    end
+
+    # Returns the index of the character in `ALPHANUMERIC_CHARS`, or nil if it is
+    # not encodable in Alphanumeric mode.
+    protected def self.alphanumeric_index(char : Char) : Int32?
+      ord = char.ord
+      return nil unless 0 <= ord < 128
+      index = ALPHANUMERIC_INDICES[ord]
+      index >= 0 ? index.to_i32 : nil
+    end
+
     private def initialize(@mode, @char_count, @text, @bit_size)
     end
 
@@ -45,7 +61,7 @@ module Goban
     # Shorthand method for creating a Alphanumeric mode segment.
     def self.alphanumeric(text : String)
       is_all_alphanumeric = text.each_char.all? do |c|
-        ALPHANUMERIC_CHARS.index(c)
+        Segment.alphanumeric_index(c)
       end
       raise InputError.new("Alphanumeric data contains unencodable characters") unless is_all_alphanumeric
 
@@ -91,10 +107,10 @@ module Goban
     private macro produce_bits_alphanumeric
       @text.each_char.each_slice(2, reuse: true).map do |slice|
         if slice.size == 1
-          val = ALPHANUMERIC_CHARS.index!(slice[0])
+          val = Segment.alphanumeric_index(slice[0]).not_nil!
           size = 6
         else
-          val = ALPHANUMERIC_CHARS.index!(slice[0]) * 45 + ALPHANUMERIC_CHARS.index!(slice[1])
+          val = Segment.alphanumeric_index(slice[0]).not_nil! * 45 + Segment.alphanumeric_index(slice[1]).not_nil!
           size = 11
         end
 
