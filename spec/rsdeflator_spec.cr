@@ -37,6 +37,24 @@ module Goban
           0_u8, 0_u8, 0_u8, 0_u8, 0_u8, 0_u8,
         ])
       end
+
+      it "corrects errors in the last codewords of the blocks" do
+        version = QR::Version.new(3)
+        ecl = ECC::Level::Quartile
+        data = Slice(UInt8).new(version.max_data_codewords(ecl)) { |i| (i * 37 + 11).to_u8! }
+        codewords = ECC::RSInflator.inflate_codewords(data, version, ecl)
+
+        # The last codewords of the interleaved sequence are the last
+        # EC codewords of each block
+        corrupted = codewords.dup
+        ecc_codewords = codewords.size - data.size
+        (ecc_codewords // 2).times do |i|
+          corrupted[corrupted.size - 1 - i] ^= 0xff_u8
+        end
+
+        result = ECC::RSDeflator.deflate_codewords(corrupted, version, ecl)
+        result[0, data.size].should eq(data)
+      end
     end
   end
 end

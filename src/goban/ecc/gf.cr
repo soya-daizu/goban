@@ -15,9 +15,10 @@ module Goban::ECC
     end
 
     LOG_TABLE = begin
-      a = uninitialized UInt8[256]
+      a = StaticArray(UInt8, 256).new(0_u8) # log(0) is undefined and never used
 
-      (0..255).each do |i|
+      # EXP_TABLE[255] is 1 again (a^255 = 1), so stop at 254 to keep log(1) = 0
+      (0..254).each do |i|
         a[EXP_TABLE[i]] = i.to_u8
       end
 
