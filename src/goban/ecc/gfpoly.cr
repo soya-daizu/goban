@@ -91,48 +91,29 @@ module Goban::ECC
       GFPoly.new(result)
     end
 
-    def div(other : Indexable(UInt8))
+    # Polynomial long division. Returns `{quotient, remainder}` such that
+    # `self == quotient * other + remainder`.
+    def divmod(other : Indexable(UInt8))
       raise InputError.new("Division by 0") if other.is_zero?
+      return {GFPoly.zero, self} if self.degree < other.degree
 
-      result = Slice(UInt8).new(self.size + other.size - 1)
-      @data.copy_to(result)
-
-      self.size.times do |i|
-        coeff = result[i]
+      work = @data.dup
+      inv_lead = GF.inv(other[0])
+      quotient_size = self.size - other.size + 1
+      quotient_size.times do |i|
+        coeff = GF.mul(work[i], inv_lead)
+        work[i] = coeff # This position now holds the quotient coefficient
         next if coeff == 0
+
         (1...other.size).each do |j|
-          next if other[j] == 0
-          result[i + j] ^= GF.mul(other[j], coeff)
+          work[i + j] ^= GF.mul(other[j], coeff)
         end
       end
 
       {
-        GFPoly.new(result[0, self.size], truncate: false),
-        GFPoly.new(result[self.size, result.size - self.size], truncate: false),
+        GFPoly.new(work[0, quotient_size]),
+        GFPoly.new(work[quotient_size, other.size - 1]),
       }
-    end
-
-    def div2(other : Indexable(UInt8))
-      raise InputError.new("Division by 0") if other.is_zero?
-
-      quotient = GFPoly.zero
-      remainder = self
-
-      denominator_leading_term = other.get_coeff(other.degree)
-      inv_denominator_leading_term = GF.inv(denominator_leading_term)
-
-      while remainder.degree >= other.degree && !remainder.is_zero?
-        degree_diff = remainder.degree - other.degree
-        scale = GF.mul(remainder.get_coeff(remainder.degree), inv_denominator_leading_term)
-
-        iter_quotient = GFPoly.build_mono(degree_diff, scale)
-        term = other.mul(iter_quotient)
-
-        quotient = quotient.add_or_sub(iter_quotient)
-        remainder = remainder.add_or_sub(term)
-      end
-
-      {quotient, remainder}
     end
   end
 end

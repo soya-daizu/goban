@@ -89,7 +89,7 @@ module Goban::ECC
         r_last_last, t_last_last = r_last, t_last
         r_last, t_last = r, t
 
-        q, r = r_last_last.div2(r_last)
+        q, r = r_last_last.divmod(r_last)
         t = q.mul(t_last).add_or_sub(t_last_last)
 
         raise InputError.new("Unable to correct error") if r.degree >= r_last.degree

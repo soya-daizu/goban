@@ -34,7 +34,6 @@ module Goban::ECC
       short_block_size = raw_codewords_count // ec_blocks_count - ec_block_size
 
       result = Slice(UInt8).new(raw_codewords_count)
-      gen_poly = GEN_POLYS[ec_block_size]
       k = 0
       ec_blocks_count.times do |i|
         is_short_block = i < short_blocks_count
@@ -50,8 +49,7 @@ module Goban::ECC
           result[i + ec_blocks_count*j - short_blocks_count] = data[j]
         end
 
-        data_poly = GFPoly.new(data, truncate: false)
-        _, ecc = data_poly.div(gen_poly)
+        ecc = compute_ecc(data, ec_block_size)
         ec_block_size.times do |j|
           result[i + codewords.size + ec_blocks_count*j] = ecc[j]
         end
@@ -71,12 +69,23 @@ module Goban::ECC
       data = codewords
       data.copy_to(result)
 
-      data_poly = GFPoly.new(data)
-      gen_poly = GEN_POLYS[ec_block_size]
-      _, ecc = data_poly.div(gen_poly)
-      ecc.data.copy_to(result[data.size, ecc.data.size])
+      ecc = compute_ecc(data, ec_block_size)
+      ecc.copy_to(result[data.size, ec_block_size])
 
       result
+    end
+
+    # Computes the error correction codewords, which are the remainder of
+    # `data(x) * x^ec_block_size` divided by the generator polynomial.
+    private def compute_ecc(data : Slice(UInt8), ec_block_size : Int)
+      shifted = Slice(UInt8).new(data.size + ec_block_size)
+      data.copy_to(shifted)
+      _, rem = GFPoly.new(shifted).divmod(GEN_POLYS[ec_block_size])
+
+      # Leading zero coefficients of the remainder are truncated, so right-align it
+      ecc = Slice(UInt8).new(ec_block_size)
+      rem.data.copy_to(ecc[ec_block_size - rem.size, rem.size]) unless rem.is_zero?
+      ecc
     end
   end
 end
