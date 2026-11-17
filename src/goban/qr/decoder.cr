@@ -22,11 +22,13 @@ struct Goban::QR < Goban::AbstractQR
       mask, ecl = self.read_format(canvas)
       # p! version, mask, ecl
 
+      # Work on a copy so that the caller's canvas is left untouched
+      work = canvas.clone
       # For reserving function patterns
-      Template.draw_function_patterns(canvas, version)
-      mask.apply_to(canvas)
+      Template.draw_function_patterns(work, version)
+      mask.apply_to(work)
 
-      raw_data_codewords = self.read_data_codewords(canvas, version)
+      raw_data_codewords = self.read_data_codewords(work, version)
       data_codewords = ECC::RSDeflator.deflate_codewords(raw_data_codewords, version, ecl)
 
       bit_stream = BitStream.new(data_codewords)
