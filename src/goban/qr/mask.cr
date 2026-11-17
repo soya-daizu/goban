@@ -80,7 +80,9 @@ struct Goban::QR < Goban::AbstractQR
           buffer = ((buffer << 1) | value) & 0b111_1111_1111
 
           # Finder pattern score
-          if j >= 10 && (buffer == 0b000_0101_1101 || buffer == 0b101_1101_0000)
+          # The buffer starts with zeros, which represent the light area
+          # outside the symbol on the leading side
+          if buffer == 0b000_0101_1101 || buffer == 0b101_1101_0000
             fin_score += 40
           end
 
@@ -102,6 +104,13 @@ struct Goban::QR < Goban::AbstractQR
           # Adjacent score
           adj_score += same_count - 2 if same_count >= 5
           same_count = 1
+        end
+
+        # Also check the finder-like patterns followed by
+        # the light area outside the symbol on the trailing side
+        4.times do
+          buffer = (buffer << 1) & 0b111_1111_1111
+          fin_score += 40 if buffer == 0b101_1101_0000
         end
       end
 
@@ -125,9 +134,9 @@ struct Goban::QR < Goban::AbstractQR
 
     private def self.compute_balance_score(dark_count : Int, size : Int)
       total_modules = size ** 2
-      ratio = dark_count / total_modules * 100
-      distance = (ratio.to_i - 50).abs
-      distance // 5 * 10
+      # k = floor(|dark ratio (%) - 50| / 5), computed in integers to avoid rounding errors
+      k = (dark_count * 2 - total_modules).abs * 10 // total_modules
+      k * 10
     end
   end
 end

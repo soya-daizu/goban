@@ -8,7 +8,7 @@ module Goban
         canvas = Canvas(UInt8).new(version.symbol_size, version.symbol_size, 0)
         QR::Template.draw_function_patterns(canvas, version)
 
-        expected = 283 + 283 + 711 + 360 + 360 + 50 # = 2047
+        expected = 283 + 283 + 711 + 720 + 720 + 50 # = 2767
         QR::Mask.evaluate_score(canvas).should eq(expected)
       end
     end
