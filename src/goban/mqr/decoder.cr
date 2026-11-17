@@ -57,7 +57,8 @@ struct Goban::MQR < Goban::AbstractQR
         segments.push(segment)
         bit_stream.read_pos += segment.bit_size
 
-        terminator_bits_size = 3 + 2 * header_bits_size
+        break if bit_stream.read_pos >= bit_stream.size
+        terminator_bits_size = Math.min(3 + 2 * header_bits_size, bit_stream.size - bit_stream.read_pos)
         lookahead = bit_stream.read_bits(terminator_bits_size)
         break if lookahead == 0b000000000
         bit_stream.read_pos -= terminator_bits_size
