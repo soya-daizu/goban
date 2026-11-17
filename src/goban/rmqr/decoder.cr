@@ -106,7 +106,7 @@ struct Goban::RMQR < Goban::AbstractQR
       i = 0
       upward = true      # Current filling direction
       base_x = width - 2 # Zig zag filling starts from bottom right
-      while base_x > 1
+      while base_x > 0
         (0...height).reverse_each do |base_y|
           (0..1).each do |alt|
             x = base_x - alt
