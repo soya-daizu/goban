@@ -144,6 +144,8 @@ struct Goban::QR < Goban::AbstractQR
       # the version number later
       {1..9, 10..26, 27..40}.each do |group|
         v = QR::Version.new(group.end)
+        # Skip without segmenting if the text can never fit in this version
+        next if analysis.min_data_bits > v.max_data_bits(ecl)
         segments = analysis.segments_for(v)
 
         cap_bits = v.max_data_bits(ecl)

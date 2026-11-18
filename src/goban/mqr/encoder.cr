@@ -47,6 +47,8 @@ struct Goban::MQR < Goban::AbstractQR
       # the segments in each version and see if they fit in that version
       (Version::MIN..Version::MAX).each do |i|
         v = Version.new(i)
+        # Skip without segmenting if the text can never fit in this version
+        next if analysis.min_data_bits > v.max_data_bits(ecl)
         segments = analysis.segments_for(v)
 
         cap_bits = v.max_data_bits(ecl)

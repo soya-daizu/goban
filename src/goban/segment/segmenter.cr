@@ -30,6 +30,10 @@ struct Goban::Segment
       getter bytesizes : Slice(UInt8)
       # Byte offset of each character in the text, followed by the text bytesize
       getter byte_offsets : Slice(Int32)
+      # Lower bound of the number of data bits of any segmentation of the text,
+      # excluding the mode indicators and character count indicators. Versions
+      # with a smaller capacity can be skipped without segmenting the text.
+      getter min_data_bits : Int32
 
       @cache = {} of Tuple(Int32, Int32?, Int32?, Int32?, Int32?) => Array(Segment)
 
@@ -39,17 +43,25 @@ struct Goban::Segment
         @bytesizes = Slice(UInt8).new(size)
         @byte_offsets = Slice(Int32).new(size + 1)
 
+        # In sixths of a bit, as in `Segmenter.compute_char_modes`
+        min_cost = 0_i64
+
         reader = Char::Reader.new(@text)
         i = 0
         while reader.has_next?
           char = reader.current_char
+          klass = Segmenter.classify(char)
           @byte_offsets[i] = reader.pos
           @bytesizes[i] = char.bytesize.to_u8
-          @classes[i] = Segmenter.classify(char)
+          @classes[i] = klass
           reader.next_char
+          # The actual number of bytes in the text, which differs from the
+          # bytesize of the replacement character for invalid UTF-8 sequences
+          min_cost += Segmenter.min_char_cost(klass, reader.pos - @byte_offsets[i])
           i += 1
         end
         @byte_offsets[size] = @text.bytesize
+        @min_data_bits = ((min_cost + 5) // 6).to_i32
       end
 
       def size
@@ -78,6 +90,18 @@ struct Goban::Segment
       klass |= CLASS_NUMERIC if char.ascii_number?
       klass |= CLASS_KANJI if char.bytesize > 1 && UNICODE_SHIFTJIS_TABLE.has_key?(char.ord)
       klass
+    end
+
+    # The lowest cost (in sixths of a bit) of the character among the modes
+    # that can encode it. Each segment needs at least the sum of these costs
+    # of its characters, since its data bits are the per-character costs of
+    # its mode rounded up.
+    protected def min_char_cost(klass : UInt8, bytesize : Int32)
+      cost = bytesize.to_i64 * 8 * 6
+      cost = Math.min(cost, 33_i64) if klass & CLASS_ALPHANUMERIC != 0
+      cost = Math.min(cost, 20_i64) if klass & CLASS_NUMERIC != 0
+      cost = Math.min(cost, 78_i64) if klass & CLASS_KANJI != 0
+      cost
     end
 
     # Makes a list of the best encoding mode for the each given character

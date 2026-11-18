@@ -90,6 +90,20 @@ module Goban
       segments.map(&.text).join.to_slice.should eq(text.to_slice)
     end
 
+    it "computes the lower bound of the data bits" do
+      # Kanji 13 * 2 + Byte 8 * 3 + Numeric 10 / 3 * 10 (rounded up)
+      Segment::Segmenter::Analysis.new("漢字abc0123456789").min_data_bits.should eq(26 + 24 + 34)
+    end
+
+    it "counts the actual bytes of invalid UTF-8 sequences in the lower bound" do
+      # Each invalid byte is one byte, not the 3 bytes of the replacement character
+      text = String.new(Bytes[0x41, 0xff, 0x42, 0xe3, 0x81])
+      Segment::Segmenter::Analysis.new(text).min_data_bits.should be <= text.bytesize * 8
+
+      _, version = MQR::Encoder.determine_version_and_segments(text, ECC::Level::Medium)
+      version.should eq(3)
+    end
+
     it "reuses the segments for versions with the same indicator lengths" do
       analysis = Segment::Segmenter::Analysis.new("HELLO 123")
       analysis.segments_for(QR::Version.new(1)).should be(analysis.segments_for(QR::Version.new(9)))
