@@ -12,10 +12,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The minimum version declared in shard.yml, and the latest release
+        crystal: ["1.13.0", "latest"]
+    name: build (Crystal ${{ matrix.crystal }})
     container:
-      image: crystallang/crystal
+      image: crystallang/crystal:${{ matrix.crystal }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
     - name: Install dependencies
       run: shards install
     - name: Run tests

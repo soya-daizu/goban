@@ -13,13 +13,13 @@ jobs:
     container:
       image: crystallang/crystal
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
     - name: Install dependencies
       run: shards install
     - name: Build documentation
       run: crystal docs --source-refname="master"
     - name: Deploy documentation to gh-pages branch
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs
