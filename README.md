@@ -1,6 +1,6 @@
 # Goban
 
-A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (4-10×) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols.
+A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (30-60×) and uses fewer heap allocations (-98%) compared to the other implementation in Crystal ([spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code)), and is even faster than the C library [libqrencode](https://fukuchi.org/works/qrencode/). It supports wider QR Code standard features such as Kanji mode encoding, and also supports generating Micro QR Code and rMQR Code symbols.
 
 The implementation aims compliance with following standards:
 
@@ -14,53 +14,43 @@ https://www.qrcode.com/en/patent.html
 
 ## Benchmarks
 
-### vs [spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code):
-
-```crystal
-text = ARGV[0]
-Benchmark.ips do |x|
-  x.report("goban") { Goban::QR.encode_string(text, Goban::ECC::Level::High) }
-  x.report("qr-code") { QRCode.new(text, level: :h) }
-end
-```
-
-```
-❯ ./bin/qr_test "Hello World\!"
-  goban  30.76k ( 32.51µs) (± 0.21%)  7.6kB/op        fastest
-qr-code   4.59k (217.64µs) (± 0.64%)  149kB/op   6.69× slower
-```
-
-```
-❯ ./bin/qr_test "こんにちは"
-  goban  30.99k ( 32.26µs) (± 0.31%)  7.56kB/op        fastest
-qr-code   3.08k (324.90µs) (± 0.59%)   198kB/op  10.07× slower
-```
-
-### vs [woodruffw/qrencode.cr](https://github.com/woodruffw/qrencode.cr) (Crystal bindings to libqrencode):
+Compared with [spider-gazelle/qr-code](https://github.com/spider-gazelle/qr-code) and [woodruffw/qrencode.cr](https://github.com/woodruffw/qrencode.cr) (Crystal bindings to libqrencode):
 
 ```crystal
 text = ARGV[0]
 Benchmark.ips do |x|
   x.report("goban") { Goban::QR.encode_string(text, Goban::ECC::Level::High) }
   x.report("qrencode") { QRencode::QRcode.new(text, level: QRencode::ECLevel::HIGH) }
+  x.report("qr-code") { QRCode.new(text, level: :h) }
 end
 ```
 
 ```
 ❯ ./bin/qr_test "Hello World\!"
-   goban  30.31k ( 32.99µs) (± 0.20%)  7.6kB/op   1.46× slower
-qrencode  44.18k ( 22.63µs) (± 0.28%)   112B/op        fastest
+   goban 133.78k (  7.48µs) (± 0.95%)  2.29kB/op        fastest
+qrencode  47.94k ( 20.86µs) (± 0.93%)    112B/op   2.79× slower
+ qr-code   4.49k (222.56µs) (± 2.38%)   149kB/op  29.77× slower
 ```
 
 ```
 ❯ ./bin/qr_test "こんにちは"
-   goban  31.45k ( 31.80µs) (± 0.22%)  7.56kB/op   1.03× slower
-qrencode  32.42k ( 30.84µs) (± 0.52%)    112B/op        fastest
+   goban 133.74k (  7.48µs) (± 2.34%)  2.24kB/op        fastest
+qrencode  34.40k ( 29.07µs) (± 0.96%)    112B/op   3.89× slower
+ qr-code   3.20k (312.80µs) (± 2.24%)   198kB/op  41.83× slower
 ```
+
+```
+❯ ./bin/qr_test "$(printf 'こんにちは世界 HELLO 0123456789 %.0s' {1..30})"
+   goban   4.43k (225.94µs) (± 1.27%)  65.2kB/op        fastest
+qrencode 483.51  (  2.07ms) (± 0.57%)    142B/op   9.15× slower
+ qr-code  69.38  ( 14.41ms) (± 2.90%)  6.53MB/op  63.80× slower
+```
+
+Measured on AMD Ryzen 5 5625U with Crystal 1.22.3, built with `--release`.
 
 \* The heap allocation value reported for qrencode.cr is not accurate as it doesn't include memory allocations happened on the C library.
 
-When compared to the C library, Goban is usually a bit slower, but it should be noted that Goban uses [a more advanced algorithm](#about-the-encoding-modes-and-the-text-segmentation) for text segmentation and is more likely to produce a smaller QR Code symbol as a result.
+Goban is faster than the C library while using [a more advanced algorithm](#about-the-encoding-modes-and-the-text-segmentation) for text segmentation, which is more likely to produce a smaller QR Code symbol as a result.
 
 ## Features
 
