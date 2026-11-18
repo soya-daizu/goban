@@ -42,7 +42,7 @@ struct Goban::QR < Goban::AbstractQR
     end
 
     protected def get_format_bits(ecl : ECC::Level)
-      FORMAT_BITS[@value][ecl.to_s]
+      ECC.lookup(FORMAT_BITS[@value], ecl)
     end
 
     # The largest symbol size (version 40). Lines are packed into up to

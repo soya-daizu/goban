@@ -17,4 +17,19 @@ module Goban::ECC
     Quartile = 0b11
     High     = 0b10
   end
+
+  # :nodoc:
+  # Expands to the value for the level `ecl` in the named tuple `table` keyed
+  # by the level names, such as `{Low: 1, Medium: 2, Quartile: 3, High: 4}`.
+  # This is the same as `table[ecl.to_s]` but the key is resolved at compile
+  # time, and the table is accessed in place instead of being passed around.
+  # The table must have the keys for all the levels.
+  macro lookup(table, ecl)
+    case {{ecl}}
+    in .low?      then {{table}}[:Low]
+    in .medium?   then {{table}}[:Medium]
+    in .quartile? then {{table}}[:Quartile]
+    in .high?     then {{table}}[:High]
+    end
+  end
 end
