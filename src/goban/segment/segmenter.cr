@@ -88,7 +88,7 @@ struct Goban::Segment
       klass = 0_u8
       klass |= CLASS_ALPHANUMERIC if Segment.alphanumeric_index(char)
       klass |= CLASS_NUMERIC if char.ascii_number?
-      klass |= CLASS_KANJI if char.bytesize > 1 && UNICODE_SHIFTJIS_TABLE.has_key?(char.ord)
+      klass |= CLASS_KANJI if char.bytesize > 1 && ShiftJIS.encode?(char.ord)
       klass
     end
 

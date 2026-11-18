@@ -115,7 +115,7 @@ module Goban
         end
       when .kanji?
         @text.each_char do |char|
-          v = UNICODE_SHIFTJIS_TABLE[char.ord]? || raise InputError.new("Kanji data contains unencodable characters")
+          v = ShiftJIS.encode?(char.ord) || raise InputError.new("Kanji data contains unencodable characters")
 
           val = v.to_i32
           if val.in?(0x8140..0x9ffc)
