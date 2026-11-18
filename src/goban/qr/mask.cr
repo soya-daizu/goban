@@ -94,29 +94,30 @@ struct Goban::QR < Goban::AbstractQR
       end
     end
 
-    # Returns the mask with the lowest penalty score for the canvas with the
+    # Applies the mask with the lowest penalty score to the canvas with the
     # codewords drawn but no mask and format information applied yet.
+    # Returns the mask and a new canvas of the masked symbol with the format
+    # information drawn, where each module is normalized to 0 (light) or 1 (dark).
     #
     # Instead of applying each mask to a copy of the canvas, the canvas is
     # packed into rows and columns of bits once, and each candidate is built
     # by XORing the packed mask patterns on the data modules and patching in
-    # the format information bits.
-    protected def self.choose_best(canvas : Canvas(UInt8), ecl : ECC::Level)
+    # the format information bits. The resulting canvas is unpacked from the
+    # rows of the chosen candidate.
+    protected def self.apply_best(canvas : Canvas(UInt8), ecl : ECC::Level) : Tuple(Mask, Canvas(UInt8))
       size = canvas.size
-      value = if size <= 64
-                self.choose_best(canvas, ecl, StaticArray(UInt64, 1))
-              elsif size <= 128
-                self.choose_best(canvas, ecl, StaticArray(UInt64, 2))
-              elsif size <= MAX_SIZE
-                self.choose_best(canvas, ecl, StaticArray(UInt64, 3))
-              else
-                raise InternalError.new("Canvas too large")
-              end
-
-      Mask.new(value)
+      if size <= 64
+        self.apply_best(canvas, ecl, StaticArray(UInt64, 1))
+      elsif size <= 128
+        self.apply_best(canvas, ecl, StaticArray(UInt64, 2))
+      elsif size <= MAX_SIZE
+        self.apply_best(canvas, ecl, StaticArray(UInt64, 3))
+      else
+        raise InternalError.new("Canvas too large")
+      end
     end
 
-    private def self.choose_best(canvas : Canvas(UInt8), ecl : ECC::Level, line_type : StaticArray(UInt64, W).class) forall W
+    private def self.apply_best(canvas : Canvas(UInt8), ecl : ECC::Level, line_type : StaticArray(UInt64, W).class) forall W
       size = canvas.size
       data = canvas.data.to_unsafe
 
@@ -162,7 +163,19 @@ struct Goban::QR < Goban::AbstractQR
         end
       {% end %}
 
-      best_mask
+      rows = uninitialized StaticArray(StaticArray(UInt64, W), MAX_SIZE)
+      self.build_masked_lines(best_mask, ecl, size, lines[0], lines[2], pointerof(rows).as(StaticArray(UInt64, W)*), true)
+
+      result = Canvas(UInt8).new(size, size, 0_u8)
+      result_data = result.data
+      size.times do |y|
+        row = rows[y]
+        size.times do |x|
+          result_data.unsafe_put(y * size + x, row.unsafe_fetch(x >> 6).unsafe_shr(x & 63).to_u8! & 1)
+        end
+      end
+
+      {Mask.new(best_mask), result}
     end
 
     # Penalty score of the canvas (given as packed lines) with the mask and
@@ -172,21 +185,32 @@ struct Goban::QR < Goban::AbstractQR
                                   data_rows : StaticArray(UInt64, W)*, data_cols : StaticArray(UInt64, W)*) forall W
       rows = uninitialized StaticArray(StaticArray(UInt64, W), MAX_SIZE)
       cols = uninitialized StaticArray(StaticArray(UInt64, W), MAX_SIZE)
-      row_patterns = ROW_PATTERNS.to_unsafe[mask]
-      col_patterns = COL_PATTERNS.to_unsafe[mask]
+      rows_ptr = pointerof(rows).as(StaticArray(UInt64, W)*)
+      cols_ptr = pointerof(cols).as(StaticArray(UInt64, W)*)
+      self.build_masked_lines(mask, ecl, size, base_rows, data_rows, rows_ptr, true)
+      self.build_masked_lines(mask, ecl, size, base_cols, data_cols, cols_ptr, false)
+
+      self.evaluate_score(rows_ptr, cols_ptr, size)
+    end
+
+    # Writes the rows (or columns if `is_row` is false) of the canvas with the
+    # mask and the matching format information applied to `result`.
+    private def self.build_masked_lines(mask : UInt8, ecl : ECC::Level, size : Int32,
+                                        base : StaticArray(UInt64, W)*, data : StaticArray(UInt64, W)*,
+                                        result : StaticArray(UInt64, W)*, is_row : Bool) forall W
+      patterns = (is_row ? ROW_PATTERNS : COL_PATTERNS).to_unsafe[mask]
       size.times do |i|
-        row_pattern = self.truncate(row_patterns.unsafe_fetch(i % PATTERN_PERIOD), StaticArray(UInt64, W))
-        col_pattern = self.truncate(col_patterns.unsafe_fetch(i % PATTERN_PERIOD), StaticArray(UInt64, W))
-        rows[i] = self.xor(base_rows[i], self.and(row_pattern, data_rows[i]))
-        cols[i] = self.xor(base_cols[i], self.and(col_pattern, data_cols[i]))
+        pattern = self.truncate(patterns.unsafe_fetch(i % PATTERN_PERIOD), StaticArray(UInt64, W))
+        result[i] = self.xor(base[i], self.and(pattern, data[i]))
       end
 
       Template.each_format_module(size, Mask.new(mask), ecl) do |x, y, bit|
-        self.put_bit(rows.to_unsafe + y, x, bit)
-        self.put_bit(cols.to_unsafe + x, y, bit)
+        if is_row
+          self.put_bit(result + y, x, bit)
+        else
+          self.put_bit(result + x, y, bit)
+        end
       end
-
-      self.evaluate_score(pointerof(rows).as(StaticArray(UInt64, W)*), pointerof(cols).as(StaticArray(UInt64, W)*), size)
     end
 
     # Evaluate penalty score for the given canvas.

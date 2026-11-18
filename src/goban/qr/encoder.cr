@@ -127,8 +127,8 @@ struct Goban::QR < Goban::AbstractQR
 
       canvas = Template.make_canvas(version)
       self.draw_codewords(canvas, codewords)
+      # The returned canvas is already normalized
       mask, canvas = self.apply_best_mask(canvas, ecl)
-      canvas.normalize
 
       QR.new(version, ecl, segments, canvas, mask)
     end
@@ -206,13 +206,10 @@ struct Goban::QR < Goban::AbstractQR
       end
     end
 
+    # Returns the best mask and a new canvas with it and the format information
+    # applied, with each module normalized to 0 or 1.
     protected def apply_best_mask(canvas : Canvas(UInt8), ecl : ECC::Level)
-      mask = Mask.choose_best(canvas, ecl)
-      canvas = canvas.clone
-      Template.draw_format_modules(canvas, mask, ecl)
-      mask.apply_to(canvas)
-
-      {mask, canvas}
+      Mask.apply_best(canvas, ecl)
     end
   end
 end
