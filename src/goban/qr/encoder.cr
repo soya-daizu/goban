@@ -177,6 +177,7 @@ struct Goban::QR < Goban::AbstractQR
 
     protected def draw_codewords(canvas : Canvas(UInt8), codewords : Slice(UInt8))
       size = canvas.size
+      data = canvas.data
       data_length = codewords.size * 8
 
       i = 0
@@ -186,14 +187,14 @@ struct Goban::QR < Goban::AbstractQR
         base_x = 5 if base_x == 6 # Skip vertical timing pattern
 
         (0...size).reverse_each do |base_y|
-          (0..1).each do |alt|
-            x = base_x - alt
-            y = upward ? base_y : size - 1 - base_y
-            next if canvas[x, y] & 0x80 > 0
+          y = upward ? base_y : size - 1 - base_y
+          row = y * size
+          2.times do |alt|
+            index = row + base_x - alt
+            next if data[index] & 0x80 > 0
             return if i >= data_length
 
-            bit = codewords[i >> 3].bit(7 - i & 7)
-            canvas[x, y] = bit
+            data[index] = (codewords.unsafe_fetch(i >> 3) >> (7 - i & 7)) & 1
             i += 1
           end
         end

@@ -15,6 +15,26 @@ module Goban::ECC
       a
     end
 
+    # Logarithms of the coefficients of each generator polynomial except the
+    # leading one, which is always 1. The coefficients are all nonzero.
+    GEN_POLY_LOGS = begin
+      GEN_POLYS.map do |poly|
+        Slice(UInt8).new(poly.size - 1) do |i|
+          coeff = poly[i + 1]
+          raise InternalError.new("Zero coefficient in generator polynomial") if coeff == 0
+          GF.log(coeff)
+        end
+      end
+    end
+
+    # `GF::EXP_TABLE` repeated twice, so that the sum of two logarithms can
+    # be looked up without taking the modulo.
+    EXP_TABLE_2X = begin
+      a = uninitialized UInt8[510]
+      510.times { |i| a[i] = GF::EXP_TABLE[i % 255] }
+      a
+    end
+
     def inflate_codewords(codewords : Slice(UInt8), version : QR::Version | RMQR::Version, ecl : Level)
       raise InputError.new("Codewords size mismatch") if codewords.size != version.max_data_codewords(ecl)
 
@@ -77,14 +97,26 @@ module Goban::ECC
 
     # Computes the error correction codewords, which are the remainder of
     # `data(x) * x^ec_block_size` divided by the generator polynomial.
+    # The division is done in place on the remainder register, one data
+    # codeword at a time.
     private def compute_ecc(data : Slice(UInt8), ec_block_size : Int)
-      shifted = Slice(UInt8).new(data.size + ec_block_size)
-      data.copy_to(shifted)
-      _, rem = GFPoly.new(shifted).divmod(GEN_POLYS[ec_block_size])
-
-      # Leading zero coefficients of the remainder are truncated, so right-align it
+      gen_logs = GEN_POLY_LOGS[ec_block_size]
       ecc = Slice(UInt8).new(ec_block_size)
-      rem.data.copy_to(ecc[ec_block_size - rem.size, rem.size]) unless rem.is_zero?
+      last = ec_block_size - 1
+
+      data.each do |byte|
+        factor = byte ^ ecc.unsafe_fetch(0)
+        # Shift the register by one codeword (the ranges overlap)
+        (ecc.to_unsafe + 1).move_to(ecc.to_unsafe, last)
+        ecc.unsafe_put(last, 0_u8)
+        next if factor == 0
+
+        factor_log = GF::LOG_TABLE[factor].to_i32
+        ec_block_size.times do |j|
+          ecc.unsafe_put(j, ecc.unsafe_fetch(j) ^ EXP_TABLE_2X.unsafe_fetch(gen_logs.unsafe_fetch(j).to_i32 + factor_log))
+        end
+      end
+
       ecc
     end
   end

@@ -81,65 +81,55 @@ module Goban
     end
 
     protected def produce_bits
+      result = [] of Tuple(Int32, Int32)
+      produce_bits { |val, len| result << {val, len} }
+      result.each
+    end
+
+    # Yields the value and the bit length of each chunk of the data bits.
+    protected def produce_bits(&)
       case @mode
       when .numeric?
-        produce_bits_numeric
+        # Each group of 3 digits in 10 bits, and the last 1 or 2 digits in 4 or 7 bits
+        bytes = @text.to_slice
+        (0...bytes.size).step(3) do |i|
+          count = Math.min(3, bytes.size - i)
+          val = 0
+          count.times { |j| val = val * 10 + (bytes[i + j] - '0'.ord) }
+          yield val, count * 3 + 1
+        end
       when .alphanumeric?
-        produce_bits_alphanumeric
+        # Each pair of characters in 11 bits, and the last one in 6 bits
+        chars = @text.to_slice
+        (0...chars.size).step(2) do |i|
+          first = Segment.alphanumeric_index(chars[i].unsafe_chr).not_nil!
+          if i + 1 < chars.size
+            yield first * 45 + Segment.alphanumeric_index(chars[i + 1].unsafe_chr).not_nil!, 11
+          else
+            yield first, 6
+          end
+        end
       when .byte?
-        produce_bits_byte
+        @text.each_byte do |byte|
+          yield byte.to_i32, 8
+        end
       when .kanji?
-        produce_bits_kanji
+        @text.each_char do |char|
+          v = UNICODE_SHIFTJIS_TABLE[char.ord]? || raise InputError.new("Kanji data contains unencodable characters")
+
+          val = v.to_i32
+          if val.in?(0x8140..0x9ffc)
+            val -= 0x8140
+          elsif val.in?(0xe040..0xebbf)
+            val -= 0xc140
+          else
+            raise InputError.new("Kanji data contains unencodable characters")
+          end
+
+          yield (val >> 8) * 0xc0 + (val & 0xff), 13
+        end
       else
         raise InternalError.new("Unsupported mode")
-      end
-    end
-
-    private macro produce_bits_numeric
-      @text.each_char.each_slice(3, reuse: true).map do |slice|
-        val = slice.join.to_u16
-        size = slice.size * 3 + 1
-
-        next val, size
-      end
-    end
-
-    private macro produce_bits_alphanumeric
-      @text.each_char.each_slice(2, reuse: true).map do |slice|
-        if slice.size == 1
-          val = Segment.alphanumeric_index(slice[0]).not_nil!
-          size = 6
-        else
-          val = Segment.alphanumeric_index(slice[0]).not_nil! * 45 + Segment.alphanumeric_index(slice[1]).not_nil!
-          size = 11
-        end
-
-        next val, size
-      end
-    end
-
-    private macro produce_bits_byte
-      @text.each_byte.map do |byte|
-        next byte, 8
-      end
-    end
-
-    private macro produce_bits_kanji
-      @text.each_char.map do |char|
-        v = UNICODE_SHIFTJIS_TABLE[char.ord] rescue raise InputError.new("Kanji data contains unencodable characters")
-        byte_pair = {v >> 8, v & 0x00ff}
-
-        val = (byte_pair[0].to_u16 << 8) | byte_pair[1]
-        if val.in?(0x8140..0x9ffc)
-          val -= 0x8140
-        elsif val.in?(0xe040..0xebbf)
-          val -= 0xc140
-        else
-          raise InputError.new("Kanji data contains unencodable characters")
-        end
-        val = (val >> 8) * 0xc0 + (val & 0xff)
-
-        next val, 13
       end
     end
 

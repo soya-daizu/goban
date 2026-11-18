@@ -45,7 +45,7 @@ module Goban
       push_bits(indicator, indicator_length)
       push_bits(cci_bits, cci_bits_count)
 
-      segment.produce_bits.each do |val, len|
+      segment.produce_bits do |val, len|
         push_bits(val, len)
       end
     end
@@ -70,9 +70,7 @@ module Goban
       # Pad to the codeword boundary with zeros. In version M1 and M3, the data
       # capacity is not a multiple of 8 because the last data codeword is only
       # 4 bits long, so we must not write beyond the capacity here.
-      while @write_pos % 8 != 0 && @write_pos < @size
-        self.push(false)
-      end
+      push_bits(0, Math.min(-@write_pos % 8, @size - @write_pos))
 
       # Fill the remaining full codewords with the pad codewords. The shorter
       # last codeword of M1 and M3 (if left) stays as 0000.
@@ -87,8 +85,21 @@ module Goban
       return if len == 0
 
       raise InternalError.new("Too many bits to append") unless len.in?(0..31) && val >> len == 0
-      (0...len).reverse_each do |i|
-        self.push((val >> i) & 1 != 0)
+      raise InternalError.new("Can't write to a read-only bit stream") if read_only
+      raise IndexError.new if @write_pos + len > @size
+
+      # Write the bits from the most significant one, filling up the
+      # remaining bits of the current byte each time. The buffer is zeroed
+      # and only appended to, so the bits can simply be ORed in.
+      val = val.to_u32
+      remaining = len.to_i
+      while remaining > 0
+        free = 8 - (@write_pos & 7)
+        count = Math.min(free, remaining)
+        remaining -= count
+        chunk = (val >> remaining) & ((1_u32 << count) - 1)
+        @bits[@write_pos >> 3] |= (chunk << (free - count)).to_u8!
+        @write_pos += count
       end
     end
 
