@@ -142,26 +142,10 @@ struct Goban::QR < Goban::AbstractQR
       }
 
       best_mask, min_score = 0_u8, Int32::MAX
-      {% if flag?(:preview_mt) %}
-        channel = Channel(Tuple(UInt8, Int32)).new(8)
-        8_u8.times do |mask|
-          spawn do
-            channel.send({mask, self.masked_score(mask, ecl, size, *lines)})
-          end
-        end
-        8.times do
-          mask, score = channel.receive
-          # Prefer the lower mask number on ties, as in the sequential version
-          if score < min_score || score == min_score && mask < best_mask
-            best_mask, min_score = mask, score
-          end
-        end
-      {% else %}
-        8_u8.times do |mask|
-          score = self.masked_score(mask, ecl, size, *lines)
-          best_mask, min_score = mask, score if score < min_score
-        end
-      {% end %}
+      8_u8.times do |mask|
+        score = self.masked_score(mask, ecl, size, *lines)
+        best_mask, min_score = mask, score if score < min_score
+      end
 
       rows = uninitialized StaticArray(StaticArray(UInt64, W), MAX_SIZE)
       self.build_masked_lines(best_mask, ecl, size, lines[0], lines[2], pointerof(rows).as(StaticArray(UInt64, W)*), true)

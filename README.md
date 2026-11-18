@@ -36,22 +36,6 @@ qr-code   4.59k (217.64µs) (± 0.64%)  149kB/op   6.69× slower
 qr-code   3.08k (324.90µs) (± 0.59%)   198kB/op  10.07× slower
 ```
 
-It goes even faster with a larger data and multithreading:
-
-```
-❯ shards build --release -Dpreview_mt
-Dependencies are satisfied
-Building: qr_test
-
-❯ CRYSTAL_WORKERS=4 ./bin/qr_test "A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (4-10×) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal (spider-gazelle/qr-code), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols."
-  goban   2.45k (408.47µs) (± 6.31%)  95.3kB/op        fastest
-qr-code 168.07  (  5.95ms) (± 2.17%)  2.55MB/op  14.57× slower
-
-❯ CRYSTAL_WORKERS=8 ./bin/qr_test "A fast and efficient QR Code encoder/decoder library written purely in Crystal. It is significantly faster (4-10×) and uses fewer heap allocations (-95%) compared to the other implementation in Crystal (spider-gazelle/qr-code), and it supports wider QR Code standard features such as Kanji mode encoding. It also supports generating Micro QR Code and rMQR Code symbols."
-  goban   3.41k (292.99µs) (± 2.03%)  95.3kB/op        fastest
-qr-code 173.34  (  5.77ms) (± 1.81%)  2.55MB/op  19.69× slower
-```
-
 ### vs [woodruffw/qrencode.cr](https://github.com/woodruffw/qrencode.cr) (Crystal bindings to libqrencode):
 
 ```crystal
