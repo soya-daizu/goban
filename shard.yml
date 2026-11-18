@@ -21,6 +21,6 @@ development_dependencies:
 crystalline:
   main: .crystalline_main.cr
 
-crystal: 1.13.0
+crystal: 1.16.0
 
 license: MIT

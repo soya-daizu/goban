@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         # The minimum version declared in shard.yml, and the latest release
-        crystal: ["1.13.0", "latest"]
+        crystal: ["1.16.0", "latest"]
     name: build (Crystal ${{ matrix.crystal }})
     container:
       image: crystallang/crystal:${{ matrix.crystal }}
